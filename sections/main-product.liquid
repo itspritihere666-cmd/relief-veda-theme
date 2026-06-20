@@ -1,0 +1,4629 @@
+{% comment %} {%- assign meta_block = section.blocks | where: 'type', 'product_meta' | first -%}
+{%- assign share_buttons_block = section.blocks | where: 'type', 'share_buttons' | first -%}
+{%- assign inventory_block = section.blocks | where: 'type', 'inventory' | first -%}
+{%- assign buy_buttons_block = section.blocks | where: 'type', 'buy_buttons' | first -%}
+
+{%- capture section_settings -%}
+{
+  "enableHistoryState": true,
+  "templateSuffix": {{ product.template_suffix | json }},
+  "showInventoryQuantity": {% if inventory_block != blank %}true{% else %}false{% endif %},
+  "showSku": {{ meta_block.settings.show_sku | json }},
+  "stackProductImages": {{ section.settings.stack_images | json }},
+  "showThumbnails": {{ section.settings.show_thumbnails | json }},
+  "enableVideoLooping": {{ section.settings.enable_video_looping | json }},
+  "inventoryQuantityThreshold": {{ inventory_block.settings.inventory_quantity_threshold | default: 0 }},
+  "showPriceInButton": {{ buy_buttons_block.settings.show_price_in_button | json }},
+  "enableImageZoom": {{ section.settings.enable_image_zoom | json }},
+  "showPaymentButton": {{ buy_buttons_block.settings.show_payment_button | json }},
+  "useAjaxCart": {% if settings.cart_type == 'drawer' %}true{% else %}false{% endif %}
+}
+{%- endcapture -%}
+
+<script>
+  (() => {
+    let items = JSON.parse(localStorage.getItem('recentlyViewedProducts') || '[]');
+    if (!items.includes({{ product.id }})) {
+      items.unshift({{ product.id }});
+    }
+    try {
+      localStorage.setItem('recentlyViewedProducts', JSON.stringify(items.slice(0, 8)));
+    } catch (error) {}
+  })();
+</script>
+
+{%- comment -%}--- FRESH DESIGN STYLES ---{%- endcomment -%}
+<style>
+  :root {
+    --rv-forest: #1b4332;
+    --rv-forest-mid: #2d6a4f;
+    --rv-forest-light: #40916c;
+    --rv-sage: #95d5b2;
+    --rv-sage-pale: #d8f3dc;
+    --rv-cream: #fefae0;
+    --rv-gold: #dda15e;
+    --rv-gold-dark: #bc6c25;
+    --rv-white: #ffffff;
+    --rv-off-white: #fafaf8;
+    --rv-text-dark: #1b1b1b;
+    --rv-text-mid: #555;
+    --rv-text-light: #888;
+    --rv-border: #e8e6e1;
+    --rv-red: #c1121f;
+    --rv-green: #2d6a4f;
+    --rv-radius: 16px;
+    --rv-radius-sm: 10px;
+    --rv-shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --rv-shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+    --rv-shadow-lg: 0 16px 48px rgba(0,0,0,0.1);
+  }
+
+  /* ===== RESET FOR SECTION ===== */
+  .rv-section * { box-sizing: border-box; }
+
+  /* ===== LAYOUT ===== */
+  .rv-section {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .rv-grid {
+    display: grid;
+    grid-template-columns: 55% 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  @media (max-width: 991px) {
+    .rv-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  /* ===== BREADCRUMB — minimal line ===== */
+  .rv-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--rv-text-light);
+    margin-bottom: 28px;
+  }
+  .rv-crumbs a { color: var(--rv-text-light); text-decoration: none; }
+  .rv-crumbs a:hover { color: var(--rv-forest); }
+  .rv-crumbs__sep { color: var(--rv-border); }
+  .rv-crumbs__current { color: var(--rv-text-dark); font-weight: 600; }
+
+  /* ===== GALLERY — vertical thumbs on left, main on right ===== */
+  .rv-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    position: relative;
+  }
+
+  @media (min-width: 992px) {
+    .rv-gallery--has-thumbs {
+      grid-template-columns: 72px 1fr;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .rv-gallery {
+      grid-template-columns: 1fr;
+      position: relative;
+      top: 0;
+    }
+  }
+
+  .rv-gallery__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 600px;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .rv-gallery__sidebar::-webkit-scrollbar { display: none; }
+
+  @media (max-width: 991px) {
+    .rv-gallery__sidebar { display: none; }
+  }
+
+  .rv-gallery__thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    background: var(--rv-off-white);
+    flex-shrink: 0;
+  }
+  .rv-gallery__thumb:hover { opacity: 0.8; border-color: var(--rv-sage); }
+  .rv-gallery__thumb.is-active { opacity: 1; border-color: var(--rv-forest); }
+  .rv-gallery__thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+  .rv-gallery__main {
+    position: relative;
+    border-radius: var(--rv-radius);
+    overflow: hidden;
+    background: var(--rv-off-white);
+    aspect-ratio: 1/1;
+    cursor: crosshair;
+  }
+  .rv-gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+  .rv-gallery__main img.rv-slide-left { opacity: 0; transform: translateX(-30px); }
+  .rv-gallery__main img.rv-slide-right { opacity: 0; transform: translateX(30px); }
+
+  /* Zoom lens overlay */
+  .rv-zoom-lens {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border: 2px solid var(--rv-forest);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    box-shadow: 0 0 0 4000px rgba(0,0,0,0.08);
+    background-repeat: no-repeat;
+    background-size: 300%;
+  }
+  .rv-zoom-lens.is-active { opacity: 1; }
+
+  /* Zoom hint icon */
+  .rv-zoom-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    z-index: 3;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--rv-shadow-sm);
+    color: var(--rv-text-mid);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .rv-zoom-hint svg { width: 18px; height: 18px; }
+  .rv-gallery__main:hover .rv-zoom-hint { opacity: 0; }
+
+  /* Fullscreen zoom overlay (tap on mobile) */
+  .rv-zoom-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+  }
+  .rv-zoom-overlay.is-open { display: flex; }
+  .rv-zoom-overlay img {
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+    border-radius: 8px;
+    touch-action: pinch-zoom;
+  }
+  .rv-zoom-overlay__close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.15);
+    border: none; border-radius: 50%;
+    color: #fff; font-size: 24px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s ease;
+  }
+  .rv-zoom-overlay__close:hover { background: rgba(255,255,255,0.3); }
+
+  @media (max-width: 991px) {
+    .rv-gallery__main { cursor: zoom-in; }
+    .rv-zoom-lens { display: none; }
+  }
+
+  /* Discount tag — angled ribbon style */
+  .rv-ribbon {
+    position: absolute;
+    top: 16px;
+    left: -6px;
+    z-index: 2;
+    background: var(--rv-red);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px 5px 10px;
+    letter-spacing: 0.5px;
+    clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);
+  }
+
+  /* Mobile dots */
+  .rv-gallery__dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 0;
+  }
+  @media (max-width: 991px) { .rv-gallery__dots { display: flex; } }
+
+  .rv-gallery__dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rv-border);
+    border: none; padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .rv-gallery__dot.is-active { background: var(--rv-forest); transform: scale(1.3); }
+
+  /* ===== PRODUCT INFO ===== */
+  .rv-info { display: flex; flex-direction: column; }
+
+  /* Vendor tag */
+  .rv-vendor {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--rv-forest-mid);
+    background: var(--rv-sage-pale);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    width: fit-content;
+  }
+
+  .rv-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--rv-text-dark);
+    margin: 0 0 8px;
+    letter-spacing: -0.2px;
+  }
+  @media (max-width: 767px) { .rv-title { font-size: 20px; } }
+
+  .rv-subtitle {
+    font-size: 14px;
+    color: var(--rv-text-mid);
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+
+  /* Rating — inline chips */
+  .rv-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .rv-rating__stars { display: flex; gap: 1px; }
+  .rv-rating__stars svg { width: 16px; height: 16px; fill: var(--rv-gold); }
+  .rv-rating__score { font-size: 14px; font-weight: 700; color: var(--rv-text-dark); }
+  .rv-rating__count { font-size: 13px; color: var(--rv-text-light); }
+
+  /* ===== PRICE BLOCK — card-style ===== */
+  .rv-price-card {
+    background: linear-gradient(135deg, var(--rv-sage-pale) 0%, #f0f9f4 100%);
+    border-radius: var(--rv-radius-sm);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .rv-price-card__left { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .rv-price__current {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--rv-forest);
+    line-height: 1;
+  }
+  .rv-price__compare {
+    font-size: 16px;
+    color: var(--rv-text-light);
+    text-decoration: line-through;
+  }
+  .rv-price__save {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rv-white);
+    background: var(--rv-forest-mid);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .rv-price__tax {
+    font-size: 11px;
+    color: var(--rv-text-light);
+    margin-top: 4px;
+  }
+
+  /* ===== FEATURE PILLS — horizontal scroll ===== */
+  .rv-features {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .rv-features::-webkit-scrollbar { display: none; }
+
+  .rv-feature {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--rv-white);
+    border: 1px solid var(--rv-border);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--rv-text-dark);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+  .rv-feature svg { width: 14px; height: 14px; color: var(--rv-forest-mid); flex-shrink: 0; }
+
+  /* ===== DESCRIPTION — expandable ===== */
+  .rv-desc { margin-bottom: 20px; }
+  .rv-desc__text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--rv-text-mid);
+    margin: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .rv-desc__text.is-collapsed { max-height: 4.4em; }
+  .rv-desc__toggle {
+    background: none; border: none; cursor: pointer;
+    font-size: 13px; font-weight: 700;
+    color: var(--rv-forest);
+    padding: 6px 0; margin-top: 2px;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .rv-desc__toggle:hover { text-decoration: underline; }
+  .rv-desc__toggle svg { width: 14px; height: 14px; transition: transform 0.3s ease; }
+  .rv-desc__toggle.is-open svg { transform: rotate(180deg); }
+
+  /* ===== DIVIDER ===== */
+  .rv-divider {
+    height: 1px;
+    background: var(--rv-border);
+    margin: 4px 0 20px;
+    border: none;
+  }
+
+  /* ===== VARIANT CHIPS — pill toggles ===== */
+  .rv-variants { margin-bottom: 20px; }
+  .rv-variants__label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--rv-text-mid);
+    margin-bottom: 10px;
+  }
+  .rv-variants__row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .rv-variant-chip {
+    padding: 10px 20px;
+    border: 1.5px solid var(--rv-border);
+    border-radius: 100px;
+    background: var(--rv-white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-width: 0;
+  }
+  .rv-variant-chip:hover { border-color: var(--rv-sage); background: var(--rv-sage-pale); }
+  .rv-variant-chip.is-selected {
+    border-color: var(--rv-forest);
+    background: var(--rv-forest);
+    color: #fff;
+  }
+  .rv-variant-chip.is-soldout { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+  .rv-variant-chip__name { font-size: 13px; font-weight: 600; }
+  .rv-variant-chip__price { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+  /* ===== QUANTITY — square modern ===== */
+  .rv-qty-row { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .rv-qty-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--rv-text-mid);
+  }
+  .rv-qty-box {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid var(--rv-border);
+    border-radius: var(--rv-radius-sm);
+    overflow: hidden;
+  }
+  .rv-qty-box__btn {
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--rv-off-white); border: none;
+    cursor: pointer; font-size: 18px; color: var(--rv-text-dark);
+    transition: background 0.15s ease;
+  }
+  .rv-qty-box__btn:hover { background: var(--rv-sage-pale); }
+  .rv-qty-box__input {
+    width: 44px; text-align: center;
+    border: none; border-left: 1.5px solid var(--rv-border); border-right: 1.5px solid var(--rv-border);
+    font-size: 15px; font-weight: 600; color: var(--rv-text-dark);
+    background: transparent; outline: none; height: 42px;
+    -moz-appearance: textfield;
+  }
+  .rv-qty-box__input::-webkit-inner-spin-button,
+  .rv-qty-box__input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+  /* ===== BUY BUTTONS ===== */
+  .rv-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .rv-actions * { font-family: inherit !important; }
+
+  .rv-btn-cart {
+    width: 100%; padding: 16px;
+    height: 54px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    border: 2px solid var(--rv-forest);
+    background: linear-gradient(to right, var(--rv-forest) 50%, var(--rv-white) 50%);
+    background-size: 200% 100%;
+    background-position: right;
+    color: var(--rv-forest);
+    border-radius: var(--rv-radius-sm);
+    cursor: pointer;
+    transition: background-position 0.4s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+    -webkit-appearance: none; appearance: none;
+  }
+  .rv-btn-cart:hover {
+    background-position: left;
+    color: var(--rv-white);
+    box-shadow: 0 4px 16px rgba(27,67,50,0.25);
+    transform: translateY(-1px);
+  }
+  .rv-btn-cart:active {
+    transform: translateY(0) scale(0.98);
+  }
+  .rv-btn-cart[disabled] { opacity: 0.5; cursor: not-allowed; transform: none; background-position: right; }
+  .rv-btn-cart.is-added,
+  .rv-btn-cart.is-added[disabled] {
+    opacity: 1 !important;
+    background: var(--rv-green) !important;
+    border-color: var(--rv-green) !important;
+    color: #fff !important;
+    pointer-events: none;
+    animation: rv-pop 0.35s ease;
+  }
+  @keyframes rv-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+  }
+
+  /* Dynamic checkout */
+  .rv-actions .shopify-payment-button { width: 100%; }
+  .rv-actions .shopify-payment-button * { border-radius: var(--rv-radius-sm) !important; }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded {
+    border-radius: var(--rv-radius-sm) !important;
+    overflow: hidden !important;
+    height: 54px !important;
+    min-height: 54px !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    background-color: var(--rv-forest) !important;
+    background-image: none !important;
+    color: #fff !important;
+    border: 2px solid var(--rv-forest) !important;
+    transition: box-shadow 0.3s ease, transform 0.15s ease, background-color 0.3s ease !important;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:hover,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded:hover,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded:hover {
+    background-color: var(--rv-forest-mid) !important;
+    box-shadow: 0 4px 16px rgba(27,67,50,0.3) !important;
+    transform: translateY(-1px) !important;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:active,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded:active,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded:active {
+    transform: translateY(0) scale(0.98) !important;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2) !important;
+    background-color: #153a2b !important;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:focus,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded:focus,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded:focus {
+    background-color: var(--rv-forest) !important;
+    outline: 2px solid var(--rv-sage) !important;
+    outline-offset: 2px;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button[aria-disabled="true"],
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:disabled {
+    background-color: var(--rv-forest) !important;
+    opacity: 0.85 !important;
+  }
+
+  /* ===== PROMISES BAR ===== */
+  .rv-promises {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border: 1px solid var(--rv-border);
+    border-radius: var(--rv-radius-sm);
+    overflow: hidden;
+  }
+  .rv-promise {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 8px;
+    text-align: center;
+    border-right: 1px solid var(--rv-border);
+    background: var(--rv-white);
+  }
+  .rv-promise:last-child { border-right: none; }
+  .rv-promise__icon { width: 28px; height: 28px; color: var(--rv-forest-mid); }
+  .rv-promise__text { font-size: 11px; font-weight: 600; color: var(--rv-text-mid); text-transform: uppercase; letter-spacing: 0.3px; }
+
+  @media (max-width: 575px) {
+    .rv-promise { padding: 12px 6px; }
+    .rv-promise__icon { width: 22px; height: 22px; }
+    .rv-promise__text { font-size: 10px; }
+  }
+
+  /* ===== CROSS-SELL ===== */
+  .rv-crosssell {
+    border: 1.5px dashed var(--rv-sage);
+    border-radius: var(--rv-radius-sm);
+    padding: 20px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, rgba(149,213,178,0.08) 0%, transparent 100%);
+  }
+  .rv-crosssell__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .rv-crosssell__head svg { width: 20px; height: 20px; color: var(--rv-forest-mid); }
+  .rv-crosssell__title { font-size: 15px; font-weight: 700; color: var(--rv-text-dark); margin: 0; }
+  .rv-crosssell__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: var(--rv-white);
+    border-radius: 8px;
+    border: 1px solid var(--rv-border);
+  }
+  .rv-crosssell__item + .rv-crosssell__item { margin-top: 8px; }
+  .rv-crosssell__check input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--rv-forest); cursor: pointer; }
+  .rv-crosssell__img { width: 52px; height: 52px; border-radius: 6px; object-fit: contain; background: var(--rv-off-white); flex-shrink: 0; }
+  .rv-crosssell__name { font-size: 13px; font-weight: 600; color: var(--rv-text-dark); flex: 1; min-width: 0; }
+  .rv-crosssell__price { font-size: 14px; font-weight: 700; color: var(--rv-forest); flex-shrink: 0; }
+  .rv-crosssell__old { font-size: 11px; color: var(--rv-text-light); text-decoration: line-through; margin-right: 4px; }
+
+  /* ===== SHARE ===== */
+  .rv-share { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+  .rv-share__label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--rv-text-light); }
+  .rv-share__btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; border: none;
+    color: #fff; text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .rv-share__btn:hover { transform: scale(1.1); box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+  .rv-share__btn svg { width: 14px; height: 14px; }
+  .rv-share__btn--fb { background: #1877f2; }
+  .rv-share__btn--x { background: #000; }
+  .rv-share__btn--wa { background: #25d366; }
+  .rv-share__btn--ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+
+  /* ===== FAQ-STYLE ACCORDION ===== */
+  .rv-details--desktop {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rv-border);
+    grid-column: 1 / -1;
+  }
+  .rv-details--mobile {
+    display: none;
+    margin-bottom: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rv-border);
+  }
+
+  @media (max-width: 991px) {
+    .rv-details--desktop { display: none; }
+    .rv-details--mobile { display: block; }
+  }
+
+  .rv-tabs-heading {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--rv-text-dark);
+    margin: 0 0 16px;
+  }
+
+  .rv-reviews-section {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rv-border);
+  }
+
+  .rv-faq {
+    border: 1px solid var(--rv-border);
+    border-radius: var(--rv-radius-sm);
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: var(--rv-white);
+    transition: box-shadow 0.2s ease;
+  }
+  .rv-faq:hover { box-shadow: var(--rv-shadow-sm); }
+  .rv-faq.is-open { box-shadow: var(--rv-shadow-md); }
+
+  .rv-faq__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 22px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--rv-text-dark);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 12px;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .rv-faq__trigger:hover { background: var(--rv-off-white); }
+  .rv-faq.is-open .rv-faq__trigger {
+    color: var(--rv-forest);
+    background: var(--rv-sage-pale);
+  }
+
+  .rv-faq__icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--rv-off-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .rv-faq.is-open .rv-faq__icon {
+    transform: rotate(180deg);
+    background: var(--rv-forest);
+    color: #fff;
+  }
+  .rv-faq__icon svg { width: 16px; height: 16px; }
+
+  .rv-faq__body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .rv-faq.is-open .rv-faq__body {
+    max-height: 500px;
+  }
+
+  .rv-faq__content {
+    padding: 0 22px 20px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--rv-text-mid);
+  }
+  .rv-faq__content ul { padding-left: 20px; margin: 8px 0; }
+  .rv-faq__content li { margin-bottom: 6px; }
+
+  /* ===== INVENTORY URGENCY ===== */
+  .rv-urgency {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rv-red);
+    margin-bottom: 14px;
+    padding: 6px 14px;
+    background: #fef2f2;
+    border-radius: 6px;
+    width: fit-content;
+  }
+  .rv-urgency__dot {
+    width: 7px; height: 7px;
+    background: var(--rv-red);
+    border-radius: 50%;
+    animation: rv-blink 1.5s infinite;
+  }
+  @keyframes rv-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ===== TOAST ===== */
+  .rv-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    z-index: 9999;
+    background: var(--rv-forest);
+    color: #fff;
+    border-radius: var(--rv-radius-sm);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--rv-shadow-lg);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
+    max-width: 420px;
+    width: calc(100% - 40px);
+  }
+  .rv-toast.is-visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .rv-toast__icon svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .rv-toast__body { flex: 1; }
+  .rv-toast__title { font-size: 14px; font-weight: 700; margin: 0; }
+  .rv-toast__msg { font-size: 12px; margin: 2px 0 0; opacity: 0.8; }
+  .rv-toast__close {
+    background: none; border: none; color: #fff; cursor: pointer;
+    font-size: 20px; opacity: 0.6; padding: 0 4px; line-height: 1;
+  }
+  .rv-toast__close:hover { opacity: 1; }
+  .rv-toast__bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px; background: var(--rv-sage);
+    border-radius: 0 0 var(--rv-radius-sm) var(--rv-radius-sm);
+    transform-origin: left;
+    animation: rv-bar-shrink 3.5s linear forwards;
+  }
+  @keyframes rv-bar-shrink {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+
+  /* ===== MOBILE STICKY BAR ===== */
+  .rv-sticky-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 99;
+    background: var(--rv-white);
+    border-top: 1px solid var(--rv-border);
+    padding: 12px 16px;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+  }
+  .rv-sticky-bar__inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .rv-sticky-bar__price {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--rv-forest);
+    white-space: nowrap;
+  }
+  .rv-sticky-bar__btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--rv-forest);
+    color: #fff;
+    border: none;
+    border-radius: var(--rv-radius-sm);
+    cursor: pointer;
+  }
+  @media (max-width: 767px) {
+    .rv-sticky-bar { display: block; }
+    .rv-section { padding-bottom: 90px; }
+  }
+
+  /* ===== PRODUCT FAQ SECTION (before footer) ===== */
+  .rv-faq-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 20px 60px;
+  }
+  .rv-faq-section__header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .rv-faq-section__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--rv-text-dark);
+    margin: 0 0 6px;
+  }
+  .rv-faq-section__subtitle {
+    font-size: 14px;
+    color: var(--rv-text-light);
+    margin: 0;
+  }
+
+  .rv-faq-section .rv-faq {
+    margin-bottom: 8px;
+  }
+  .rv-faq-section .rv-faq__trigger {
+    padding: 20px 24px;
+  }
+  .rv-faq-section .rv-faq__content {
+    padding: 0 24px 22px;
+  }
+
+  /* ===== CUSTOM REVIEWS SECTION ===== */
+  .rv-rev {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+  .rv-rev__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rv-border);
+  }
+  .rv-rev__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--rv-text-dark);
+    margin: 0 0 20px;
+  }
+  .rv-rev__summary {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .rv-rev__avg {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .rv-rev__avg-num {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--rv-text-dark);
+    line-height: 1;
+    border-right: 2px solid var(--rv-border);
+    padding-right: 16px;
+  }
+  .rv-rev__avg-stars svg {
+    width: 18px;
+    height: 18px;
+  }
+  .rv-rev__avg-count {
+    font-size: 13px;
+    color: var(--rv-text-light);
+    margin-top: 4px;
+  }
+
+  /* Write review button */
+  .rv-rev__write-btn {
+    padding: 12px 28px;
+    border: 1.5px solid var(--rv-border);
+    border-radius: 100px;
+    background: var(--rv-white);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--rv-text-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rv-rev__write-btn:hover {
+    border-color: var(--rv-forest);
+    color: var(--rv-forest);
+    box-shadow: var(--rv-shadow-sm);
+  }
+  .rv-rev__write-btn svg { width: 16px; height: 16px; }
+
+  /* Star distribution bars */
+  .rv-rev__bars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 220px;
+  }
+  .rv-rev__bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--rv-text-mid);
+  }
+  .rv-rev__bar-label {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .rv-rev__bar-label svg { width: 12px; height: 12px; fill: var(--rv-gold); }
+  .rv-rev__bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--rv-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .rv-rev__bar-fill {
+    height: 100%;
+    background: var(--rv-text-dark);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .rv-rev__bar-pct {
+    width: 32px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--rv-text-light);
+  }
+
+  /* Sort bar */
+  .rv-rev__sort {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .rv-rev__sort-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--rv-text-dark);
+  }
+  .rv-rev__sort-select {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--rv-text-mid);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-weight: 500;
+  }
+  .rv-rev__sort-select svg { width: 16px; height: 16px; }
+
+  /* Individual review */
+  .rv-rev__item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rv-border);
+  }
+  .rv-rev__item:last-child { border-bottom: none; }
+  .rv-rev__item-author {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--rv-text-dark);
+    margin: 0 0 6px;
+  }
+  .rv-rev__item-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .rv-rev__item-stars { display: flex; gap: 1px; }
+  .rv-rev__item-stars svg { width: 14px; height: 14px; }
+  .rv-rev__item-date { font-size: 12px; color: var(--rv-text-light); }
+  .rv-rev__item-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--rv-text-mid);
+    margin: 0;
+  }
+  .rv-rev__item-anon {
+    font-size: 11px;
+    color: var(--rv-text-light);
+    font-style: italic;
+  }
+
+  /* Review form */
+  .rv-rev__form-wrap {
+    margin-top: 24px;
+    padding: 24px;
+    background: var(--rv-off-white);
+    border-radius: var(--rv-radius-sm);
+    border: 1px solid var(--rv-border);
+    display: none;
+  }
+  .rv-rev__form-wrap.is-open { display: block; }
+
+  .rv-rev__form-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--rv-text-dark);
+    margin: 0 0 16px;
+  }
+  .rv-rev__form-login {
+    text-align: center;
+    padding: 24px;
+  }
+  .rv-rev__form-login p {
+    font-size: 14px;
+    color: var(--rv-text-mid);
+    margin: 0 0 12px;
+  }
+  .rv-rev__form-login-btn {
+    display: inline-block;
+    padding: 10px 28px;
+    background: var(--rv-forest);
+    color: #fff;
+    border: none;
+    border-radius: var(--rv-radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .rv-rev__form-login-btn:hover { background: var(--rv-forest-mid); }
+
+  .rv-rev__field {
+    margin-bottom: 14px;
+  }
+  .rv-rev__field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rv-text-dark);
+    margin-bottom: 6px;
+  }
+  .rv-rev__field input,
+  .rv-rev__field textarea,
+  .rv-rev__field select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--rv-border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--rv-text-dark);
+    background: var(--rv-white);
+    outline: none;
+    transition: border-color 0.2s ease;
+    font-family: inherit;
+  }
+  .rv-rev__field input:focus,
+  .rv-rev__field textarea:focus {
+    border-color: var(--rv-forest);
+  }
+  .rv-rev__field textarea { resize: vertical; min-height: 100px; }
+
+  /* Star picker */
+  .rv-star-picker {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .rv-star-picker__star {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: transform 0.15s ease;
+  }
+  .rv-star-picker__star:hover { transform: scale(1.2); }
+  .rv-star-picker__star svg {
+    width: 28px;
+    height: 28px;
+    fill: var(--rv-border);
+    transition: fill 0.15s ease;
+  }
+  .rv-star-picker__star.is-filled svg { fill: var(--rv-gold); }
+
+  .rv-rev__anon-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--rv-text-mid);
+  }
+  .rv-rev__anon-row input { width: auto; }
+
+  .rv-rev__submit {
+    padding: 12px 32px;
+    background: var(--rv-forest);
+    color: #fff;
+    border: none;
+    border-radius: var(--rv-radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .rv-rev__submit:hover { background: var(--rv-forest-mid); }
+
+  .rv-rev__empty {
+    text-align: center;
+    padding: 32px;
+    color: var(--rv-text-light);
+    font-size: 14px;
+  }
+
+  /* Pagination */
+  .rv-rev__more {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .rv-rev__more-btn {
+    padding: 10px 28px;
+    border: 1.5px solid var(--rv-border);
+    border-radius: 100px;
+    background: var(--rv-white);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rv-text-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .rv-rev__more-btn:hover { border-color: var(--rv-forest); color: var(--rv-forest); }
+</style>
+
+{%- comment -%}--- TOAST ---{%- endcomment -%}
+<div class="rv-toast" id="rv-cart-toast" role="alert" aria-live="polite">
+  <div class="rv-toast__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <div class="rv-toast__body">
+    <p class="rv-toast__title">Added to cart</p>
+    <p class="rv-toast__msg" id="rv-toast-name">{{ product.title | truncate: 40 }}</p>
+  </div>
+  <button class="rv-toast__close" onclick="rvHideToast()" aria-label="Close">&times;</button>
+  <div class="rv-toast__bar" id="rv-toast-bar"></div>
+</div>
+
+<section class="rv-section" data-section-id="{{ section.id }}" data-section-type="product" data-section-settings='{{ section_settings }}'>
+
+  {%- comment -%}--- BREADCRUMB ---{%- endcomment -%}
+  <nav class="rv-crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="rv-crumbs__sep">/</span>
+    <a href="{{ collection.url | default: '/collections/all' }}">{{ collection.title | default: 'Products' }}</a>
+    <span class="rv-crumbs__sep">/</span>
+    <span class="rv-crumbs__current">{{ product.title | truncate: 30 }}</span>
+  </nav>
+
+  <div class="rv-grid">
+
+    {%- comment -%}========== LEFT: GALLERY =========={%- endcomment -%}
+    <div class="rv-gallery {% if product.media.size > 1 %}rv-gallery--has-thumbs{% endif %}" id="rv-main-image">
+
+      {%- assign initial_media_id = product.featured_media.id -%}
+      {%- assign media_count = 0 -%}
+      {%- if product.selected_variant and product.selected_variant.featured_media -%}
+        {%- assign initial_media_id = product.selected_variant.featured_media.id -%}
+      {%- endif -%}
+
+      {%- comment -%}Vertical thumbnails{%- endcomment -%}
+      {%- if product.media.size > 1 -%}
+        <div class="rv-gallery__sidebar">
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              <div
+                class="rv-gallery__thumb {% if media.id == initial_media_id %}is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                data-full-src="{{ media | image_url: width: 800 }}"
+                data-zoom-src="{{ media | image_url: width: 1600 }}"
+                data-alt="{{ media.alt | escape }}"
+                onclick="rvSwitchImage(this)"
+              >
+                <img src="{{ media | image_url: width: 160 }}" alt="{{ media.alt | escape }}" loading="lazy" width="72" height="72">
+              </div>
+            {%- endif -%}
+            {%- assign media_count = media_count | plus: 1 -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}Main image{%- endcomment -%}
+      {%- if product.media.size > 0 -%}
+        <div class="rv-gallery__main">
+          {%- if product.compare_at_price > product.price -%}
+            {%- assign discount_pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+            <div class="rv-ribbon">{{ discount_pct }}% OFF</div>
+          {%- endif -%}
+          <img
+            id="rv-featured-img"
+            src="{{ product.featured_media | image_url: width: 800 }}"
+            data-zoom-src="{{ product.featured_media | image_url: width: 1600 }}"
+            alt="{{ product.featured_media.alt | escape }}"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+            loading="eager"
+          >
+          <div class="rv-zoom-lens" id="rv-zoom-lens"></div>
+          <div class="rv-zoom-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}Mobile dots{%- endcomment -%}
+      {%- if product.media.size > 1 -%}
+        <div class="rv-gallery__dots">
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              <button
+                class="rv-gallery__dot {% if media.id == initial_media_id %}is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                data-full-src="{{ media | image_url: width: 800 }}"
+                data-zoom-src="{{ media | image_url: width: 1600 }}"
+                data-alt="{{ media.alt | escape }}"
+                onclick="rvSwitchImage(this)"
+                aria-label="View image {{ forloop.index }}"
+              ></button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}--- Product Details FAQ (below gallery — desktop only) ---{%- endcomment -%}
+      <div class="rv-details--desktop">
+        <h2 class="rv-tabs-heading">Product Details</h2>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Benefits</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.benefits != blank -%}
+                {{ product.metafields.custom.benefits | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li>Supports overall health and wellness</li>
+                  <li>Made from natural, pure extracts</li>
+                  <li>Scientifically tested formulation</li>
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Key Ingredients</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.key_ingredients != blank -%}
+                {{ product.metafields.custom.key_ingredients | metafield_tag }}
+              {%- else -%}
+                <p>{{ product.description | strip_html | truncatewords: 50 }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>How to Use</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.how_to_use != blank -%}
+                {{ product.metafields.custom.how_to_use | metafield_tag }}
+              {%- else -%}
+                <p>Please refer to the product packaging for usage instructions or consult your healthcare professional.</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Additional Information</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.additional_info != blank -%}
+                {{ product.metafields.custom.additional_info | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li><strong>Type:</strong> {{ product.type | default: 'Health Supplement' }}</li>
+                  <li><strong>Vendor:</strong> {{ product.vendor }}</li>
+                  {%- if product.selected_or_first_available_variant.sku != blank -%}
+                    <li><strong>SKU:</strong> {{ product.selected_or_first_available_variant.sku }}</li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {%- comment -%}========== RIGHT: PRODUCT INFO =========={%- endcomment -%}
+    <div class="rv-info">
+
+      {%- if product.vendor != blank -%}
+        <span class="rv-vendor">{{ product.vendor }}</span>
+      {%- endif -%}
+
+      <h1 class="rv-title">{{ product.title }}</h1>
+
+      {%- if product.metafields.descriptors.subtitle != blank -%}
+        <p class="rv-subtitle">{{ product.metafields.descriptors.subtitle.value }}</p>
+      {%- endif -%}
+
+      {%- comment -%}--- Rating (populated dynamically from actual reviews) ---{%- endcomment -%}
+      <div class="rv-rating" id="rv-rating-inline">
+        <div class="rv-rating__stars" id="rv-inline-stars">
+          {%- for i in (1..5) -%}
+            <svg viewBox="0 0 24 24" style="fill: var(--rv-border);"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          {%- endfor -%}
+        </div>
+        <span class="rv-rating__score" id="rv-inline-avg"></span>
+        <span class="rv-rating__count" id="rv-inline-count"></span>
+      </div>
+
+      {%- comment -%}--- Price card ---{%- endcomment -%}
+      {%- assign current_variant = product.selected_or_first_available_variant -%}
+      <div class="rv-price-card">
+        <div>
+          <div class="rv-price-card__left">
+            {%- if current_variant.compare_at_price > current_variant.price -%}
+              <span class="rv-price__compare" data-unit-compare="{{ current_variant.compare_at_price }}">{{ current_variant.compare_at_price | money }}</span>
+            {%- endif -%}
+            <span class="rv-price__current" data-unit-price="{{ current_variant.price }}">{{ current_variant.price | money }}</span>
+            {%- if current_variant.compare_at_price > current_variant.price -%}
+              {%- assign savings_pct = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round -%}
+              <span class="rv-price__save">Save {{ savings_pct }}%</span>
+            {%- endif -%}
+          </div>
+          <div class="rv-price__tax">Inclusive of all taxes</div>
+        </div>
+      </div>
+
+      {%- comment -%}--- Feature pills ---{%- endcomment -%}
+      <div class="rv-features">
+        {%- if product.metafields.custom.usp_1 != blank -%}
+          <div class="rv-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ product.metafields.custom.usp_1.value }}
+          </div>
+        {%- endif -%}
+        {%- if product.metafields.custom.usp_2 != blank -%}
+          <div class="rv-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ product.metafields.custom.usp_2.value }}
+          </div>
+        {%- endif -%}
+        {%- if product.metafields.custom.usp_3 != blank -%}
+          <div class="rv-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ product.metafields.custom.usp_3.value }}
+          </div>
+        {%- endif -%}
+        {%- if product.metafields.custom.usp_1 == blank -%}
+          {%- for tag in product.tags -%}
+            {%- if tag contains 'usp:' -%}
+              <div class="rv-feature">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                {{ tag | remove: 'usp:' }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      {%- comment -%}--- Description ---{%- endcomment -%}
+      {%- if product.description != blank -%}
+        <div class="rv-desc">
+          <p class="rv-desc__text is-collapsed" id="rv-desc-text">{{ product.description | strip_html }}</p>
+          <button class="rv-desc__toggle" id="rv-desc-toggle" onclick="rvToggleDesc()">
+            Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+      {%- endif -%}
+
+      <hr class="rv-divider">
+
+      {%- comment -%}--- Inventory ---{%- endcomment -%}
+      {%- if inventory_block != blank and current_variant.inventory_management != blank and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 -%}
+        <div class="rv-urgency">
+          <span class="rv-urgency__dot"></span>
+          Only {{ current_variant.inventory_quantity }} left in stock
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}--- FORM ---{%- endcomment -%}
+      {%- form 'product', product, class: 'ProductForm' -%}
+        {%- render 'product-data', product: product -%}
+
+        {%- comment -%}--- Variant chips ---{%- endcomment -%}
+        {%- if product.has_only_default_variant == false -%}
+          <div class="rv-variants">
+            {%- for option in product.options_with_values -%}
+              <div class="rv-variants__label">{{ option.name }}</div>
+              <div class="rv-variants__row">
+                {%- assign prev_option1 = '' -%}
+                {%- for variant in product.variants -%}
+                  {%- unless variant.option1 == prev_option1 -%}
+                    <div
+                      class="rv-variant-chip {% if variant.id == current_variant.id %}is-selected{% endif %} {% unless variant.available %}is-soldout{% endunless %}"
+                      data-variant-id="{{ variant.id }}"
+                      onclick="rvSelectVariant(this, {{ variant.id }})"
+                    >
+                      <div class="rv-variant-chip__name">{{ variant.title }}</div>
+                      <div class="rv-variant-chip__price">{{ variant.price | money }}</div>
+                    </div>
+                  {%- endunless -%}
+                  {%- assign prev_option1 = variant.option1 -%}
+                {%- endfor -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <input type="hidden" name="id" id="rv-variant-id" value="{{ current_variant.id }}">
+
+        {%- comment -%}--- Quantity ---{%- endcomment -%}
+        <div class="rv-qty-row">
+          <span class="rv-qty-label">Qty</span>
+          <div class="rv-qty-box">
+            <button type="button" class="rv-qty-box__btn" onclick="rvQty(-1)" aria-label="Decrease">&minus;</button>
+            <input type="text" class="rv-qty-box__input" name="quantity" id="rv-qty" value="1" pattern="[0-9]*" min="1" aria-label="Quantity">
+            <button type="button" class="rv-qty-box__btn" onclick="rvQty(1)" aria-label="Increase">+</button>
+          </div>
+        </div>
+
+        {%- comment -%}--- Promises bar ---{%- endcomment -%}
+        <div class="rv-promises">
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span class="rv-promise__text">Free Delivery</span>
+          </div>
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="rv-promise__text">Genuine Product</span>
+          </div>
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            <span class="rv-promise__text">Easy Returns</span>
+          </div>
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <span class="rv-promise__text">Secure Payment</span>
+          </div>
+        </div>
+
+        {%- comment -%}--- Cross-sell ---{%- endcomment -%}
+        {%- assign buy_it_with_block = section.blocks | where: 'type', 'buy_it_with' | first -%}
+        {%- if buy_it_with_block != blank and buy_it_with_block.settings.product != blank -%}
+          {%- assign associated_product = buy_it_with_block.settings.product -%}
+          <div class="rv-crosssell">
+            <div class="rv-crosssell__head">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              <h3 class="rv-crosssell__title">{{ buy_it_with_block.settings.title | default: 'Frequently bought together' }}</h3>
+            </div>
+            <div class="rv-crosssell__item">
+              <label class="rv-crosssell__check"><input type="checkbox"></label>
+              {%- if associated_product.featured_image -%}
+                <img class="rv-crosssell__img" src="{{ associated_product.featured_image | image_url: width: 128 }}" alt="{{ associated_product.title | escape }}" loading="lazy" width="52" height="52">
+              {%- endif -%}
+              <span class="rv-crosssell__name">{{ associated_product.title | truncate: 35 }}</span>
+              <span class="rv-crosssell__price">
+                {%- if associated_product.compare_at_price > associated_product.price -%}
+                  <span class="rv-crosssell__old">{{ associated_product.compare_at_price | money }}</span>
+                {%- endif -%}
+                {{ associated_product.price | money }}
+              </span>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%}--- Buy buttons ---{%- endcomment -%}
+        {%- if buy_buttons_block.settings.show_payment_button == false or product.selling_plan_groups.size > 0 -%}
+          {%- assign use_primary_button = true -%}
+        {%- else -%}
+          {%- assign use_primary_button = false -%}
+        {%- endif -%}
+
+        <div class="ProductForm__BuyButtons rv-actions" {{ buy_buttons_block.shopify_attributes }}>
+          {%- if buy_buttons_block.settings.show_payment_button and product.selected_or_first_available_variant.available == false -%}
+            <style>#shopify-section-{{ section.id }} .shopify-payment-button { display: none; }</style>
+          {%- endif -%}
+
+          <button type="submit" data-use-primary-button="{% if use_primary_button %}true{% else %}false{% endif %}" class="ProductForm__AddToCart rv-btn-cart" {% if product.selected_or_first_available_variant.available %}data-action="add-to-cart"{% else %}disabled="disabled"{% endif %}>
+            {%- if product.selected_or_first_available_variant.available -%}
+              <span>{% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t }}{% else %}ADD TO CART{% endif %}</span>
+              {%- if buy_buttons_block.settings.show_price_in_button -%}
+                <span> &middot; </span>
+                <span id="rv-btn-price" data-unit-price="{{ product.selected_or_first_available_variant.price }}">{{ product.selected_or_first_available_variant.price | money }}</span>
+              {%- endif -%}
+            {%- else -%}
+              SOLD OUT
+            {%- endif -%}
+          </button>
+
+          {%- if buy_buttons_block.settings.show_payment_button and product.template_suffix != 'pre-order' -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      {%- endform -%}
+
+      {%- comment -%}--- Product Details FAQ (mobile only — below buy buttons) ---{%- endcomment -%}
+      <div class="rv-details--mobile">
+        <h2 class="rv-tabs-heading">Product Details</h2>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Benefits</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.benefits != blank -%}
+                {{ product.metafields.custom.benefits | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li>Supports overall health and wellness</li>
+                  <li>Made from natural, pure extracts</li>
+                  <li>Scientifically tested formulation</li>
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Key Ingredients</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.key_ingredients != blank -%}
+                {{ product.metafields.custom.key_ingredients | metafield_tag }}
+              {%- else -%}
+                <p>{{ product.description | strip_html | truncatewords: 50 }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>How to Use</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.how_to_use != blank -%}
+                {{ product.metafields.custom.how_to_use | metafield_tag }}
+              {%- else -%}
+                <p>Please refer to the product packaging for usage instructions or consult your healthcare professional.</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Additional Information</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.additional_info != blank -%}
+                {{ product.metafields.custom.additional_info | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li><strong>Type:</strong> {{ product.type | default: 'Health Supplement' }}</li>
+                  <li><strong>Vendor:</strong> {{ product.vendor }}</li>
+                  {%- if product.selected_or_first_available_variant.sku != blank -%}
+                    <li><strong>SKU:</strong> {{ product.selected_or_first_available_variant.sku }}</li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%}--- Share ---{%- endcomment -%}
+      {%- if share_buttons_block != blank -%}
+        {%- assign share_url = shop.url | append: product.url -%}
+        <div class="rv-share">
+          <span class="rv-share__label">Share</span>
+          <a class="rv-share__btn rv-share__btn--fb" href="https://www.facebook.com/sharer.php?u={{ share_url }}" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a class="rv-share__btn rv-share__btn--x" href="https://x.com/intent/post?url={{ share_url }}&text={{ product.title | url_encode }}" target="_blank" rel="noopener" aria-label="Share on X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a class="rv-share__btn rv-share__btn--wa" href="https://wa.me/?text={{ product.title | url_encode }}%20{{ share_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          </a>
+          <a class="rv-share__btn rv-share__btn--ig" href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}--- App blocks ---{%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}
+          <div {{ block.shopify_attributes }}>{%- render block -%}</div>
+        {%- endif -%}
+        {%- if block.type == 'store_pickup' -%}
+          <div class="ProductMeta__StoreAvailabilityContainer" {{ block.shopify_attributes }}></div>
+        {%- endif -%}
+        {%- if block.type == 'liquid' and block.settings.liquid != blank -%}
+          <div {{ block.shopify_attributes }}>{{ block.settings.liquid }}</div>
+        {%- endif -%}
+        {%- if block.type == 'text' and block.settings.text != blank -%}
+          <div {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%}--- Reviews (full-width) ---{%- endcomment -%}
+    {%- assign reviews_block = section.blocks | where: 'type', 'reviews' | first -%}
+    {%- if reviews_block != blank -%}
+      <div class="rv-reviews-section">
+        <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{%- comment -%}--- Fullscreen zoom overlay ---{%- endcomment -%}
+<div class="rv-zoom-overlay" id="rv-zoom-overlay" onclick="rvCloseZoom(event)">
+  <img id="rv-zoom-overlay-img" src="" alt="">
+  <button class="rv-zoom-overlay__close" onclick="rvCloseZoom(event)" aria-label="Close zoom">&times;</button>
+</div>
+
+{%- comment -%}--- PRODUCT FAQ SECTION (before footer) ---{%- endcomment -%}
+<div class="rv-faq-section">
+  <div class="rv-faq-section__header">
+    <h2 class="rv-faq-section__title">Frequently Asked Questions</h2>
+    <p class="rv-faq-section__subtitle">Everything you need to know about {{ product.title | truncate: 40 }}</p>
+  </div>
+
+  {%- if product.metafields.custom.faq_q1 != blank -%}
+    {%- comment -%}--- Per-product FAQs from metafields ---{%- endcomment -%}
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>{{ product.metafields.custom.faq_q1.value }}</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a1.value }}</div></div>
+    </div>
+
+    {%- if product.metafields.custom.faq_q2 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q2.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a2.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+    {%- if product.metafields.custom.faq_q3 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q3.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a3.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+    {%- if product.metafields.custom.faq_q4 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q4.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a4.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+    {%- if product.metafields.custom.faq_q5 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q5.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a5.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+  {%- else -%}
+    {%- comment -%}--- Default/fallback FAQs ---{%- endcomment -%}
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>Is this product safe to use daily?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>Yes, our products are made with 100% natural ingredients and are safe for daily use. However, we recommend consulting your healthcare professional if you have any specific medical conditions.</p></div></div>
+    </div>
+
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>How long does shipping take?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>We typically deliver within 5-7 business days across India. Metro cities may receive orders within 3-5 business days.</p></div></div>
+    </div>
+
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>What is the return policy?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>We offer easy returns within 7 days of delivery. If the product is damaged or defective, we will provide a full replacement or refund.</p></div></div>
+    </div>
+
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>Are there any side effects?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>Our products are formulated using natural Ayurvedic ingredients and are generally well-tolerated. Please read the label carefully and consult a physician if you are pregnant, nursing, or on medication.</p></div></div>
+    </div>
+  {%- endif -%}
+</div>
+
+{%- comment -%}--- REVIEWS SECTION ---{%- endcomment -%}
+<div class="rv-rev" id="rv-reviews-section">
+  <h2 class="rv-rev__title">Reviews</h2>
+
+  <div class="rv-rev__header">
+    <div class="rv-rev__summary">
+      <div class="rv-rev__avg">
+        <span class="rv-rev__avg-num" id="rv-rev-avg">0</span>
+        <div>
+          <div class="rv-rev__avg-stars" id="rv-rev-avg-stars">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" style="fill: var(--rv-border);"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            {%- endfor -%}
+          </div>
+          <div class="rv-rev__avg-count" id="rv-rev-total">0 reviews</div>
+        </div>
+      </div>
+
+      <button class="rv-rev__write-btn" onclick="rvOpenReviewForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Write a review
+      </button>
+    </div>
+
+    <div class="rv-rev__bars" id="rv-rev-bars">
+      {%- for i in (1..5) -%}
+        {%- assign star_num = 6 | minus: i -%}
+        <div class="rv-rev__bar-row">
+          <span class="rv-rev__bar-label">{{ star_num }}<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <div class="rv-rev__bar-track"><div class="rv-rev__bar-fill" data-star="{{ star_num }}" style="width:0%"></div></div>
+          <span class="rv-rev__bar-pct" data-star-pct="{{ star_num }}">0%</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="rv-rev__sort">
+    <span class="rv-rev__sort-label">Recent Reviews</span>
+    <button class="rv-rev__sort-select" onclick="rvSortReviews()">
+      Sort By <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="18" x2="12" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div id="rv-reviews-list">
+    {%- comment -%}Reviews will be loaded here from localStorage + SPR{%- endcomment -%}
+  </div>
+
+  <div class="rv-rev__empty" id="rv-rev-empty" style="display:none;">
+    No reviews yet. Be the first to share your experience!
+  </div>
+
+  {%- comment -%}--- Review Form ---{%- endcomment -%}
+  <div class="rv-rev__form-wrap" id="rv-review-form">
+    {%- if customer -%}
+      <h3 class="rv-rev__form-title">Write a Review</h3>
+
+      <form id="rv-new-review-form" onsubmit="return rvSubmitReview(event)">
+        <div class="rv-rev__field">
+          <label>Your Rating</label>
+          <div class="rv-star-picker" id="rv-star-picker">
+            {%- for i in (1..5) -%}
+              <button type="button" class="rv-star-picker__star" data-value="{{ i }}" onclick="rvPickStar({{ i }})">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </button>
+            {%- endfor -%}
+          </div>
+          <input type="hidden" id="rv-review-rating" value="0">
+        </div>
+
+        <div class="rv-rev__field">
+          <label for="rv-review-name">Display Name</label>
+          <input type="text" id="rv-review-name" value="{{ customer.name }}" required>
+        </div>
+
+        <div class="rv-rev__anon-row">
+          <input type="checkbox" id="rv-review-anon">
+          <label for="rv-review-anon">Post as Anonymous</label>
+        </div>
+
+        <div class="rv-rev__field">
+          <label for="rv-review-body">Your Review</label>
+          <textarea id="rv-review-body" placeholder="Share your experience with this product..." required></textarea>
+        </div>
+
+        <button type="submit" class="rv-rev__submit">Submit Review</button>
+      </form>
+    {%- else -%}
+      <div class="rv-rev__form-login">
+        <p>Please log in to write a review</p>
+        <a href="/account/login?return_url={{ product.url }}" class="rv-rev__form-login-btn">Log In / Sign Up</a>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}--- SPR reviews (hidden, data source) ---{%- endcomment -%}
+  <div id="rv-spr-data" style="display:none;">
+    {{ product.metafields.spr.reviews }}
+  </div>
+</div>
+
+{%- comment -%}--- Mobile sticky bar ---{%- endcomment -%}
+<div class="rv-sticky-bar">
+  <div class="rv-sticky-bar__inner">
+    <span class="rv-sticky-bar__price">{{ current_variant.price | money }}</span>
+    <button class="rv-sticky-bar__btn" onclick="document.querySelector('.rv-btn-cart').click()">ADD TO CART</button>
+  </div>
+</div>
+
+{%- comment -%}--- PHOTO SWIPE ---{%- endcomment -%}
+{%- if section.settings.enable_image_zoom -%}
+  <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+    <div class="pswp__scroll-wrap">
+      <div class="pswp__container">
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+      </div>
+      <div class="pswp__ui pswp__ui--hidden">
+        <button class="pswp__button pswp__button--prev RoundButton" title="{{ 'product.slideshow.previous' | t }}">{% render 'icon' with 'arrow-left' %}</button>
+        <button class="pswp__button pswp__button--close RoundButton RoundButton--large" title="{{ 'product.slideshow.close' | t }}">{% render 'icon' with 'close' %}</button>
+        <button class="pswp__button pswp__button--next RoundButton" title="{{ 'product.slideshow.next' | t }}">{% render 'icon' with 'arrow-right' %}</button>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+<script>
+  window.ShopifyXR=window.ShopifyXR||function(){(ShopifyXR.q=ShopifyXR.q||[]).push(arguments)};
+  ShopifyXR('addModels', {{ product.media | where: 'media_type', 'model' | json }});
+</script>
+
+{%- comment -%}--- ALL JS ---{%- endcomment -%}
+<script>
+  /* === Gallery === */
+  function rvSwitchImage(el, direction) {
+    var src = el.getAttribute('data-full-src');
+    var zoomSrc = el.getAttribute('data-zoom-src') || src;
+    var alt = el.getAttribute('data-alt') || '';
+    var img = document.getElementById('rv-featured-img');
+    if (!img || !src) return;
+
+    if (direction) {
+      var outClass = direction === 'next' ? 'rv-slide-left' : 'rv-slide-right';
+      var inClass = direction === 'next' ? 'rv-slide-right' : 'rv-slide-left';
+      img.classList.add(outClass);
+      setTimeout(function() {
+        img.src = src; img.alt = alt; img.setAttribute('data-zoom-src', zoomSrc);
+        img.classList.remove(outClass);
+        img.classList.add(inClass);
+        img.offsetHeight;
+        img.classList.remove(inClass);
+      }, 200);
+    } else {
+      img.src = src; img.alt = alt; img.setAttribute('data-zoom-src', zoomSrc);
+    }
+
+    document.querySelectorAll('.rv-gallery__thumb, .rv-gallery__dot').forEach(function(t) { t.classList.remove('is-active'); });
+    var mid = el.getAttribute('data-media-id');
+    document.querySelectorAll('[data-media-id="' + mid + '"]').forEach(function(t) { t.classList.add('is-active'); });
+  }
+
+  function rvNavigateImage(delta) {
+    var dots = Array.prototype.slice.call(document.querySelectorAll('.rv-gallery__dot'));
+    if (dots.length === 0) dots = Array.prototype.slice.call(document.querySelectorAll('.rv-gallery__thumb'));
+    if (dots.length < 2) return;
+    var cur = 0;
+    dots.forEach(function(d, i) { if (d.classList.contains('is-active')) cur = i; });
+    var next = cur + delta;
+    if (next < 0) next = dots.length - 1;
+    if (next >= dots.length) next = 0;
+    rvSwitchImage(dots[next], delta > 0 ? 'next' : 'prev');
+  }
+
+  /* Swipe */
+  (function() {
+    var g = document.querySelector('.rv-gallery__main');
+    if (!g) return;
+    var sx = 0, sy = 0, tracking = false;
+    g.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; tracking = true; }, { passive: true });
+    g.addEventListener('touchmove', function(e) {
+      if (!tracking) return;
+      if (Math.abs(e.touches[0].clientX - sx) > Math.abs(e.touches[0].clientY - sy) && Math.abs(e.touches[0].clientX - sx) > 10) e.preventDefault();
+    }, { passive: false });
+    g.addEventListener('touchend', function(e) {
+      if (!tracking) return; tracking = false;
+      var diff = e.changedTouches[0].clientX - sx;
+      if (Math.abs(diff) < 40) return;
+      rvNavigateImage(diff < 0 ? 1 : -1);
+    }, { passive: true });
+  })();
+
+  /* === Quantity with price update === */
+  function rvQty(delta) {
+    var input = document.getElementById('rv-qty');
+    if (!input) return;
+    var val = Math.max(1, (parseInt(input.value, 10) || 1) + delta);
+    input.value = val;
+    rvUpdatePrice(val);
+  }
+
+  function rvFormatMoney(cents) {
+    var amt = (cents / 100).toFixed(2);
+    return '{{ cart.currency.symbol | default: "Rs." }} ' + amt.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function rvUpdatePrice(qty) {
+    var bp = document.getElementById('rv-btn-price');
+    if (bp) { bp.textContent = rvFormatMoney(parseInt(bp.getAttribute('data-unit-price'), 10) * qty); }
+    var mp = document.querySelector('.rv-price__current');
+    if (mp && mp.getAttribute('data-unit-price')) { mp.textContent = rvFormatMoney(parseInt(mp.getAttribute('data-unit-price'), 10) * qty); }
+    var mc = document.querySelector('.rv-price__compare');
+    if (mc && mc.getAttribute('data-unit-compare')) { mc.textContent = rvFormatMoney(parseInt(mc.getAttribute('data-unit-compare'), 10) * qty); }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('rv-qty');
+    if (input) {
+      input.addEventListener('change', function() {
+        var v = parseInt(this.value, 10);
+        if (isNaN(v) || v < 1) { v = 1; this.value = 1; }
+        rvUpdatePrice(v);
+      });
+    }
+  });
+
+  /* === Description toggle === */
+  function rvToggleDesc() {
+    var t = document.getElementById('rv-desc-text');
+    var b = document.getElementById('rv-desc-toggle');
+    if (!t) return;
+    if (t.classList.contains('is-collapsed')) {
+      t.classList.remove('is-collapsed');
+      t.style.maxHeight = t.scrollHeight + 'px';
+      if (b) { b.innerHTML = 'Read less <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'; b.classList.add('is-open'); }
+    } else {
+      t.classList.add('is-collapsed');
+      t.style.maxHeight = '';
+      if (b) { b.innerHTML = 'Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'; b.classList.remove('is-open'); }
+    }
+  }
+
+  /* === FAQ accordion === */
+  function rvToggleFaq(el) {
+    var isOpen = el.classList.contains('is-open');
+    /* Close all */
+    document.querySelectorAll('.rv-faq').forEach(function(f) {
+      f.classList.remove('is-open');
+      var trigger = f.querySelector('.rv-faq__trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+    /* Open clicked if it wasn't open */
+    if (!isOpen) {
+      el.classList.add('is-open');
+      var trigger = el.querySelector('.rv-faq__trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  /* === Variant selector === */
+  function rvSelectVariant(el, variantId) {
+    if (el.classList.contains('is-soldout')) return;
+    document.querySelectorAll('.rv-variant-chip').forEach(function(c) { c.classList.remove('is-selected'); });
+    el.classList.add('is-selected');
+    var idInput = document.getElementById('rv-variant-id');
+    if (idInput) idInput.value = variantId;
+    if (window.history && window.history.replaceState) {
+      var url = new URL(window.location.href);
+      url.searchParams.set('variant', variantId);
+      window.history.replaceState({}, '', url.toString());
+    }
+    document.dispatchEvent(new CustomEvent('variant:changed', { detail: { variantId: variantId } }));
+  }
+
+  /* === Toast === */
+  var rvToastTimer = null;
+  function rvShowToast() {
+    var toast = document.getElementById('rv-cart-toast');
+    if (!toast) return;
+    var bar = document.getElementById('rv-toast-bar');
+    if (bar) { bar.style.animation = 'none'; bar.offsetHeight; bar.style.animation = ''; }
+    toast.classList.add('is-visible');
+    clearTimeout(rvToastTimer);
+    rvToastTimer = setTimeout(rvHideToast, 3500);
+  }
+  function rvHideToast() {
+    var toast = document.getElementById('rv-cart-toast');
+    if (toast) toast.classList.remove('is-visible');
+    clearTimeout(rvToastTimer);
+  }
+
+  /* ATC intercept */
+  (function() {
+    var form = document.querySelector('.rv-section .ProductForm');
+    if (!form) return;
+    var btn = form.querySelector('.ProductForm__AddToCart');
+    var originalHTML = btn ? btn.innerHTML : '';
+    form.addEventListener('submit', function() {
+      if (!btn || (btn.disabled && !btn.classList.contains('is-added'))) return;
+      btn.classList.add('is-added');
+      btn.innerHTML = '<span>&#10003; ADDED</span>';
+      rvShowToast();
+      setTimeout(function() { btn.classList.remove('is-added'); btn.innerHTML = originalHTML; }, 2500);
+    });
+  })();
+
+  /* === Image Zoom === */
+  (function() {
+    var container = document.querySelector('.rv-gallery__main');
+    var lens = document.getElementById('rv-zoom-lens');
+    var img = document.getElementById('rv-featured-img');
+    if (!container || !lens || !img) return;
+
+    var isMobile = window.matchMedia('(max-width: 991px)').matches;
+
+    /* Desktop: lens zoom on hover */
+    if (!isMobile) {
+      container.addEventListener('mouseenter', function() {
+        var zoomSrc = img.getAttribute('data-zoom-src') || img.src;
+        lens.style.backgroundImage = 'url(' + zoomSrc + ')';
+        lens.classList.add('is-active');
+      });
+
+      container.addEventListener('mousemove', function(e) {
+        var rect = container.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var lw = lens.offsetWidth / 2;
+        var lh = lens.offsetHeight / 2;
+
+        /* Clamp lens position */
+        var lx = Math.max(lw, Math.min(x, rect.width - lw));
+        var ly = Math.max(lh, Math.min(y, rect.height - lh));
+
+        lens.style.left = lx - lw + 'px';
+        lens.style.top = ly - lh + 'px';
+
+        /* Background position for magnified image */
+        var px = (x / rect.width) * 100;
+        var py = (y / rect.height) * 100;
+        lens.style.backgroundPosition = px + '% ' + py + '%';
+      });
+
+      container.addEventListener('mouseleave', function() {
+        lens.classList.remove('is-active');
+      });
+    }
+
+    /* Open fullscreen: tap on mobile, double-click on desktop */
+    function rvOpenFullscreen() {
+      var overlay = document.getElementById('rv-zoom-overlay');
+      var overlayImg = document.getElementById('rv-zoom-overlay-img');
+      if (!overlay || !overlayImg) return;
+      overlayImg.src = img.getAttribute('data-zoom-src') || img.src;
+      overlayImg.alt = img.alt;
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      lens.classList.remove('is-active');
+    }
+
+    container.addEventListener('click', function() {
+      if (isMobile) rvOpenFullscreen();
+    });
+
+    container.addEventListener('dblclick', function() {
+      if (!isMobile) rvOpenFullscreen();
+    });
+
+    /* Recheck on resize */
+    window.addEventListener('resize', function() {
+      isMobile = window.matchMedia('(max-width: 991px)').matches;
+    });
+  })();
+
+  /* Close fullscreen zoom */
+  function rvCloseZoom(e) {
+    var overlay = document.getElementById('rv-zoom-overlay');
+    if (!overlay) return;
+    /* Only close if clicking overlay bg or close button, not the image */
+    if (e.target === overlay || e.target.closest('.rv-zoom-overlay__close')) {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  /* Close on Escape key */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var overlay = document.getElementById('rv-zoom-overlay');
+      if (overlay && overlay.classList.contains('is-open')) {
+        overlay.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+    }
+  });
+
+  /* ===== REVIEWS SYSTEM ===== */
+  var rvProductId = '{{ product.id }}';
+  var rvReviewsKey = 'rv_reviews_' + rvProductId;
+  var rvSelectedRating = 0;
+  var rvSortMode = 'newest'; /* newest, oldest, highest, lowest */
+
+  /* Get stored reviews */
+  function rvGetReviews() {
+    try {
+      return JSON.parse(localStorage.getItem(rvReviewsKey) || '[]');
+    } catch(e) { return []; }
+  }
+
+  /* Save reviews */
+  function rvSaveReviews(reviews) {
+    try { localStorage.setItem(rvReviewsKey, JSON.stringify(reviews)); } catch(e) {}
+  }
+
+  /* Parse SPR reviews if present */
+  function rvParseSPR() {
+    var sprEl = document.getElementById('rv-spr-data');
+    if (!sprEl) return [];
+    var items = sprEl.querySelectorAll('.spr-review');
+    var reviews = [];
+    items.forEach(function(item) {
+      var stars = item.querySelectorAll('.spr-icon-star').length || 5;
+      var author = (item.querySelector('.spr-review-header-byline strong') || {}).textContent || 'Anonymous';
+      var date = (item.querySelector('.spr-review-header-byline') || {}).textContent || '';
+      date = date.replace(author, '').replace('on', '').trim();
+      var body = (item.querySelector('.spr-review-content-body') || {}).textContent || '';
+      var ts = Date.parse(date) || 0;
+      reviews.push({ stars: stars, author: author.trim(), date: date, body: body.trim(), timestamp: ts, source: 'spr' });
+    });
+    return reviews;
+  }
+
+  /* Render stars HTML */
+  function rvStarsHTML(count, size) {
+    size = size || 14;
+    var html = '';
+    for (var i = 1; i <= 5; i++) {
+      var color = i <= count ? 'var(--rv-gold)' : 'var(--rv-border)';
+      html += '<svg viewBox="0 0 24 24" style="width:' + size + 'px;height:' + size + 'px;fill:' + color + ';"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+    }
+    return html;
+  }
+
+  /* Render all reviews */
+  function rvRenderReviews() {
+    var sprReviews = rvParseSPR();
+    var localReviews = rvGetReviews();
+    var all = localReviews.concat(sprReviews);
+
+    /* Sort */
+    all.sort(function(a, b) {
+      if (rvSortMode === 'oldest') {
+        return (a.timestamp || 0) - (b.timestamp || 0);
+      } else if (rvSortMode === 'highest') {
+        return (b.stars || 0) - (a.stars || 0);
+      } else if (rvSortMode === 'lowest') {
+        return (a.stars || 0) - (b.stars || 0);
+      }
+      /* default: newest first */
+      return (b.timestamp || 0) - (a.timestamp || 0);
+    });
+
+    /* Stats */
+    var total = all.length;
+    var sum = 0;
+    var dist = {1:0, 2:0, 3:0, 4:0, 5:0};
+    all.forEach(function(r) {
+      var s = parseInt(r.stars, 10) || 5;
+      sum += s;
+      if (dist[s] !== undefined) dist[s]++;
+    });
+    var avg = total > 0 ? (sum / total).toFixed(1) : '0.0';
+
+    /* Update header */
+    document.getElementById('rv-rev-avg').textContent = avg;
+    document.getElementById('rv-rev-total').textContent = total + ' review' + (total !== 1 ? 's' : '');
+    document.getElementById('rv-rev-avg-stars').innerHTML = rvStarsHTML(Math.round(parseFloat(avg)), 18);
+
+    /* Update inline rating under product title */
+    var inlineStars = document.getElementById('rv-inline-stars');
+    var inlineAvg = document.getElementById('rv-inline-avg');
+    var inlineCount = document.getElementById('rv-inline-count');
+    if (inlineStars) inlineStars.innerHTML = rvStarsHTML(Math.round(parseFloat(avg)), 16);
+    if (inlineAvg) inlineAvg.textContent = avg;
+    if (inlineCount) inlineCount.textContent = '(' + total + ' review' + (total !== 1 ? 's' : '') + ')';
+
+    /* Update bars */
+    for (var s = 1; s <= 5; s++) {
+      var pct = total > 0 ? Math.round((dist[s] / total) * 100) : 0;
+      var fill = document.querySelector('.rv-rev__bar-fill[data-star="' + s + '"]');
+      var pctEl = document.querySelector('[data-star-pct="' + s + '"]');
+      if (fill) fill.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+    }
+
+    /* Render list */
+    var listEl = document.getElementById('rv-reviews-list');
+    var emptyEl = document.getElementById('rv-rev-empty');
+    if (total === 0) {
+      listEl.innerHTML = '';
+      emptyEl.style.display = 'block';
+      return;
+    }
+    emptyEl.style.display = 'none';
+
+    var html = '';
+    all.forEach(function(r) {
+      var displayName = r.anon ? 'Anonymous' : (r.author || 'Anonymous');
+      html += '<div class="rv-rev__item">';
+      html += '<div class="rv-rev__item-author">' + displayName;
+      if (r.anon) html += ' <span class="rv-rev__item-anon">(verified buyer)</span>';
+      html += '</div>';
+      html += '<div class="rv-rev__item-meta">';
+      html += '<div class="rv-rev__item-stars">' + rvStarsHTML(r.stars) + '</div>';
+      html += '<span class="rv-rev__item-date">' + (r.date || '') + '</span>';
+      html += '</div>';
+      html += '<p class="rv-rev__item-body">' + (r.body || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
+      html += '</div>';
+    });
+    listEl.innerHTML = html;
+  }
+
+  /* Star picker */
+  function rvPickStar(val) {
+    rvSelectedRating = val;
+    document.getElementById('rv-review-rating').value = val;
+    document.querySelectorAll('.rv-star-picker__star').forEach(function(s) {
+      var sv = parseInt(s.getAttribute('data-value'), 10);
+      if (sv <= val) { s.classList.add('is-filled'); }
+      else { s.classList.remove('is-filled'); }
+    });
+  }
+
+  /* Open review form */
+  function rvOpenReviewForm() {
+    var form = document.getElementById('rv-review-form');
+    if (form) {
+      form.classList.toggle('is-open');
+      if (form.classList.contains('is-open')) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+
+  /* Submit review */
+  function rvSubmitReview(e) {
+    e.preventDefault();
+    if (rvSelectedRating === 0) {
+      alert('Please select a star rating.');
+      return false;
+    }
+    var name = document.getElementById('rv-review-name').value.trim();
+    var body = document.getElementById('rv-review-body').value.trim();
+    var anon = document.getElementById('rv-review-anon').checked;
+
+    if (!name || !body) return false;
+
+    var now = new Date();
+    var dateStr = ('0' + now.getDate()).slice(-2) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()] + ' ' + String(now.getFullYear()).slice(-2);
+
+    var review = {
+      stars: rvSelectedRating,
+      author: name,
+      anon: anon,
+      realName: name,
+      body: body,
+      date: dateStr,
+      timestamp: now.getTime(),
+      email: '{{ customer.email | escape }}',
+      source: 'local'
+    };
+
+    var reviews = rvGetReviews();
+    reviews.unshift(review);
+    rvSaveReviews(reviews);
+
+    /* Reset form */
+    document.getElementById('rv-review-body').value = '';
+    rvPickStar(0);
+    document.getElementById('rv-review-anon').checked = false;
+    document.getElementById('rv-review-form').classList.remove('is-open');
+
+    /* Re-render */
+    rvRenderReviews();
+    rvShowToast();
+    document.getElementById('rv-toast-name').textContent = 'Thank you for your review!';
+
+    return false;
+  }
+
+  /* Sort cycle: newest → oldest → highest → lowest → newest */
+  function rvSortReviews() {
+    var modes = ['newest', 'oldest', 'highest', 'lowest'];
+    var labels = { newest: 'Newest First', oldest: 'Oldest First', highest: 'Highest Rated', lowest: 'Lowest Rated' };
+    var idx = modes.indexOf(rvSortMode);
+    rvSortMode = modes[(idx + 1) % modes.length];
+    var labelEl = document.querySelector('.rv-rev__sort-label');
+    if (labelEl) labelEl.textContent = labels[rvSortMode];
+    rvRenderReviews();
+  }
+
+  /* Init reviews on page load */
+  document.addEventListener('DOMContentLoaded', rvRenderReviews);
+</script>
+
+{% schema %}
+{
+  "name": "Product page",
+  "class": "shopify-section--bordered",
+  "blocks": [
+    {
+      "type": "product_meta",
+      "name": "Product meta",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_vendor",
+          "label": "Show vendor",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_sku",
+          "label": "Show SKU",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_product_rating",
+          "label": "Show product rating",
+          "info": "To display a rating, add a product rating app. [Learn more](https://help.shopify.com/en/manual/products/product-reviews/installation)",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_taxes_included",
+          "label": "Show price taxes notice",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "variant_selector",
+      "name": "Variant selector",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "selector_mode",
+          "label": "Selector type",
+          "options": [
+            { "value": "block", "label": "Block" },
+            { "value": "dropdown", "label": "Dropdown" }
+          ],
+          "default": "dropdown"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_color_swatch",
+          "label": "Show color swatch",
+          "default": false,
+          "info": "Some colors appear white? [Learn more](http://support.maestrooo.com/article/80-product-uploading-custom-color-for-color-swatch)."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_color_carousel",
+          "label": "Show color carousel",
+          "info": "A pop-up selector with variant images for choosing colors. Only enables when color swatch is disabled.",
+          "default": false
+        },
+        {
+          "type": "page",
+          "id": "size_chart",
+          "label": "Size chart",
+          "info": "Show along option named Size."
+        }
+      ]
+    },
+    { "type": "share_buttons", "name": "Share buttons", "limit": 1 },
+    {
+      "type": "inventory",
+      "name": "Inventory",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "inventory_quantity_threshold",
+          "label": "Inventory quantity threshold",
+          "info": "Only show inventory quantity if below threshold. Choose 0 to always show.",
+          "min": 0, "max": 50, "step": 1, "default": 0
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_price_in_button",
+          "label": "Show price in add to cart button",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_payment_button",
+          "label": "Show dynamic checkout button",
+          "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+          "default": true
+        }
+      ]
+    },
+    { "type": "description", "name": "Description", "limit": 1 },
+    {
+      "type": "liquid",
+      "name": "Liquid",
+      "settings": [
+        { "type": "paragraph", "content": "This Liquid code will show on the right part of the product page." },
+        { "type": "liquid", "id": "liquid", "label": "Liquid" }
+      ]
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_label", "label": "Show label", "default": false }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "paragraph", "content": "This text will show on the right part of the product page." },
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "store_pickup",
+      "name": "Local pickup availability",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Show customers where they can pick up the product. [Learn more](https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/local-methods/local-pickup#show-pickup-availability-to-your-customers)" }
+      ]
+    },
+    { "type": "@app" },
+    {
+      "name": "Content", "type": "content",
+      "settings": [
+        { "type": "paragraph", "content": "This content will show on the left part, below the product images." },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "richtext", "id": "content", "label": "Content" },
+        { "type": "page", "id": "page", "label": "Content from page", "info": "If specified, takes precedence over inline content." }
+      ]
+    },
+    {
+      "name": "Reviews", "type": "reviews", "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "To show reviews, install [Shopify Product Reviews](https://apps.shopify.com/product-reviews). This content will show on the left part, below the product images." }
+      ]
+    },
+    {
+      "name": "Buy it with", "type": "buy_it_with", "limit": 1,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "title", "label": "Heading", "default": "Frequently bought together" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "header", "content": "Media" },
+    { "type": "paragraph", "content": "Learn more about [media types](https://help.shopify.com/en/manual/products/product-media)" },
+    {
+      "type": "select", "id": "image_size", "label": "Size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "fill", "label": "Fill screen" }
+      ],
+      "default": "large"
+    },
+    { "type": "checkbox", "id": "stack_images", "label": "Stack images on desktop", "default": true },
+    { "type": "checkbox", "id": "show_thumbnails", "label": "Show thumbnails on desktop", "default": true },
+    { "type": "checkbox", "id": "enable_image_zoom", "label": "Enable zoom", "default": true },
+    { "type": "checkbox", "id": "enable_video_looping", "label": "Enable video looping", "default": false }
+  ]
+}
+{% endschema %} {% endcomment %}
+
+{%- assign meta_block = section.blocks | where: 'type', 'product_meta' | first -%}
+{%- assign share_buttons_block = section.blocks | where: 'type', 'share_buttons' | first -%}
+{%- assign inventory_block = section.blocks | where: 'type', 'inventory' | first -%}
+{%- assign buy_buttons_block = section.blocks | where: 'type', 'buy_buttons' | first -%}
+
+{%- capture section_settings -%}
+{
+  "enableHistoryState": true,
+  "templateSuffix": {{ product.template_suffix | json }},
+  "showInventoryQuantity": {% if inventory_block != blank %}true{% else %}false{% endif %},
+  "showSku": {{ meta_block.settings.show_sku | json }},
+  "stackProductImages": {{ section.settings.stack_images | json }},
+  "showThumbnails": {{ section.settings.show_thumbnails | json }},
+  "enableVideoLooping": {{ section.settings.enable_video_looping | json }},
+  "inventoryQuantityThreshold": {{ inventory_block.settings.inventory_quantity_threshold | default: 0 }},
+  "showPriceInButton": {{ buy_buttons_block.settings.show_price_in_button | json }},
+  "enableImageZoom": {{ section.settings.enable_image_zoom | json }},
+  "showPaymentButton": {{ buy_buttons_block.settings.show_payment_button | json }},
+  "useAjaxCart": {% if settings.cart_type == 'drawer' %}true{% else %}false{% endif %}
+}
+{%- endcapture -%}
+
+<script>
+  (() => {
+    let items = JSON.parse(localStorage.getItem('recentlyViewedProducts') || '[]');
+    if (!items.includes({{ product.id }})) {
+      items.unshift({{ product.id }});
+    }
+    try {
+      localStorage.setItem('recentlyViewedProducts', JSON.stringify(items.slice(0, 8)));
+    } catch (error) {}
+  })();
+</script>
+
+{%- comment -%}--- FRESH DESIGN STYLES ---{%- endcomment -%}
+<style>
+  :root {
+    --rv-forest: #1a3a2a;
+    --rv-forest-mid: #2b5940;
+    --rv-forest-light: #4a8062;
+    --rv-sage: #8bb5a0;
+    --rv-sage-pale: #edf5f0;
+    --rv-cream: #f8f6f1;
+    --rv-gold: #d4a43a;
+    --rv-gold-dark: #b08425;
+    --rv-white: #ffffff;
+    --rv-off-white: #f9f9f7;
+    --rv-text-dark: #222;
+    --rv-text-mid: #555;
+    --rv-text-light: #999;
+    --rv-border: #e5e3de;
+    --rv-red: #c0392b;
+    --rv-green: #2b5940;
+    --rv-radius: 4px;
+    --rv-radius-sm: 3px;
+    --rv-shadow-sm: 0 1px 4px rgba(0,0,0,0.05);
+    --rv-shadow-md: 0 4px 14px rgba(0,0,0,0.07);
+    --rv-shadow-lg: 0 10px 30px rgba(0,0,0,0.09);
+  }
+
+  /* ===== RESET FOR SECTION ===== */
+  .rv-section * { box-sizing: border-box; }
+
+  /* ===== LAYOUT ===== */
+  .rv-section {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .rv-grid {
+    display: grid;
+    grid-template-columns: 55% 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  @media (max-width: 991px) {
+    .rv-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  /* ===== BREADCRUMB — minimal line ===== */
+  .rv-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--rv-text-light);
+    margin-bottom: 28px;
+  }
+  .rv-crumbs a { color: var(--rv-text-light); text-decoration: none; }
+  .rv-crumbs a:hover { color: var(--rv-forest); }
+  .rv-crumbs__sep { color: var(--rv-border); }
+  .rv-crumbs__current { color: var(--rv-forest); font-weight: 600; }
+
+  /* ===== GALLERY — vertical thumbs on left, main on right ===== */
+  .rv-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    position: relative;
+  }
+
+  @media (min-width: 992px) {
+    .rv-gallery--has-thumbs {
+      grid-template-columns: 72px 1fr;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .rv-gallery {
+      grid-template-columns: 1fr;
+      position: relative;
+      top: 0;
+    }
+  }
+
+  .rv-gallery__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 600px;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .rv-gallery__sidebar::-webkit-scrollbar { display: none; }
+
+  @media (max-width: 991px) {
+    .rv-gallery__sidebar { display: none; }
+  }
+
+  .rv-gallery__thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    background: var(--rv-off-white);
+    flex-shrink: 0;
+  }
+  .rv-gallery__thumb:hover { opacity: 0.8; border-color: var(--rv-sage); }
+  .rv-gallery__thumb.is-active { opacity: 1; border-color: var(--rv-forest); }
+  .rv-gallery__thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+  .rv-gallery__main {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--rv-off-white);
+    border: 1px solid var(--rv-border);
+    aspect-ratio: 1/1;
+    cursor: crosshair;
+  }
+  .rv-gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+  .rv-gallery__main img.rv-slide-left { opacity: 0; transform: translateX(-30px); }
+  .rv-gallery__main img.rv-slide-right { opacity: 0; transform: translateX(30px); }
+
+  /* Zoom lens overlay */
+  .rv-zoom-lens {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border: 2px solid var(--rv-forest);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    box-shadow: 0 0 0 4000px rgba(0,0,0,0.08);
+    background-repeat: no-repeat;
+    background-size: 300%;
+  }
+  .rv-zoom-lens.is-active { opacity: 1; }
+
+  /* Zoom hint icon */
+  .rv-zoom-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    z-index: 3;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--rv-shadow-sm);
+    color: var(--rv-text-mid);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .rv-zoom-hint svg { width: 18px; height: 18px; }
+  .rv-gallery__main:hover .rv-zoom-hint { opacity: 0; }
+
+  /* Fullscreen zoom overlay (tap on mobile) */
+  .rv-zoom-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+  }
+  .rv-zoom-overlay.is-open { display: flex; }
+  .rv-zoom-overlay img {
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+    border-radius: 8px;
+    touch-action: pinch-zoom;
+  }
+  .rv-zoom-overlay__close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.15);
+    border: none; border-radius: 50%;
+    color: #fff; font-size: 24px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s ease;
+  }
+  .rv-zoom-overlay__close:hover { background: rgba(255,255,255,0.3); }
+
+  @media (max-width: 991px) {
+    .rv-gallery__main { cursor: zoom-in; }
+    .rv-zoom-lens { display: none; }
+  }
+
+  /* Discount tag — angled ribbon style */
+  .rv-ribbon {
+    position: absolute;
+    top: 16px;
+    left: -6px;
+    z-index: 2;
+    background: var(--rv-red);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px 5px 10px;
+    letter-spacing: 0.5px;
+    clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);
+  }
+
+  /* Mobile dots */
+  .rv-gallery__dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 0;
+  }
+  @media (max-width: 991px) { .rv-gallery__dots { display: flex; } }
+
+  .rv-gallery__dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rv-border);
+    border: none; padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .rv-gallery__dot.is-active { background: var(--rv-forest); transform: scale(1.3); }
+
+  /* ===== PRODUCT INFO ===== */
+  .rv-info { display: flex; flex-direction: column; }
+
+  /* Vendor */
+  .rv-vendor {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: var(--rv-forest);
+    margin-bottom: 14px;
+    padding: 6px 14px;
+    background: var(--rv-sage-pale);
+    border-left: 3px solid var(--rv-forest);
+    width: fit-content;
+  }
+
+  /* Title */
+  .rv-title {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--rv-text-dark);
+    margin: 0 0 16px;
+  }
+  @media (max-width: 767px) { .rv-title { font-size: 21px; } }
+
+  .rv-subtitle {
+    font-size: 14px;
+    color: var(--rv-text-mid);
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
+
+  /* Rating */
+  .rv-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 16px;
+  }
+  .rv-rating__stars { display: flex; gap: 1px; }
+  .rv-rating__stars svg { width: 14px; height: 14px; fill: var(--rv-gold); }
+  .rv-rating__score { font-size: 13px; font-weight: 600; color: var(--rv-text-dark); }
+  .rv-rating__count { font-size: 13px; color: var(--rv-text-light); }
+
+  /* ===== PRICE BLOCK ===== */
+  .rv-price-card {
+    background: var(--rv-sage-pale);
+    border: 1px solid rgba(43,89,64,0.12);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .rv-price-card__left { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .rv-price__current {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rv-forest);
+    line-height: 1;
+  }
+  .rv-price__compare {
+    font-size: 16px;
+    color: var(--rv-text-light);
+    text-decoration: line-through;
+    font-weight: 400;
+  }
+  .rv-price__save {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--rv-forest);
+    background: rgba(43,89,64,0.1);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .rv-price__tax {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    color: var(--rv-forest-light);
+    margin-top: 4px;
+  }
+
+  /* ===== FEATURE PILLS — horizontal scroll ===== */
+  .rv-features {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .rv-features::-webkit-scrollbar { display: none; }
+
+  .rv-feature {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--rv-white);
+    border: 1px solid var(--rv-border);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--rv-text-dark);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+  .rv-feature svg { width: 14px; height: 14px; color: var(--rv-forest-mid); flex-shrink: 0; }
+
+  /* ===== DESCRIPTION — expandable ===== */
+  .rv-desc { margin-bottom: 20px; }
+  .rv-desc__text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--rv-text-mid);
+    margin: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .rv-desc__text.is-collapsed { max-height: 4.4em; }
+  .rv-desc__toggle {
+    background: none; border: none; cursor: pointer;
+    font-size: 13px; font-weight: 700;
+    color: var(--rv-forest);
+    padding: 6px 0; margin-top: 2px;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .rv-desc__toggle:hover { text-decoration: underline; }
+  .rv-desc__toggle svg { width: 14px; height: 14px; transition: transform 0.3s ease; }
+  .rv-desc__toggle.is-open svg { transform: rotate(180deg); }
+
+  /* ===== DIVIDER ===== */
+  .rv-divider {
+    height: 1px;
+    background: var(--rv-border);
+    margin: 4px 0 20px;
+    border: none;
+  }
+
+  /* ===== VARIANT CHIPS — pill toggles ===== */
+  .rv-variants { margin-bottom: 20px; }
+  .rv-variants__label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--rv-text-mid);
+    margin-bottom: 10px;
+  }
+  .rv-variants__row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .rv-variant-chip {
+    padding: 10px 20px;
+    border: 1.5px solid var(--rv-border);
+    border-radius: 8px;
+    background: var(--rv-white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-width: 0;
+  }
+  .rv-variant-chip:hover { border-color: var(--rv-sage); background: var(--rv-sage-pale); }
+  .rv-variant-chip.is-selected {
+    border-color: var(--rv-forest);
+    background: var(--rv-sage-pale);
+    color: var(--rv-forest);
+    box-shadow: inset 0 0 0 1px var(--rv-forest);
+  }
+  .rv-variant-chip.is-soldout { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+  .rv-variant-chip__name { font-size: 13px; font-weight: 600; }
+  .rv-variant-chip__price { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+  /* ===== QUANTITY — square modern ===== */
+  .rv-qty-row { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .rv-qty-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--rv-text-mid);
+  }
+  .rv-qty-box {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid var(--rv-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .rv-qty-box__btn {
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--rv-off-white); border: none;
+    cursor: pointer; font-size: 18px; color: var(--rv-text-dark);
+    transition: background 0.15s ease;
+  }
+  .rv-qty-box__btn:hover { background: var(--rv-sage-pale); }
+  .rv-qty-box__input {
+    width: 44px; text-align: center;
+    border: none; border-left: 1.5px solid var(--rv-border); border-right: 1.5px solid var(--rv-border);
+    font-size: 15px; font-weight: 600; color: var(--rv-text-dark);
+    background: transparent; outline: none; height: 42px;
+    -moz-appearance: textfield;
+  }
+  .rv-qty-box__input::-webkit-inner-spin-button,
+  .rv-qty-box__input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+  /* ===== BUY BUTTONS ===== */
+  .rv-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .rv-actions * { font-family: inherit !important; }
+
+  .rv-btn-cart {
+    width: 100%;
+    padding: 15px;
+    height: 52px;
+    font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    border: 1.5px solid var(--rv-forest);
+    background: var(--rv-white);
+    color: var(--rv-forest);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .rv-btn-cart:hover {
+    background: var(--rv-forest);
+    color: var(--rv-white);
+  }
+  .rv-btn-cart:active {
+    opacity: 0.9;
+  }
+  .rv-btn-cart[disabled] { opacity: 0.4; cursor: not-allowed; }
+  .rv-btn-cart.is-added,
+  .rv-btn-cart.is-added[disabled] {
+    opacity: 1 !important;
+    background: var(--rv-green) !important;
+    border-color: var(--rv-green) !important;
+    color: #fff !important;
+    pointer-events: none;
+    animation: rv-pop 0.35s ease;
+  }
+  @keyframes rv-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+  }
+
+  /* Dynamic checkout */
+  .rv-actions .shopify-payment-button { width: 100%; }
+  .rv-actions .shopify-payment-button * { border-radius: 8px !important; }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    background-color: var(--rv-forest) !important;
+    background-image: none !important;
+    color: #fff !important;
+    border: 2px solid var(--rv-forest) !important;
+    transition: box-shadow 0.3s ease, transform 0.15s ease, background-color 0.3s ease !important;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:hover,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded:hover,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded:hover {
+    background-color: var(--rv-forest-mid) !important;
+    box-shadow: 0 4px 16px rgba(27,67,50,0.3) !important;
+    transform: translateY(-1px) !important;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:active,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded:active,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded:active {
+    transform: translateY(0) scale(0.98) !important;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2) !important;
+    background-color: #153a2b !important;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:focus,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--unbranded:focus,
+  .rv-actions .shopify-payment-button .shopify-payment-button__button--branded:focus {
+    background-color: var(--rv-forest) !important;
+    outline: 2px solid var(--rv-sage) !important;
+    outline-offset: 2px;
+  }
+  .rv-actions .shopify-payment-button .shopify-payment-button__button[aria-disabled="true"],
+  .rv-actions .shopify-payment-button .shopify-payment-button__button:disabled {
+    background-color: var(--rv-forest) !important;
+    opacity: 0.85 !important;
+  }
+
+  /* ===== PROMISES BAR ===== */
+  .rv-promises {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border: 1px solid var(--rv-border);
+    border-radius: var(--rv-radius-sm);
+    overflow: hidden;
+  }
+  .rv-promise {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 8px;
+    text-align: center;
+    border-right: 1px solid var(--rv-border);
+    background: var(--rv-white);
+  }
+  .rv-promise:last-child { border-right: none; }
+  .rv-promise__icon { width: 28px; height: 28px; color: var(--rv-forest-mid); }
+  .rv-promise__text { font-size: 11px; font-weight: 600; color: var(--rv-text-mid); text-transform: uppercase; letter-spacing: 0.3px; }
+
+  @media (max-width: 575px) {
+    .rv-promise { padding: 12px 6px; }
+    .rv-promise__icon { width: 22px; height: 22px; }
+    .rv-promise__text { font-size: 10px; }
+  }
+
+  /* ===== CROSS-SELL ===== */
+  .rv-crosssell {
+    border: 1.5px dashed var(--rv-sage);
+    border-radius: var(--rv-radius-sm);
+    padding: 20px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, rgba(149,213,178,0.08) 0%, transparent 100%);
+  }
+  .rv-crosssell__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .rv-crosssell__head svg { width: 20px; height: 20px; color: var(--rv-forest-mid); }
+  .rv-crosssell__title { font-size: 15px; font-weight: 700; color: var(--rv-text-dark); margin: 0; }
+  .rv-crosssell__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: var(--rv-white);
+    border-radius: 8px;
+    border: 1px solid var(--rv-border);
+  }
+  .rv-crosssell__item + .rv-crosssell__item { margin-top: 8px; }
+  .rv-crosssell__check input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--rv-forest); cursor: pointer; }
+  .rv-crosssell__img { width: 52px; height: 52px; border-radius: 6px; object-fit: contain; background: var(--rv-off-white); flex-shrink: 0; }
+  .rv-crosssell__name { font-size: 13px; font-weight: 600; color: var(--rv-text-dark); flex: 1; min-width: 0; }
+  .rv-crosssell__price { font-size: 14px; font-weight: 700; color: var(--rv-forest); flex-shrink: 0; }
+  .rv-crosssell__old { font-size: 11px; color: var(--rv-text-light); text-decoration: line-through; margin-right: 4px; }
+
+  /* ===== SHARE ===== */
+  .rv-share { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+  .rv-share__label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--rv-text-light); }
+  .rv-share__btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; border: none;
+    color: #fff; text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .rv-share__btn:hover { transform: scale(1.1); box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+  .rv-share__btn svg { width: 14px; height: 14px; }
+  .rv-share__btn--fb { background: #1877f2; }
+  .rv-share__btn--x { background: #000; }
+  .rv-share__btn--wa { background: #25d366; }
+  .rv-share__btn--ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+
+  /* ===== FAQ-STYLE ACCORDION ===== */
+  .rv-details--desktop {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rv-border);
+    grid-column: 1 / -1;
+  }
+  .rv-details--mobile {
+    display: none;
+    margin-bottom: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rv-border);
+  }
+
+  @media (max-width: 991px) {
+    .rv-details--desktop { display: none; }
+    .rv-details--mobile { display: block; }
+  }
+
+  .rv-tabs-heading {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--rv-text-dark);
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rv-border);
+  }
+
+  .rv-reviews-section {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rv-border);
+  }
+
+  .rv-faq {
+    background: #f4f4f4;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    border: none;
+  }
+
+  .rv-faq__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--rv-text-dark);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 12px;
+    transition: color 0.15s;
+  }
+  .rv-faq__trigger:hover { color: var(--rv-forest); }
+  .rv-faq.is-open .rv-faq__trigger {
+    color: var(--rv-text-dark);
+    font-weight: 600;
+  }
+
+  .rv-faq__icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    color: var(--rv-text-light);
+  }
+  .rv-faq.is-open .rv-faq__icon {
+    transform: rotate(180deg);
+    color: var(--rv-text-dark);
+  }
+  .rv-faq__icon svg { width: 16px; height: 16px; }
+
+  .rv-faq__body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .rv-faq.is-open .rv-faq__body {
+    max-height: 500px;
+  }
+
+  .rv-faq__content {
+    padding: 0 20px 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--rv-text-mid);
+  }
+  .rv-faq__content ul { padding-left: 20px; margin: 8px 0; }
+  .rv-faq__content li { margin-bottom: 6px; }
+
+  /* ===== INVENTORY URGENCY ===== */
+  .rv-urgency {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rv-red);
+    margin-bottom: 14px;
+    padding: 6px 14px;
+    background: #fef2f2;
+    border-radius: 6px;
+    width: fit-content;
+  }
+  .rv-urgency__dot {
+    width: 7px; height: 7px;
+    background: var(--rv-red);
+    border-radius: 50%;
+    animation: rv-blink 1.5s infinite;
+  }
+  @keyframes rv-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ===== TOAST ===== */
+  .rv-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    z-index: 9999;
+    background: var(--rv-forest);
+    color: #fff;
+    border-radius: var(--rv-radius-sm);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--rv-shadow-lg);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
+    max-width: 420px;
+    width: calc(100% - 40px);
+  }
+  .rv-toast.is-visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .rv-toast__icon svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .rv-toast__body { flex: 1; }
+  .rv-toast__title { font-size: 14px; font-weight: 700; margin: 0; }
+  .rv-toast__msg { font-size: 12px; margin: 2px 0 0; opacity: 0.8; }
+  .rv-toast__close {
+    background: none; border: none; color: #fff; cursor: pointer;
+    font-size: 20px; opacity: 0.6; padding: 0 4px; line-height: 1;
+  }
+  .rv-toast__close:hover { opacity: 1; }
+  .rv-toast__bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px; background: var(--rv-sage);
+    border-radius: 0 0 var(--rv-radius-sm) var(--rv-radius-sm);
+    transform-origin: left;
+    animation: rv-bar-shrink 3.5s linear forwards;
+  }
+  @keyframes rv-bar-shrink {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+
+  /* ===== MOBILE STICKY BAR ===== */
+  .rv-sticky-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 99;
+    background: var(--rv-white);
+    border-top: 1px solid var(--rv-border);
+    padding: 12px 16px;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+  }
+  .rv-sticky-bar__inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .rv-sticky-bar__price {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--rv-forest);
+    white-space: nowrap;
+  }
+  .rv-sticky-bar__btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--rv-forest);
+    color: #fff;
+    border: none;
+    border-radius: var(--rv-radius-sm);
+    cursor: pointer;
+  }
+  @media (max-width: 767px) {
+    .rv-sticky-bar { display: block; }
+    .rv-section { padding-bottom: 90px; }
+  }
+
+  /* ===== PRODUCT FAQ SECTION (before footer) ===== */
+  .rv-faq-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 20px 60px;
+  }
+  .rv-faq-section__header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .rv-faq-section__title {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--rv-text-dark);
+    margin: 0 0 6px;
+  }
+  .rv-faq-section__subtitle {
+    font-size: 14px;
+    color: var(--rv-text-light);
+    margin: 0;
+  }
+
+  .rv-faq-section .rv-faq {
+    margin-bottom: 8px;
+  }
+  .rv-faq-section .rv-faq__trigger {
+    padding: 20px 24px;
+  }
+  .rv-faq-section .rv-faq__content {
+    padding: 0 24px 22px;
+  }
+</style>
+
+{%- comment -%}--- TOAST ---{%- endcomment -%}
+<div class="rv-toast" id="rv-cart-toast" role="alert" aria-live="polite">
+  <div class="rv-toast__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <div class="rv-toast__body">
+    <p class="rv-toast__title">Added to cart</p>
+    <p class="rv-toast__msg" id="rv-toast-name">{{ product.title | truncate: 40 }}</p>
+  </div>
+  <button class="rv-toast__close" onclick="rvHideToast()" aria-label="Close">&times;</button>
+  <div class="rv-toast__bar" id="rv-toast-bar"></div>
+</div>
+
+<section class="rv-section" data-section-id="{{ section.id }}" data-section-type="product" data-section-settings='{{ section_settings }}'>
+
+  {%- comment -%}--- BREADCRUMB ---{%- endcomment -%}
+  <nav class="rv-crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="rv-crumbs__sep">/</span>
+    <a href="{{ collection.url | default: '/collections/all' }}">{{ collection.title | default: 'Products' }}</a>
+    <span class="rv-crumbs__sep">/</span>
+    <span class="rv-crumbs__current">{{ product.title | truncate: 30 }}</span>
+  </nav>
+
+  <div class="rv-grid">
+
+    {%- comment -%}========== LEFT: GALLERY =========={%- endcomment -%}
+    <div class="rv-gallery {% if product.media.size > 1 %}rv-gallery--has-thumbs{% endif %}" id="rv-main-image">
+
+      {%- assign initial_media_id = product.featured_media.id -%}
+      {%- assign media_count = 0 -%}
+      {%- if product.selected_variant and product.selected_variant.featured_media -%}
+        {%- assign initial_media_id = product.selected_variant.featured_media.id -%}
+      {%- endif -%}
+
+      {%- comment -%}Vertical thumbnails{%- endcomment -%}
+      {%- if product.media.size > 1 -%}
+        <div class="rv-gallery__sidebar">
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              <div
+                class="rv-gallery__thumb {% if media.id == initial_media_id %}is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                data-full-src="{{ media | image_url: width: 800 }}"
+                data-zoom-src="{{ media | image_url: width: 1600 }}"
+                data-alt="{{ media.alt | escape }}"
+                onclick="rvSwitchImage(this)"
+              >
+                <img src="{{ media | image_url: width: 160 }}" alt="{{ media.alt | escape }}" loading="lazy" width="72" height="72">
+              </div>
+            {%- endif -%}
+            {%- assign media_count = media_count | plus: 1 -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}Main image{%- endcomment -%}
+      {%- if product.media.size > 0 -%}
+        <div class="rv-gallery__main">
+          {%- if product.compare_at_price > product.price -%}
+            {%- assign discount_pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+            <div class="rv-ribbon">{{ discount_pct }}% OFF</div>
+          {%- endif -%}
+          <img
+            id="rv-featured-img"
+            src="{{ product.featured_media | image_url: width: 800 }}"
+            data-zoom-src="{{ product.featured_media | image_url: width: 1600 }}"
+            alt="{{ product.featured_media.alt | escape }}"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+            loading="eager"
+          >
+          <div class="rv-zoom-lens" id="rv-zoom-lens"></div>
+          <div class="rv-zoom-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}Mobile dots{%- endcomment -%}
+      {%- if product.media.size > 1 -%}
+        <div class="rv-gallery__dots">
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              <button
+                class="rv-gallery__dot {% if media.id == initial_media_id %}is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                data-full-src="{{ media | image_url: width: 800 }}"
+                data-zoom-src="{{ media | image_url: width: 1600 }}"
+                data-alt="{{ media.alt | escape }}"
+                onclick="rvSwitchImage(this)"
+                aria-label="View image {{ forloop.index }}"
+              ></button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}--- Product Details FAQ (below gallery — desktop only) ---{%- endcomment -%}
+      <div class="rv-details--desktop">
+        <h2 class="rv-tabs-heading">Product Details</h2>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Benefits</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.benefits != blank -%}
+                {{ product.metafields.custom.benefits | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li>Supports overall health and wellness</li>
+                  <li>Made from natural, pure extracts</li>
+                  <li>Scientifically tested formulation</li>
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Key Ingredients</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.key_ingredients != blank -%}
+                {{ product.metafields.custom.key_ingredients | metafield_tag }}
+              {%- else -%}
+                <p>{{ product.description | strip_html | truncatewords: 50 }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>How to Use</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.how_to_use != blank -%}
+                {{ product.metafields.custom.how_to_use | metafield_tag }}
+              {%- else -%}
+                <p>Please refer to the product packaging for usage instructions or consult your healthcare professional.</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Additional Information</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.additional_info != blank -%}
+                {{ product.metafields.custom.additional_info | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li><strong>Type:</strong> {{ product.type | default: 'Health Supplement' }}</li>
+                  <li><strong>Vendor:</strong> {{ product.vendor }}</li>
+                  {%- if product.selected_or_first_available_variant.sku != blank -%}
+                    <li><strong>SKU:</strong> {{ product.selected_or_first_available_variant.sku }}</li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {%- comment -%}========== RIGHT: PRODUCT INFO =========={%- endcomment -%}
+    <div class="rv-info">
+
+      {%- if product.vendor != blank -%}
+        <span class="rv-vendor">{{ product.vendor }}</span>
+      {%- endif -%}
+
+      <h1 class="rv-title">{{ product.title }}</h1>
+
+      {%- if product.metafields.descriptors.subtitle != blank -%}
+        <p class="rv-subtitle">{{ product.metafields.descriptors.subtitle.value }}</p>
+      {%- endif -%}
+
+      {%- comment -%}--- Rating removed ---{%- endcomment -%}
+
+      {%- comment -%}--- Price card ---{%- endcomment -%}
+      {%- assign current_variant = product.selected_or_first_available_variant -%}
+      <div class="rv-price-card">
+        <div>
+          <div class="rv-price-card__left">
+            {%- if current_variant.compare_at_price > current_variant.price -%}
+              <span class="rv-price__compare" data-unit-compare="{{ current_variant.compare_at_price }}">{{ current_variant.compare_at_price | money }}</span>
+            {%- endif -%}
+            <span class="rv-price__current" data-unit-price="{{ current_variant.price }}">{{ current_variant.price | money }}</span>
+            {%- if current_variant.compare_at_price > current_variant.price -%}
+              {%- assign savings_pct = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round -%}
+              <span class="rv-price__save">Save {{ savings_pct }}%</span>
+            {%- endif -%}
+          </div>
+          <div class="rv-price__tax">Inclusive of all taxes</div>
+        </div>
+      </div>
+
+      {%- comment -%}--- Feature pills ---{%- endcomment -%}
+      <div class="rv-features">
+        {%- if product.metafields.custom.usp_1 != blank -%}
+          <div class="rv-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ product.metafields.custom.usp_1.value }}
+          </div>
+        {%- endif -%}
+        {%- if product.metafields.custom.usp_2 != blank -%}
+          <div class="rv-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ product.metafields.custom.usp_2.value }}
+          </div>
+        {%- endif -%}
+        {%- if product.metafields.custom.usp_3 != blank -%}
+          <div class="rv-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ product.metafields.custom.usp_3.value }}
+          </div>
+        {%- endif -%}
+        {%- if product.metafields.custom.usp_1 == blank -%}
+          {%- for tag in product.tags -%}
+            {%- if tag contains 'usp:' -%}
+              <div class="rv-feature">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                {{ tag | remove: 'usp:' }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      {%- comment -%}--- Description ---{%- endcomment -%}
+      {%- if product.description != blank -%}
+        <div class="rv-desc">
+          <p class="rv-desc__text is-collapsed" id="rv-desc-text">{{ product.description | strip_html }}</p>
+          <button class="rv-desc__toggle" id="rv-desc-toggle" onclick="rvToggleDesc()">
+            Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+      {%- endif -%}
+
+      <hr class="rv-divider">
+
+      {%- comment -%}--- Inventory ---{%- endcomment -%}
+      {%- if inventory_block != blank and current_variant.inventory_management != blank and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 -%}
+        <div class="rv-urgency">
+          <span class="rv-urgency__dot"></span>
+          Only {{ current_variant.inventory_quantity }} left in stock
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}--- FORM ---{%- endcomment -%}
+      {%- form 'product', product, class: 'ProductForm' -%}
+        {%- render 'product-data', product: product -%}
+
+        {%- comment -%}--- Variant chips ---{%- endcomment -%}
+        {%- if product.has_only_default_variant == false -%}
+          <div class="rv-variants">
+            {%- for option in product.options_with_values -%}
+              <div class="rv-variants__label">{{ option.name }}</div>
+              <div class="rv-variants__row">
+                {%- assign prev_option1 = '' -%}
+                {%- for variant in product.variants -%}
+                  {%- unless variant.option1 == prev_option1 -%}
+                    <div
+                      class="rv-variant-chip {% if variant.id == current_variant.id %}is-selected{% endif %} {% unless variant.available %}is-soldout{% endunless %}"
+                      data-variant-id="{{ variant.id }}"
+                      onclick="rvSelectVariant(this, {{ variant.id }})"
+                    >
+                      <div class="rv-variant-chip__name">{{ variant.title }}</div>
+                      <div class="rv-variant-chip__price">{{ variant.price | money }}</div>
+                    </div>
+                  {%- endunless -%}
+                  {%- assign prev_option1 = variant.option1 -%}
+                {%- endfor -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <input type="hidden" name="id" id="rv-variant-id" value="{{ current_variant.id }}">
+
+        {%- comment -%}--- Quantity ---{%- endcomment -%}
+        <div class="rv-qty-row">
+          <span class="rv-qty-label">Qty</span>
+          <div class="rv-qty-box">
+            <button type="button" class="rv-qty-box__btn" onclick="rvQty(-1)" aria-label="Decrease">&minus;</button>
+            <input type="text" class="rv-qty-box__input" name="quantity" id="rv-qty" value="1" pattern="[0-9]*" min="1" aria-label="Quantity">
+            <button type="button" class="rv-qty-box__btn" onclick="rvQty(1)" aria-label="Increase">+</button>
+          </div>
+        </div>
+
+        {%- comment -%}--- Promises bar ---{%- endcomment -%}
+        <div class="rv-promises">
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span class="rv-promise__text">Free Delivery</span>
+          </div>
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="rv-promise__text">Genuine Product</span>
+          </div>
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            <span class="rv-promise__text">Easy Returns</span>
+          </div>
+          <div class="rv-promise">
+            <svg class="rv-promise__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <span class="rv-promise__text">Secure Payment</span>
+          </div>
+        </div>
+
+        {%- comment -%}--- Cross-sell ---{%- endcomment -%}
+        {%- assign buy_it_with_block = section.blocks | where: 'type', 'buy_it_with' | first -%}
+        {%- if buy_it_with_block != blank and buy_it_with_block.settings.product != blank -%}
+          {%- assign associated_product = buy_it_with_block.settings.product -%}
+          <div class="rv-crosssell">
+            <div class="rv-crosssell__head">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              <h3 class="rv-crosssell__title">{{ buy_it_with_block.settings.title | default: 'Frequently bought together' }}</h3>
+            </div>
+            <div class="rv-crosssell__item">
+              <label class="rv-crosssell__check"><input type="checkbox"></label>
+              {%- if associated_product.featured_image -%}
+                <img class="rv-crosssell__img" src="{{ associated_product.featured_image | image_url: width: 128 }}" alt="{{ associated_product.title | escape }}" loading="lazy" width="52" height="52">
+              {%- endif -%}
+              <span class="rv-crosssell__name">{{ associated_product.title | truncate: 35 }}</span>
+              <span class="rv-crosssell__price">
+                {%- if associated_product.compare_at_price > associated_product.price -%}
+                  <span class="rv-crosssell__old">{{ associated_product.compare_at_price | money }}</span>
+                {%- endif -%}
+                {{ associated_product.price | money }}
+              </span>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%}--- Buy buttons ---{%- endcomment -%}
+        {%- if buy_buttons_block.settings.show_payment_button == false or product.selling_plan_groups.size > 0 -%}
+          {%- assign use_primary_button = true -%}
+        {%- else -%}
+          {%- assign use_primary_button = false -%}
+        {%- endif -%}
+
+        <div class="ProductForm__BuyButtons rv-actions" {{ buy_buttons_block.shopify_attributes }}>
+          {%- if buy_buttons_block.settings.show_payment_button and product.selected_or_first_available_variant.available == false -%}
+            <style>#shopify-section-{{ section.id }} .shopify-payment-button { display: none; }</style>
+          {%- endif -%}
+
+          <button type="submit" data-use-primary-button="{% if use_primary_button %}true{% else %}false{% endif %}" class="ProductForm__AddToCart rv-btn-cart" {% if product.selected_or_first_available_variant.available %}data-action="add-to-cart"{% else %}disabled="disabled"{% endif %}>
+            {%- if product.selected_or_first_available_variant.available -%}
+              <span>{% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t }}{% else %}ADD TO CART{% endif %}</span>
+              {%- if buy_buttons_block.settings.show_price_in_button -%}
+                <span> &middot; </span>
+                <span id="rv-btn-price" data-unit-price="{{ product.selected_or_first_available_variant.price }}">{{ product.selected_or_first_available_variant.price | money }}</span>
+              {%- endif -%}
+            {%- else -%}
+              SOLD OUT
+            {%- endif -%}
+          </button>
+
+          {%- if buy_buttons_block.settings.show_payment_button and product.template_suffix != 'pre-order' -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      {%- endform -%}
+
+      {%- comment -%}--- Product Details FAQ (mobile only — below buy buttons) ---{%- endcomment -%}
+      <div class="rv-details--mobile">
+        <h2 class="rv-tabs-heading">Product Details</h2>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Benefits</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.benefits != blank -%}
+                {{ product.metafields.custom.benefits | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li>Supports overall health and wellness</li>
+                  <li>Made from natural, pure extracts</li>
+                  <li>Scientifically tested formulation</li>
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Key Ingredients</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.key_ingredients != blank -%}
+                {{ product.metafields.custom.key_ingredients | metafield_tag }}
+              {%- else -%}
+                <p>{{ product.description | strip_html | truncatewords: 50 }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>How to Use</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.how_to_use != blank -%}
+                {{ product.metafields.custom.how_to_use | metafield_tag }}
+              {%- else -%}
+                <p>Please refer to the product packaging for usage instructions or consult your healthcare professional.</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="rv-faq" onclick="rvToggleFaq(this)">
+          <button class="rv-faq__trigger" type="button" aria-expanded="false">
+            <span>Additional Information</span>
+            <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="rv-faq__body">
+            <div class="rv-faq__content">
+              {%- if product.metafields.custom.additional_info != blank -%}
+                {{ product.metafields.custom.additional_info | metafield_tag }}
+              {%- else -%}
+                <ul>
+                  <li><strong>Type:</strong> {{ product.type | default: 'Health Supplement' }}</li>
+                  <li><strong>Vendor:</strong> {{ product.vendor }}</li>
+                  {%- if product.selected_or_first_available_variant.sku != blank -%}
+                    <li><strong>SKU:</strong> {{ product.selected_or_first_available_variant.sku }}</li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%}--- Share ---{%- endcomment -%}
+      {%- if share_buttons_block != blank -%}
+        {%- assign share_url = shop.url | append: product.url -%}
+        <div class="rv-share">
+          <span class="rv-share__label">Share</span>
+          <a class="rv-share__btn rv-share__btn--fb" href="https://www.facebook.com/sharer.php?u={{ share_url }}" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a class="rv-share__btn rv-share__btn--x" href="https://x.com/intent/post?url={{ share_url }}&text={{ product.title | url_encode }}" target="_blank" rel="noopener" aria-label="Share on X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a class="rv-share__btn rv-share__btn--wa" href="https://wa.me/?text={{ product.title | url_encode }}%20{{ share_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          </a>
+          <a class="rv-share__btn rv-share__btn--ig" href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}--- App blocks ---{%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}
+          <div {{ block.shopify_attributes }}>{%- render block -%}</div>
+        {%- endif -%}
+        {%- if block.type == 'store_pickup' -%}
+          <div class="ProductMeta__StoreAvailabilityContainer" {{ block.shopify_attributes }}></div>
+        {%- endif -%}
+        {%- if block.type == 'liquid' and block.settings.liquid != blank -%}
+          <div {{ block.shopify_attributes }}>{{ block.settings.liquid }}</div>
+        {%- endif -%}
+        {%- if block.type == 'text' and block.settings.text != blank -%}
+          <div {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%}--- Reviews (full-width) ---{%- endcomment -%}
+    {%- assign reviews_block = section.blocks | where: 'type', 'reviews' | first -%}
+    {%- if reviews_block != blank -%}
+      <div class="rv-reviews-section">
+        <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{%- comment -%}--- Fullscreen zoom overlay ---{%- endcomment -%}
+<div class="rv-zoom-overlay" id="rv-zoom-overlay" onclick="rvCloseZoom(event)">
+  <img id="rv-zoom-overlay-img" src="" alt="">
+  <button class="rv-zoom-overlay__close" onclick="rvCloseZoom(event)" aria-label="Close zoom">&times;</button>
+</div>
+
+{%- comment -%}--- PRODUCT FAQ SECTION (before footer) ---{%- endcomment -%}
+<div class="rv-faq-section">
+  <div class="rv-faq-section__header">
+    <h2 class="rv-faq-section__title">Frequently Asked Questions</h2>
+    <p class="rv-faq-section__subtitle">Everything you need to know about {{ product.title | truncate: 40 }}</p>
+  </div>
+
+  {%- if product.metafields.custom.faq_q1 != blank -%}
+    {%- comment -%}--- Per-product FAQs from metafields ---{%- endcomment -%}
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>{{ product.metafields.custom.faq_q1.value }}</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a1.value }}</div></div>
+    </div>
+
+    {%- if product.metafields.custom.faq_q2 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q2.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a2.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+    {%- if product.metafields.custom.faq_q3 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q3.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a3.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+    {%- if product.metafields.custom.faq_q4 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q4.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a4.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+    {%- if product.metafields.custom.faq_q5 != blank -%}
+      <div class="rv-faq" onclick="rvToggleFaq(this)">
+        <button class="rv-faq__trigger" type="button" aria-expanded="false">
+          <span>{{ product.metafields.custom.faq_q5.value }}</span>
+          <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="rv-faq__body"><div class="rv-faq__content">{{ product.metafields.custom.faq_a5.value }}</div></div>
+      </div>
+    {%- endif -%}
+
+  {%- else -%}
+    {%- comment -%}--- Default/fallback FAQs ---{%- endcomment -%}
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>Is this product safe to use daily?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>Yes, our products are made with 100% natural ingredients and are safe for daily use. However, we recommend consulting your healthcare professional if you have any specific medical conditions.</p></div></div>
+    </div>
+
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>How long does shipping take?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>We typically deliver within 5-7 business days across India. Metro cities may receive orders within 3-5 business days.</p></div></div>
+    </div>
+
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>What is the return policy?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>We offer easy returns within 7 days of delivery. If the product is damaged or defective, we will provide a full replacement or refund.</p></div></div>
+    </div>
+
+    <div class="rv-faq" onclick="rvToggleFaq(this)">
+      <button class="rv-faq__trigger" type="button" aria-expanded="false">
+        <span>Are there any side effects?</span>
+        <span class="rv-faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="rv-faq__body"><div class="rv-faq__content"><p>Our products are formulated using natural Ayurvedic ingredients and are generally well-tolerated. Please read the label carefully and consult a physician if you are pregnant, nursing, or on medication.</p></div></div>
+    </div>
+  {%- endif -%}
+</div>
+
+{%- comment -%}--- Mobile sticky bar ---{%- endcomment -%}
+<div class="rv-sticky-bar">
+  <div class="rv-sticky-bar__inner">
+    <span class="rv-sticky-bar__price">{{ current_variant.price | money }}</span>
+    <button class="rv-sticky-bar__btn" onclick="document.querySelector('.rv-btn-cart').click()">ADD TO CART</button>
+  </div>
+</div>
+
+{%- comment -%}--- PHOTO SWIPE ---{%- endcomment -%}
+{%- if section.settings.enable_image_zoom -%}
+  <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+    <div class="pswp__scroll-wrap">
+      <div class="pswp__container">
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+      </div>
+      <div class="pswp__ui pswp__ui--hidden">
+        <button class="pswp__button pswp__button--prev RoundButton" title="{{ 'product.slideshow.previous' | t }}">{% render 'icon' with 'arrow-left' %}</button>
+        <button class="pswp__button pswp__button--close RoundButton RoundButton--large" title="{{ 'product.slideshow.close' | t }}">{% render 'icon' with 'close' %}</button>
+        <button class="pswp__button pswp__button--next RoundButton" title="{{ 'product.slideshow.next' | t }}">{% render 'icon' with 'arrow-right' %}</button>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+<script>
+  window.ShopifyXR=window.ShopifyXR||function(){(ShopifyXR.q=ShopifyXR.q||[]).push(arguments)};
+  ShopifyXR('addModels', {{ product.media | where: 'media_type', 'model' | json }});
+</script>
+
+{%- comment -%}--- ALL JS ---{%- endcomment -%}
+<script>
+  /* === Gallery === */
+  function rvSwitchImage(el, direction) {
+    var src = el.getAttribute('data-full-src');
+    var zoomSrc = el.getAttribute('data-zoom-src') || src;
+    var alt = el.getAttribute('data-alt') || '';
+    var img = document.getElementById('rv-featured-img');
+    if (!img || !src) return;
+
+    if (direction) {
+      var outClass = direction === 'next' ? 'rv-slide-left' : 'rv-slide-right';
+      var inClass = direction === 'next' ? 'rv-slide-right' : 'rv-slide-left';
+      img.classList.add(outClass);
+      setTimeout(function() {
+        img.src = src; img.alt = alt; img.setAttribute('data-zoom-src', zoomSrc);
+        img.classList.remove(outClass);
+        img.classList.add(inClass);
+        img.offsetHeight;
+        img.classList.remove(inClass);
+      }, 200);
+    } else {
+      img.src = src; img.alt = alt; img.setAttribute('data-zoom-src', zoomSrc);
+    }
+
+    document.querySelectorAll('.rv-gallery__thumb, .rv-gallery__dot').forEach(function(t) { t.classList.remove('is-active'); });
+    var mid = el.getAttribute('data-media-id');
+    document.querySelectorAll('[data-media-id="' + mid + '"]').forEach(function(t) { t.classList.add('is-active'); });
+  }
+
+  function rvNavigateImage(delta) {
+    var dots = Array.prototype.slice.call(document.querySelectorAll('.rv-gallery__dot'));
+    if (dots.length === 0) dots = Array.prototype.slice.call(document.querySelectorAll('.rv-gallery__thumb'));
+    if (dots.length < 2) return;
+    var cur = 0;
+    dots.forEach(function(d, i) { if (d.classList.contains('is-active')) cur = i; });
+    var next = cur + delta;
+    if (next < 0) next = dots.length - 1;
+    if (next >= dots.length) next = 0;
+    rvSwitchImage(dots[next], delta > 0 ? 'next' : 'prev');
+  }
+
+  /* Swipe */
+  (function() {
+    var g = document.querySelector('.rv-gallery__main');
+    if (!g) return;
+    var sx = 0, sy = 0, tracking = false;
+    g.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; tracking = true; }, { passive: true });
+    g.addEventListener('touchmove', function(e) {
+      if (!tracking) return;
+      if (Math.abs(e.touches[0].clientX - sx) > Math.abs(e.touches[0].clientY - sy) && Math.abs(e.touches[0].clientX - sx) > 10) e.preventDefault();
+    }, { passive: false });
+    g.addEventListener('touchend', function(e) {
+      if (!tracking) return; tracking = false;
+      var diff = e.changedTouches[0].clientX - sx;
+      if (Math.abs(diff) < 40) return;
+      rvNavigateImage(diff < 0 ? 1 : -1);
+    }, { passive: true });
+  })();
+
+  /* === Quantity with price update === */
+  function rvQty(delta) {
+    var input = document.getElementById('rv-qty');
+    if (!input) return;
+    var val = Math.max(1, (parseInt(input.value, 10) || 1) + delta);
+    input.value = val;
+    rvUpdatePrice(val);
+  }
+
+  function rvFormatMoney(cents) {
+    var amt = (cents / 100).toFixed(2);
+    return '{{ cart.currency.symbol | default: "Rs." }} ' + amt.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function rvUpdatePrice(qty) {
+    var bp = document.getElementById('rv-btn-price');
+    if (bp) { bp.textContent = rvFormatMoney(parseInt(bp.getAttribute('data-unit-price'), 10) * qty); }
+    var mp = document.querySelector('.rv-price__current');
+    if (mp && mp.getAttribute('data-unit-price')) { mp.textContent = rvFormatMoney(parseInt(mp.getAttribute('data-unit-price'), 10) * qty); }
+    var mc = document.querySelector('.rv-price__compare');
+    if (mc && mc.getAttribute('data-unit-compare')) { mc.textContent = rvFormatMoney(parseInt(mc.getAttribute('data-unit-compare'), 10) * qty); }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('rv-qty');
+    if (input) {
+      input.addEventListener('change', function() {
+        var v = parseInt(this.value, 10);
+        if (isNaN(v) || v < 1) { v = 1; this.value = 1; }
+        rvUpdatePrice(v);
+      });
+    }
+  });
+
+  /* === Description toggle === */
+  function rvToggleDesc() {
+    var t = document.getElementById('rv-desc-text');
+    var b = document.getElementById('rv-desc-toggle');
+    if (!t) return;
+    if (t.classList.contains('is-collapsed')) {
+      t.classList.remove('is-collapsed');
+      t.style.maxHeight = t.scrollHeight + 'px';
+      if (b) { b.innerHTML = 'Read less <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'; b.classList.add('is-open'); }
+    } else {
+      t.classList.add('is-collapsed');
+      t.style.maxHeight = '';
+      if (b) { b.innerHTML = 'Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'; b.classList.remove('is-open'); }
+    }
+  }
+
+  /* === FAQ accordion === */
+  function rvToggleFaq(el) {
+    var isOpen = el.classList.contains('is-open');
+    /* Close all */
+    document.querySelectorAll('.rv-faq').forEach(function(f) {
+      f.classList.remove('is-open');
+      var trigger = f.querySelector('.rv-faq__trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+    /* Open clicked if it wasn't open */
+    if (!isOpen) {
+      el.classList.add('is-open');
+      var trigger = el.querySelector('.rv-faq__trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  /* === Variant selector === */
+  function rvSelectVariant(el, variantId) {
+    if (el.classList.contains('is-soldout')) return;
+    document.querySelectorAll('.rv-variant-chip').forEach(function(c) { c.classList.remove('is-selected'); });
+    el.classList.add('is-selected');
+    var idInput = document.getElementById('rv-variant-id');
+    if (idInput) idInput.value = variantId;
+    if (window.history && window.history.replaceState) {
+      var url = new URL(window.location.href);
+      url.searchParams.set('variant', variantId);
+      window.history.replaceState({}, '', url.toString());
+    }
+    document.dispatchEvent(new CustomEvent('variant:changed', { detail: { variantId: variantId } }));
+  }
+
+  /* === Toast === */
+  var rvToastTimer = null;
+  function rvShowToast() {
+    var toast = document.getElementById('rv-cart-toast');
+    if (!toast) return;
+    var bar = document.getElementById('rv-toast-bar');
+    if (bar) { bar.style.animation = 'none'; bar.offsetHeight; bar.style.animation = ''; }
+    toast.classList.add('is-visible');
+    clearTimeout(rvToastTimer);
+    rvToastTimer = setTimeout(rvHideToast, 3500);
+  }
+  function rvHideToast() {
+    var toast = document.getElementById('rv-cart-toast');
+    if (toast) toast.classList.remove('is-visible');
+    clearTimeout(rvToastTimer);
+  }
+
+  /* ATC intercept */
+  (function() {
+    var form = document.querySelector('.rv-section .ProductForm');
+    if (!form) return;
+    var btn = form.querySelector('.ProductForm__AddToCart');
+    var originalHTML = btn ? btn.innerHTML : '';
+    form.addEventListener('submit', function() {
+      if (!btn || (btn.disabled && !btn.classList.contains('is-added'))) return;
+      btn.classList.add('is-added');
+      btn.innerHTML = '<span>&#10003; ADDED</span>';
+      rvShowToast();
+      setTimeout(function() { btn.classList.remove('is-added'); btn.innerHTML = originalHTML; }, 2500);
+    });
+  })();
+
+  /* === Image Zoom === */
+  (function() {
+    var container = document.querySelector('.rv-gallery__main');
+    var lens = document.getElementById('rv-zoom-lens');
+    var img = document.getElementById('rv-featured-img');
+    if (!container || !lens || !img) return;
+
+    var isMobile = window.matchMedia('(max-width: 991px)').matches;
+
+    /* Desktop: lens zoom on hover */
+    if (!isMobile) {
+      container.addEventListener('mouseenter', function() {
+        var zoomSrc = img.getAttribute('data-zoom-src') || img.src;
+        lens.style.backgroundImage = 'url(' + zoomSrc + ')';
+        lens.classList.add('is-active');
+      });
+
+      container.addEventListener('mousemove', function(e) {
+        var rect = container.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var lw = lens.offsetWidth / 2;
+        var lh = lens.offsetHeight / 2;
+
+        /* Clamp lens position */
+        var lx = Math.max(lw, Math.min(x, rect.width - lw));
+        var ly = Math.max(lh, Math.min(y, rect.height - lh));
+
+        lens.style.left = lx - lw + 'px';
+        lens.style.top = ly - lh + 'px';
+
+        /* Background position for magnified image */
+        var px = (x / rect.width) * 100;
+        var py = (y / rect.height) * 100;
+        lens.style.backgroundPosition = px + '% ' + py + '%';
+      });
+
+      container.addEventListener('mouseleave', function() {
+        lens.classList.remove('is-active');
+      });
+    }
+
+    /* Open fullscreen: tap on mobile, double-click on desktop */
+    function rvOpenFullscreen() {
+      var overlay = document.getElementById('rv-zoom-overlay');
+      var overlayImg = document.getElementById('rv-zoom-overlay-img');
+      if (!overlay || !overlayImg) return;
+      overlayImg.src = img.getAttribute('data-zoom-src') || img.src;
+      overlayImg.alt = img.alt;
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      lens.classList.remove('is-active');
+    }
+
+    container.addEventListener('click', function() {
+      if (isMobile) rvOpenFullscreen();
+    });
+
+    container.addEventListener('dblclick', function() {
+      if (!isMobile) rvOpenFullscreen();
+    });
+
+    /* Recheck on resize */
+    window.addEventListener('resize', function() {
+      isMobile = window.matchMedia('(max-width: 991px)').matches;
+    });
+  })();
+
+  /* Close fullscreen zoom */
+  function rvCloseZoom(e) {
+    var overlay = document.getElementById('rv-zoom-overlay');
+    if (!overlay) return;
+    /* Only close if clicking overlay bg or close button, not the image */
+    if (e.target === overlay || e.target.closest('.rv-zoom-overlay__close')) {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  /* Close on Escape key */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var overlay = document.getElementById('rv-zoom-overlay');
+      if (overlay && overlay.classList.contains('is-open')) {
+        overlay.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product page",
+  "class": "shopify-section--bordered",
+  "blocks": [
+    {
+      "type": "product_meta",
+      "name": "Product meta",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_vendor",
+          "label": "Show vendor",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_sku",
+          "label": "Show SKU",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_product_rating",
+          "label": "Show product rating",
+          "info": "To display a rating, add a product rating app. [Learn more](https://help.shopify.com/en/manual/products/product-reviews/installation)",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_taxes_included",
+          "label": "Show price taxes notice",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "variant_selector",
+      "name": "Variant selector",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "selector_mode",
+          "label": "Selector type",
+          "options": [
+            { "value": "block", "label": "Block" },
+            { "value": "dropdown", "label": "Dropdown" }
+          ],
+          "default": "dropdown"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_color_swatch",
+          "label": "Show color swatch",
+          "default": false,
+          "info": "Some colors appear white? [Learn more](http://support.maestrooo.com/article/80-product-uploading-custom-color-for-color-swatch)."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_color_carousel",
+          "label": "Show color carousel",
+          "info": "A pop-up selector with variant images for choosing colors. Only enables when color swatch is disabled.",
+          "default": false
+        },
+        {
+          "type": "page",
+          "id": "size_chart",
+          "label": "Size chart",
+          "info": "Show along option named Size."
+        }
+      ]
+    },
+    { "type": "share_buttons", "name": "Share buttons", "limit": 1 },
+    {
+      "type": "inventory",
+      "name": "Inventory",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "inventory_quantity_threshold",
+          "label": "Inventory quantity threshold",
+          "info": "Only show inventory quantity if below threshold. Choose 0 to always show.",
+          "min": 0, "max": 50, "step": 1, "default": 0
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_price_in_button",
+          "label": "Show price in add to cart button",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_payment_button",
+          "label": "Show dynamic checkout button",
+          "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+          "default": true
+        }
+      ]
+    },
+    { "type": "description", "name": "Description", "limit": 1 },
+    {
+      "type": "liquid",
+      "name": "Liquid",
+      "settings": [
+        { "type": "paragraph", "content": "This Liquid code will show on the right part of the product page." },
+        { "type": "liquid", "id": "liquid", "label": "Liquid" }
+      ]
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_label", "label": "Show label", "default": false }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "paragraph", "content": "This text will show on the right part of the product page." },
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "store_pickup",
+      "name": "Local pickup availability",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Show customers where they can pick up the product. [Learn more](https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/local-methods/local-pickup#show-pickup-availability-to-your-customers)" }
+      ]
+    },
+    { "type": "@app" },
+    {
+      "name": "Content", "type": "content",
+      "settings": [
+        { "type": "paragraph", "content": "This content will show on the left part, below the product images." },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "richtext", "id": "content", "label": "Content" },
+        { "type": "page", "id": "page", "label": "Content from page", "info": "If specified, takes precedence over inline content." }
+      ]
+    },
+    {
+      "name": "Reviews", "type": "reviews", "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "To show reviews, install [Shopify Product Reviews](https://apps.shopify.com/product-reviews). This content will show on the left part, below the product images." }
+      ]
+    },
+    {
+      "name": "Buy it with", "type": "buy_it_with", "limit": 1,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "title", "label": "Heading", "default": "Frequently bought together" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "header", "content": "Media" },
+    { "type": "paragraph", "content": "Learn more about [media types](https://help.shopify.com/en/manual/products/product-media)" },
+    {
+      "type": "select", "id": "image_size", "label": "Size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "fill", "label": "Fill screen" }
+      ],
+      "default": "large"
+    },
+    { "type": "checkbox", "id": "stack_images", "label": "Stack images on desktop", "default": true },
+    { "type": "checkbox", "id": "show_thumbnails", "label": "Show thumbnails on desktop", "default": true },
+    { "type": "checkbox", "id": "enable_image_zoom", "label": "Enable zoom", "default": true },
+    { "type": "checkbox", "id": "enable_video_looping", "label": "Enable video looping", "default": false }
+  ]
+}
+{% endschema %}
