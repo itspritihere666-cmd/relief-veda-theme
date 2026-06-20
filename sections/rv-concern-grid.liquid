@@ -1,0 +1,169 @@
+{%- comment -%}
+  Relief Veda — Shop by Concern (problem-hook cards → collections)
+  Custom section. Drop in /sections/. Add via Theme Customizer.
+{%- endcomment -%}
+
+{%- style -%}
+  .rv-concern-{{ section.id }}{
+    background: {{ section.settings.bg }};
+    padding: clamp(46px,6vw,84px) clamp(16px,4vw,40px);
+  }
+  .rv-concern-{{ section.id }} .rv-concern__head{
+    max-width:1240px; margin:0 auto clamp(28px,4vw,44px);
+    text-align:center;
+  }
+  .rv-concern-{{ section.id }} .rv-concern__eyebrow{
+    font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+    font-weight:600; color: {{ section.settings.accent }}; margin:0 0 12px;
+  }
+  .rv-concern-{{ section.id }} .rv-concern__title{
+    font-size: clamp(26px,3.6vw,42px); line-height:1.1;
+    margin:0 0 10px; color: {{ section.settings.heading }};
+    font-weight:600; letter-spacing:-0.01em;
+  }
+  .rv-concern-{{ section.id }} .rv-concern__sub{
+    font-size: clamp(14px,1.4vw,17px); color: {{ section.settings.muted }};
+    margin:0 auto; max-width:54ch; line-height:1.5;
+  }
+  .rv-concern-{{ section.id }} .rv-concern__grid{
+    max-width:1240px; margin:0 auto;
+    display:grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr);
+    gap: clamp(12px,1.6vw,20px);
+  }
+  .rv-concern-{{ section.id }} .rv-concern__card{
+    position:relative; display:block; overflow:hidden;
+    border-radius: {{ section.settings.radius }}px;
+    aspect-ratio: {{ section.settings.ratio }};
+    text-decoration:none; color:#fff;
+    background: {{ section.settings.card_fallback }};
+    transition: transform .28s ease, box-shadow .28s ease;
+    box-shadow: 0 2px 10px rgba(58,42,30,.08);
+  }
+  .rv-concern-{{ section.id }} .rv-concern__card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 16px 34px rgba(58,42,30,.18);
+  }
+  .rv-concern-{{ section.id }} .rv-concern__card img{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; z-index:0; transition: transform .5s ease;
+  }
+  .rv-concern-{{ section.id }} .rv-concern__card:hover img{ transform: scale(1.06); }
+  .rv-concern-{{ section.id }} .rv-concern__ov{
+    position:absolute; inset:0; z-index:1;
+    background: linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.12) 55%, rgba(0,0,0,0) 100%);
+  }
+  .rv-concern-{{ section.id }} .rv-concern__body{
+    position:absolute; z-index:2; left:0; right:0; bottom:0;
+    padding: clamp(14px,1.6vw,22px);
+  }
+  .rv-concern-{{ section.id }} .rv-concern__hook{
+    font-size: clamp(15px,1.6vw,20px); font-weight:600; line-height:1.2;
+    margin:0 0 6px;
+  }
+  .rv-concern-{{ section.id }} .rv-concern__link{
+    font-size:13px; font-weight:600; letter-spacing:.02em;
+    display:inline-flex; align-items:center; gap:6px; opacity:.95;
+  }
+  .rv-concern-{{ section.id }} .rv-concern__link svg{ width:14px;height:14px; transition: transform .2s ease; }
+  .rv-concern-{{ section.id }} .rv-concern__card:hover .rv-concern__link svg{ transform: translateX(4px); }
+  @media (max-width: 989px){
+    .rv-concern-{{ section.id }} .rv-concern__grid{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 749px){
+    .rv-concern-{{ section.id }} .rv-concern__grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .rv-concern-{{ section.id }} .rv-concern__card,
+    .rv-concern-{{ section.id }} .rv-concern__card img{ transition:none; }
+  }
+{%- endstyle -%}
+
+<section class="rv-concern-{{ section.id }}">
+  <div class="rv-concern__head">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="rv-concern__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2 class="rv-concern__title">{{ section.settings.title }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <p class="rv-concern__sub">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+  <div class="rv-concern__grid">
+    {%- for block in section.blocks -%}
+      <a class="rv-concern__card" href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <img src="{{ block.settings.image | image_url: width: 700 }}"
+               srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 700 }} 700w"
+               sizes="(max-width:749px) 50vw, 20vw"
+               alt="{{ block.settings.hook | escape }}" loading="lazy"
+               width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}">
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag }}
+        {%- endif -%}
+        <span class="rv-concern__ov"></span>
+        <span class="rv-concern__body">
+          <span class="rv-concern__hook">{{ block.settings.hook }}</span>
+          <span class="rv-concern__link">{{ block.settings.cta | default: 'Shop now' }}
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </span>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RV Shop by Concern",
+  "tag": "section",
+  "class": "rv-section rv-concern-section",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background", "default": "#FFFDF8" },
+    { "type": "color", "id": "heading", "label": "Heading color", "default": "#2B1F14" },
+    { "type": "color", "id": "muted", "label": "Subtext color", "default": "#6B5B4A" },
+    { "type": "color", "id": "accent", "label": "Accent / eyebrow", "default": "#1F7A4D" },
+    { "type": "color", "id": "card_fallback", "label": "Card fallback", "default": "#3A2A1E" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Find your solution" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Shop by concern" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Tell us what's troubling you — we have a root-cause Ayurvedic formulation for it." },
+    { "type": "range", "id": "cols", "min": 3, "max": 5, "step": 1, "label": "Columns (desktop)", "default": 4 },
+    { "type": "select", "id": "ratio", "label": "Card ratio",
+      "options": [
+        {"value":"3/4","label":"Portrait 3:4"},
+        {"value":"1/1","label":"Square 1:1"},
+        {"value":"4/5","label":"4:5"}
+      ], "default": "3/4" },
+    { "type": "range", "id": "radius", "min": 0, "max": 28, "step": 2, "unit": "px", "label": "Corner radius", "default": 14 }
+  ],
+  "blocks": [
+    {
+      "type": "concern",
+      "name": "Concern card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "hook", "label": "Hook headline", "default": "Frequent UTI bothering you?" },
+        { "type": "text", "id": "cta", "label": "CTA text", "default": "Shop relief" },
+        { "type": "url", "id": "link", "label": "Link (collection)" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "RV Shop by Concern",
+      "blocks": [
+        { "type": "concern", "settings": { "hook": "Frequent UTI bothering you?", "cta": "Shop relief" } },
+        { "type": "concern", "settings": { "hook": "Struggling with sugar?", "cta": "Shop diabetic care" } },
+        { "type": "concern", "settings": { "hook": "Gas, acidity & bloating?", "cta": "Shop digestive" } },
+        { "type": "concern", "settings": { "hook": "Dull, tired skin?", "cta": "Shop skin care" } },
+        { "type": "concern", "settings": { "hook": "Low immunity?", "cta": "Shop immunity" } },
+        { "type": "concern", "settings": { "hook": "Joint & knee pain?", "cta": "Shop bone & joint" } },
+        { "type": "concern", "settings": { "hook": "PCOS or discharge?", "cta": "Shop women's health" } },
+        { "type": "concern", "settings": { "hook": "Low stamina & energy?", "cta": "Shop men's health" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,178 @@
+{%- comment -%}
+  Relief Veda — Hero (single image + headline + CTA)
+  Custom section. Drop in /sections/. Add via Theme Customizer.
+  No existing files touched.
+{%- endcomment -%}
+
+{%- style -%}
+  .rv-hero-{{ section.id }}{
+    position:relative;
+    min-height: {{ section.settings.height_desktop }}px;
+    display:flex; align-items:center;
+    background: {{ section.settings.bg_fallback }};
+    overflow:hidden;
+  }
+  .rv-hero-{{ section.id }} .rv-hero__media{
+    position:absolute; inset:0; z-index:0;
+  }
+  .rv-hero-{{ section.id }} .rv-hero__media img{
+    width:100%; height:100%; object-fit:cover; object-position: {{ section.settings.focal }};
+    display:block;
+  }
+  .rv-hero-{{ section.id }} .rv-hero__scrim{
+    position:absolute; inset:0; z-index:1;
+    background: linear-gradient(
+      {{ section.settings.scrim_dir }},
+      rgba(0,0,0,{{ section.settings.scrim_strength | divided_by: 100.0 }}) 0%,
+      rgba(0,0,0,0) 60%
+    );
+  }
+  .rv-hero-{{ section.id }} .rv-hero__inner{
+    position:relative; z-index:2;
+    width:100%; max-width:1240px; margin:0 auto;
+    padding: 0 clamp(20px,5vw,64px);
+  }
+  .rv-hero-{{ section.id }} .rv-hero__col{
+    max-width: 560px;
+    text-align: {{ section.settings.align }};
+    {% if section.settings.align == 'right' %}margin-left:auto;{% endif %}
+    {% if section.settings.align == 'center' %}margin:0 auto;{% endif %}
+    color: {{ section.settings.text_color }};
+  }
+  .rv-hero-{{ section.id }} .rv-hero__eyebrow{
+    font-size: clamp(11px,1.1vw,13px);
+    letter-spacing:.22em; text-transform:uppercase;
+    font-weight:600; margin:0 0 18px;
+    opacity:.92;
+  }
+  .rv-hero-{{ section.id }} .rv-hero__title{
+    font-size: clamp(34px,5.4vw,62px);
+    line-height:1.04; margin:0 0 18px;
+    font-weight: {{ section.settings.title_weight }};
+    letter-spacing:-0.01em;
+  }
+  .rv-hero-{{ section.id }} .rv-hero__sub{
+    font-size: clamp(15px,1.5vw,19px);
+    line-height:1.5; margin:0 0 30px; opacity:.95;
+    max-width:42ch;
+    {% if section.settings.align == 'center' %}margin-left:auto;margin-right:auto;{% endif %}
+  }
+  .rv-hero-{{ section.id }} .rv-hero__cta{
+    display:inline-flex; align-items:center; gap:10px;
+    background: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_text }};
+    padding: 16px 34px; border-radius: {{ section.settings.btn_radius }}px;
+    font-size:15px; font-weight:600; letter-spacing:.01em;
+    text-decoration:none; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    box-shadow: 0 6px 22px rgba(0,0,0,.16);
+  }
+  .rv-hero-{{ section.id }} .rv-hero__cta:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.24);
+  }
+  .rv-hero-{{ section.id }} .rv-hero__cta svg{ width:16px;height:16px; }
+  @media (max-width: 749px){
+    .rv-hero-{{ section.id }}{ min-height: {{ section.settings.height_mobile }}px; }
+    .rv-hero-{{ section.id }} .rv-hero__col{ max-width:100%; text-align:left; margin:0; }
+    .rv-hero-{{ section.id }} .rv-hero__sub{ margin-left:0;margin-right:0; }
+    .rv-hero-{{ section.id }} .rv-hero__media img{ object-position: {{ section.settings.focal_mobile }}; }
+    .rv-hero-{{ section.id }} .rv-hero__scrim{
+      background: linear-gradient(to top, rgba(0,0,0,{{ section.settings.scrim_strength | divided_by: 100.0 }}) 0%, rgba(0,0,0,.15) 70%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .rv-hero-{{ section.id }} .rv-hero__cta{ transition:none; }
+  }
+{%- endstyle -%}
+
+<section class="rv-hero-{{ section.id }}">
+  <div class="rv-hero__media">
+    {%- if section.settings.image != blank -%}
+      {%- assign img_m = section.settings.image_mobile | default: section.settings.image -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 2400 }}"
+        srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
+                {{ section.settings.image | image_url: width: 1400 }} 1400w,
+                {{ section.settings.image | image_url: width: 2000 }} 2000w,
+                {{ section.settings.image | image_url: width: 2400 }} 2400w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="eager" fetchpriority="high">
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'rv-hero__placeholder' }}
+    {%- endif -%}
+  </div>
+  <div class="rv-hero__scrim"></div>
+  <div class="rv-hero__inner">
+    <div class="rv-hero__col">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rv-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.title != blank -%}
+        <h1 class="rv-hero__title">{{ section.settings.title }}</h1>
+      {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <p class="rv-hero__sub">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+      {%- if section.settings.btn_label != blank -%}
+        <a class="rv-hero__cta" href="{{ section.settings.btn_link | default: '#' }}">
+          {{ section.settings.btn_label }}
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RV Hero",
+  "tag": "section",
+  "class": "rv-section rv-hero-section",
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Desktop image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (optional)" },
+    { "type": "text", "id": "focal", "label": "Desktop focal point (css object-position)", "default": "center center" },
+    { "type": "text", "id": "focal_mobile", "label": "Mobile focal point", "default": "center center" },
+    { "type": "color", "id": "bg_fallback", "label": "Background fallback", "default": "#3A2A1E" },
+    { "type": "header", "content": "Scrim (darken for text legibility)" },
+    { "type": "select", "id": "scrim_dir", "label": "Scrim direction",
+      "options": [
+        {"value":"to right","label":"To right"},
+        {"value":"to left","label":"To left"},
+        {"value":"to top","label":"To top"}
+      ], "default": "to right" },
+    { "type": "range", "id": "scrim_strength", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "Scrim strength", "default": 45 },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "100% Ayurvedic · Made in India" },
+    { "type": "text", "id": "title", "label": "Headline", "default": "Real relief, rooted in Ayurveda." },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Potent herbal extracts — not raw powders — formulated for everyday ailments. Gentle, effective, and trusted." },
+    { "type": "select", "id": "align", "label": "Alignment",
+      "options": [
+        {"value":"left","label":"Left"},
+        {"value":"center","label":"Center"},
+        {"value":"right","label":"Right"}
+      ], "default": "left" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" },
+    { "type": "select", "id": "title_weight", "label": "Title weight",
+      "options": [
+        {"value":"500","label":"Medium"},
+        {"value":"600","label":"Semibold"},
+        {"value":"700","label":"Bold"}
+      ], "default": "600" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop bestsellers" },
+    { "type": "url", "id": "btn_link", "label": "Button link" },
+    { "type": "color", "id": "btn_bg", "label": "Button background", "default": "#1F7A4D" },
+    { "type": "color", "id": "btn_text", "label": "Button text", "default": "#FFFFFF" },
+    { "type": "range", "id": "btn_radius", "min": 0, "max": 40, "step": 2, "unit": "px", "label": "Button radius", "default": 8 },
+    { "type": "header", "content": "Height" },
+    { "type": "range", "id": "height_desktop", "min": 420, "max": 820, "step": 20, "unit": "px", "label": "Desktop height", "default": 620 },
+    { "type": "range", "id": "height_mobile", "min": 380, "max": 720, "step": 20, "unit": "px", "label": "Mobile height", "default": 520 }
+  ],
+  "presets": [{ "name": "RV Hero" }]
+}
+{% endschema %}

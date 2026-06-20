@@ -1,0 +1,116 @@
+{%- comment -%}
+  Relief Veda — Trust Strip (icon row of trust signals)
+  Custom section. Drop in /sections/. Add via Theme Customizer.
+{%- endcomment -%}
+
+{%- style -%}
+  .rv-trust-{{ section.id }}{
+    background: {{ section.settings.bg }};
+    color: {{ section.settings.text }};
+    padding: clamp(20px,3vw,30px) clamp(16px,4vw,40px);
+    border-top:1px solid {{ section.settings.border }};
+    border-bottom:1px solid {{ section.settings.border }};
+  }
+  .rv-trust-{{ section.id }} .rv-trust__row{
+    max-width:1240px; margin:0 auto;
+    display:grid; grid-template-columns: repeat({{ section.blocks.size }}, 1fr);
+    gap: clamp(10px,2vw,28px); align-items:center;
+  }
+  .rv-trust-{{ section.id }} .rv-trust__item{
+    display:flex; flex-direction:column; align-items:center; gap:9px;
+    text-align:center;
+  }
+  .rv-trust-{{ section.id }} .rv-trust__ic{
+    width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+    color: {{ section.settings.icon_color }};
+  }
+  .rv-trust-{{ section.id }} .rv-trust__ic svg{ width:28px; height:28px; }
+  .rv-trust-{{ section.id }} .rv-trust__ic img{ width:30px; height:30px; object-fit:contain; }
+  .rv-trust-{{ section.id }} .rv-trust__label{
+    font-size: clamp(11px,1.1vw,13.5px);
+    font-weight:600; letter-spacing:.01em; line-height:1.25;
+  }
+  @media (max-width: 749px){
+    .rv-trust-{{ section.id }} .rv-trust__row{
+      grid-template-columns: repeat(2, 1fr);
+      gap:18px 10px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign ic_leaf = '<svg viewBox="0 0 24 24" fill="none"><path d="M11 21c-4 0-7-3-7-7 0-5 5-10 16-10 0 11-5 17-9 17z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 17c3-4 6-6 9-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+  assign ic_shield = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  assign ic_drop = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 3s6 6 6 11a6 6 0 11-12 0c0-5 6-11 6-11z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'
+  assign ic_paw = '<svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="11" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="7" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="7" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="11" r="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 18c0-2.5 2-4 4-4s4 1.5 4 4-2 3-4 3-4-.5-4-3z" stroke="currentColor" stroke-width="1.6"/></svg>'
+  assign ic_cert = '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/><path d="M9 14l-2 7 5-3 5 3-2-7" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 9l1.8 1.8L15 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+-%}
+
+<section class="rv-trust-{{ section.id }}">
+  <div class="rv-trust__row">
+    {%- for block in section.blocks -%}
+      <div class="rv-trust__item" {{ block.shopify_attributes }}>
+        <span class="rv-trust__ic">
+          {%- if block.settings.custom_icon != blank -%}
+            <img src="{{ block.settings.custom_icon | image_url: width: 60 }}" alt="" width="30" height="30">
+          {%- else -%}
+            {%- case block.settings.icon -%}
+              {%- when 'leaf' -%}{{ ic_leaf }}
+              {%- when 'shield' -%}{{ ic_shield }}
+              {%- when 'drop' -%}{{ ic_drop }}
+              {%- when 'paw' -%}{{ ic_paw }}
+              {%- when 'cert' -%}{{ ic_cert }}
+              {%- else -%}{{ ic_leaf }}
+            {%- endcase -%}
+          {%- endif -%}
+        </span>
+        <span class="rv-trust__label">{{ block.settings.label }}</span>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RV Trust Strip",
+  "tag": "section",
+  "class": "rv-section rv-trust-section",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background", "default": "#F7F2E9" },
+    { "type": "color", "id": "text", "label": "Text color", "default": "#3A2A1E" },
+    { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#1F7A4D" },
+    { "type": "color", "id": "border", "label": "Border", "default": "#E7DDC9" }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon",
+          "options": [
+            {"value":"leaf","label":"Leaf (natural)"},
+            {"value":"shield","label":"Shield (safe)"},
+            {"value":"drop","label":"Drop (vegan)"},
+            {"value":"paw","label":"Paw (cruelty-free)"},
+            {"value":"cert","label":"Certificate (GMP)"}
+          ], "default": "leaf" },
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon (overrides above)" },
+        { "type": "text", "id": "label", "label": "Label", "default": "100% Natural" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "RV Trust Strip",
+      "blocks": [
+        { "type": "trust", "settings": { "icon": "leaf", "label": "100% Natural" } },
+        { "type": "trust", "settings": { "icon": "shield", "label": "100% Ayurvedic" } },
+        { "type": "trust", "settings": { "icon": "cert", "label": "GMP Certified" } },
+        { "type": "trust", "settings": { "icon": "drop", "label": "Vegan & Veg" } },
+        { "type": "trust", "settings": { "icon": "paw", "label": "Cruelty-Free" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
