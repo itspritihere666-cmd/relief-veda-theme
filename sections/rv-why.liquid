@@ -1,0 +1,81 @@
+{%- comment -%} Relief Veda — Why ReliefVeda (Generic vs Us comparison) {%- endcomment -%}
+{%- style -%}
+  .rv-cmp-{{ section.id }}{ background: {{ section.settings.bg }}; padding: clamp(46px,6vw,84px) clamp(16px,4vw,40px); }
+  .rv-cmp-{{ section.id }} .rv-cmp__head{ max-width:900px; margin:0 auto clamp(28px,4vw,44px); text-align:center; }
+  .rv-cmp-{{ section.id }} .rv-cmp__eyebrow{ font-size:12px; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:{{ section.settings.accent }}; margin:0 0 10px; }
+  .rv-cmp-{{ section.id }} .rv-cmp__title{ font-size: clamp(26px,3.6vw,42px); margin:0; color:{{ section.settings.heading }}; font-weight:600; letter-spacing:-0.01em; }
+  .rv-cmp-{{ section.id }} .rv-cmp__grid{ max-width:880px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap: clamp(12px,1.6vw,20px); }
+  .rv-cmp-{{ section.id }} .rv-cmp__col{ border-radius:16px; padding: clamp(20px,2.6vw,32px); }
+  .rv-cmp-{{ section.id }} .rv-cmp__col--them{ background:#fff; border:1px solid {{ section.settings.border }}; }
+  .rv-cmp-{{ section.id }} .rv-cmp__col--us{ background:{{ section.settings.us_bg }}; color:#fff; box-shadow:0 12px 30px rgba(31,122,77,.22); }
+  .rv-cmp-{{ section.id }} .rv-cmp__label{ font-size: clamp(15px,1.7vw,19px); font-weight:700; margin:0 0 18px; display:flex; align-items:center; gap:9px; }
+  .rv-cmp-{{ section.id }} .rv-cmp__col--them .rv-cmp__label{ color:{{ section.settings.muted }}; }
+  .rv-cmp-{{ section.id }} ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:13px; }
+  .rv-cmp-{{ section.id }} li{ font-size: clamp(13px,1.4vw,15px); line-height:1.4; display:flex; align-items:flex-start; gap:10px; }
+  .rv-cmp-{{ section.id }} .rv-cmp__col--them li{ color:{{ section.settings.muted }}; }
+  .rv-cmp-{{ section.id }} li svg{ width:18px;height:18px;flex:none;margin-top:1px; }
+  .rv-cmp-{{ section.id }} .rv-cmp__col--them li svg{ color:#C25B4E; }
+  .rv-cmp-{{ section.id }} .rv-cmp__col--us li svg{ color:#A7E8C4; }
+  @media (max-width:600px){ .rv-cmp-{{ section.id }} .rv-cmp__grid{ grid-template-columns:1fr; } }
+{%- endstyle -%}
+
+{%- liquid
+  assign cross = '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+  assign tick = '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M8 12l2.6 2.6L16 9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+-%}
+
+<section class="rv-cmp-{{ section.id }}">
+  <div class="rv-cmp__head">
+    {%- if section.settings.eyebrow != blank -%}<p class="rv-cmp__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    {%- if section.settings.title != blank -%}<h2 class="rv-cmp__title">{{ section.settings.title }}</h2>{%- endif -%}
+  </div>
+  <div class="rv-cmp__grid">
+    <div class="rv-cmp__col rv-cmp__col--them">
+      <p class="rv-cmp__label">{{ section.settings.them_label }}</p>
+      <ul>
+        {%- for block in section.blocks -%}{%- if block.type == 'them' -%}<li>{{ cross }}{{ block.settings.text }}</li>{%- endif -%}{%- endfor -%}
+      </ul>
+    </div>
+    <div class="rv-cmp__col rv-cmp__col--us">
+      <p class="rv-cmp__label">{{ section.settings.us_label }}</p>
+      <ul>
+        {%- for block in section.blocks -%}{%- if block.type == 'us' -%}<li>{{ tick }}{{ block.settings.text }}</li>{%- endif -%}{%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RV Why ReliefVeda",
+  "tag": "section",
+  "class": "rv-section",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background", "default": "#FFFDF8" },
+    { "type": "color", "id": "heading", "label": "Heading", "default": "#2B1F14" },
+    { "type": "color", "id": "muted", "label": "Muted", "default": "#7A6B59" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#1F7A4D" },
+    { "type": "color", "id": "us_bg", "label": "Our column bg", "default": "#1F7A4D" },
+    { "type": "color", "id": "border", "label": "Border", "default": "#EAE0CD" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The ReliefVeda difference" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Not your average supplement" },
+    { "type": "text", "id": "them_label", "label": "Left column label", "default": "Generic Products" },
+    { "type": "text", "id": "us_label", "label": "Right column label", "default": "ReliefVeda" }
+  ],
+  "blocks": [
+    { "type": "them", "name": "Generic point", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Cheap raw powders" } ] },
+    { "type": "us", "name": "ReliefVeda point", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "A++ herbal extracts" } ] }
+  ],
+  "max_blocks": 12,
+  "presets": [ { "name": "RV Why ReliefVeda", "blocks": [
+    {"type":"them","settings":{"text":"Cheap raw powders, weak effect"}},
+    {"type":"them","settings":{"text":"Masks symptoms only"}},
+    {"type":"them","settings":{"text":"Chemicals & fillers"}},
+    {"type":"them","settings":{"text":"One-size-fits-all"}},
+    {"type":"us","settings":{"text":"A++ active herbal extracts"}},
+    {"type":"us","settings":{"text":"Targets the root cause"}},
+    {"type":"us","settings":{"text":"100% natural, no chemicals"}},
+    {"type":"us","settings":{"text":"Vaid-formulated for each ailment"}}
+  ] } ]
+}
+{% endschema %}

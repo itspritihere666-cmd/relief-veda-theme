@@ -1,0 +1,127 @@
+{%- comment -%} Relief Veda — Bestsellers / Combos (product carousel) {%- endcomment -%}
+{%- style -%}
+  .rv-prod-{{ section.id }}{ background: {{ section.settings.bg }}; padding: clamp(46px,6vw,80px) clamp(16px,4vw,40px); }
+  .rv-prod-{{ section.id }} .rv-prod__head{ max-width:1240px; margin:0 auto clamp(24px,3vw,38px); display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+  .rv-prod-{{ section.id }} .rv-prod__eyebrow{ font-size:12px; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color: {{ section.settings.accent }}; margin:0 0 10px; }
+  .rv-prod-{{ section.id }} .rv-prod__title{ font-size: clamp(24px,3.4vw,40px); margin:0; color: {{ section.settings.heading }}; font-weight:600; letter-spacing:-0.01em; }
+  .rv-prod-{{ section.id }} .rv-prod__all{ font-size:14px; font-weight:600; color: {{ section.settings.accent }}; text-decoration:none; white-space:nowrap; display:inline-flex; align-items:center; gap:6px; }
+  .rv-prod-{{ section.id }} .rv-prod__all svg{ width:15px;height:15px; }
+  .rv-prod-{{ section.id }} .rv-prod__track{ max-width:1240px; margin:0 auto; display:grid; grid-auto-flow:column; grid-auto-columns: minmax(230px, 1fr); gap: clamp(12px,1.4vw,18px); overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:8px; -webkit-overflow-scrolling:touch; scrollbar-width:thin; }
+  .rv-prod-{{ section.id }}.rv-prod--grid .rv-prod__track{ grid-auto-flow:row; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); grid-auto-columns:auto; overflow:visible; }
+  .rv-prod-{{ section.id }} .rv-card{ scroll-snap-align:start; background:#fff; border-radius:14px; overflow:hidden; text-decoration:none; color: {{ section.settings.heading }}; border:1px solid {{ section.settings.border }}; display:flex; flex-direction:column; transition: transform .25s ease, box-shadow .25s ease; }
+  .rv-prod-{{ section.id }} .rv-card:hover{ transform:translateY(-4px); box-shadow:0 14px 30px rgba(58,42,30,.14); }
+  .rv-prod-{{ section.id }} .rv-card__media{ position:relative; aspect-ratio:1/1; background:#F4EFE5; overflow:hidden; }
+  .rv-prod-{{ section.id }} .rv-card__media img{ width:100%;height:100%;object-fit:cover; transition:transform .5s ease; }
+  .rv-prod-{{ section.id }} .rv-card:hover .rv-card__media img{ transform:scale(1.05); }
+  .rv-prod-{{ section.id }} .rv-card__badge{ position:absolute; top:10px; left:10px; background: {{ section.settings.accent }}; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:6px; letter-spacing:.02em; }
+  .rv-prod-{{ section.id }} .rv-card__body{ padding:14px 14px 16px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .rv-prod-{{ section.id }} .rv-card__name{ font-size:15px; font-weight:600; line-height:1.3; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .rv-prod-{{ section.id }} .rv-card__benefits{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; }
+  .rv-prod-{{ section.id }} .rv-card__benefits li{ font-size:12.5px; color: {{ section.settings.muted }}; display:flex; align-items:flex-start; gap:6px; line-height:1.35; }
+  .rv-prod-{{ section.id }} .rv-card__benefits svg{ width:14px;height:14px;flex:none;margin-top:1px;color:{{ section.settings.accent }}; }
+  .rv-prod-{{ section.id }} .rv-card__foot{ margin-top:auto; display:flex; align-items:baseline; gap:8px; padding-top:4px; }
+  .rv-prod-{{ section.id }} .rv-card__price{ font-size:17px; font-weight:700; }
+  .rv-prod-{{ section.id }} .rv-card__compare{ font-size:13px; color: {{ section.settings.muted }}; text-decoration:line-through; }
+  @media (max-width:989px){ .rv-prod-{{ section.id }}.rv-prod--grid .rv-prod__track{ grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:749px){ .rv-prod-{{ section.id }}.rv-prod--grid .rv-prod__track{ grid-template-columns:repeat(2,1fr);} }
+{%- endstyle -%}
+
+{%- liquid
+  assign tick = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+-%}
+
+<section class="rv-prod-{{ section.id }} {% if section.settings.layout == 'grid' %}rv-prod--grid{% endif %}">
+  <div class="rv-prod__head">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}<p class="rv-prod__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      {%- if section.settings.title != blank -%}<h2 class="rv-prod__title">{{ section.settings.title }}</h2>{%- endif -%}
+    </div>
+    {%- if section.settings.all_link != blank -%}
+      <a class="rv-prod__all" href="{{ section.settings.all_link }}">{{ section.settings.all_label | default: 'View all' }}
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    {%- endif -%}
+  </div>
+  <div class="rv-prod__track">
+    {%- if section.settings.collection != blank and section.settings.use_collection -%}
+      {%- for product in section.settings.collection.products limit: section.settings.limit -%}
+        <a class="rv-card" href="{{ product.url }}">
+          <div class="rv-card__media">
+            {%- if product.featured_image -%}<img src="{{ product.featured_image | image_url: width:500 }}" alt="{{ product.featured_image.alt | escape }}" loading="lazy" width="500" height="500">{%- else -%}{{ 'product-1' | placeholder_svg_tag }}{%- endif -%}
+            {%- if section.settings.badge != blank -%}<span class="rv-card__badge">{{ section.settings.badge }}</span>{%- endif -%}
+          </div>
+          <div class="rv-card__body">
+            <h3 class="rv-card__name">{{ product.title }}</h3>
+            <div class="rv-card__foot">
+              <span class="rv-card__price">{{ product.price | money }}</span>
+              {%- if product.compare_at_price > product.price -%}<span class="rv-card__compare">{{ product.compare_at_price | money }}</span>{%- endif -%}
+            </div>
+          </div>
+        </a>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for block in section.blocks -%}
+        <a class="rv-card" href="{{ block.settings.link | default:'#' }}" {{ block.shopify_attributes }}>
+          <div class="rv-card__media">
+            {%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width:500 }}" alt="{{ block.settings.name | escape }}" loading="lazy" width="500" height="500">{%- else -%}{{ 'product-1' | placeholder_svg_tag }}{%- endif -%}
+            {%- if block.settings.badge != blank -%}<span class="rv-card__badge">{{ block.settings.badge }}</span>{%- endif -%}
+          </div>
+          <div class="rv-card__body">
+            <h3 class="rv-card__name">{{ block.settings.name }}</h3>
+            {%- if block.settings.b1 != blank or block.settings.b2 != blank or block.settings.b3 != blank -%}
+              <ul class="rv-card__benefits">
+                {%- if block.settings.b1 != blank -%}<li>{{ tick }}{{ block.settings.b1 }}</li>{%- endif -%}
+                {%- if block.settings.b2 != blank -%}<li>{{ tick }}{{ block.settings.b2 }}</li>{%- endif -%}
+                {%- if block.settings.b3 != blank -%}<li>{{ tick }}{{ block.settings.b3 }}</li>{%- endif -%}
+              </ul>
+            {%- endif -%}
+            <div class="rv-card__foot">
+              {%- if block.settings.price != blank -%}<span class="rv-card__price">{{ block.settings.price }}</span>{%- endif -%}
+              {%- if block.settings.compare != blank -%}<span class="rv-card__compare">{{ block.settings.compare }}</span>{%- endif -%}
+            </div>
+          </div>
+        </a>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RV Bestsellers / Combos",
+  "tag": "section",
+  "class": "rv-section",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background", "default": "#F7F2E9" },
+    { "type": "color", "id": "heading", "label": "Heading", "default": "#2B1F14" },
+    { "type": "color", "id": "muted", "label": "Muted text", "default": "#6B5B4A" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#1F7A4D" },
+    { "type": "color", "id": "border", "label": "Card border", "default": "#EAE0CD" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Loved by thousands" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Bestsellers" },
+    { "type": "text", "id": "all_label", "label": "View-all label", "default": "View all" },
+    { "type": "url", "id": "all_link", "label": "View-all link" },
+    { "type": "text", "id": "badge", "label": "Badge (applies to collection mode)", "default": "Launch Offer" },
+    { "type": "select", "id": "layout", "label": "Layout", "options": [ {"value":"carousel","label":"Carousel"}, {"value":"grid","label":"Grid"} ], "default": "carousel" },
+    { "type": "range", "id": "cols", "min": 3, "max": 5, "step": 1, "label": "Grid columns", "default": 4 },
+    { "type": "header", "content": "Auto-pull from a collection (recommended)" },
+    { "type": "checkbox", "id": "use_collection", "label": "Use collection products", "default": false },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "min": 4, "max": 12, "step": 1, "label": "Max products", "default": 8 }
+  ],
+  "blocks": [
+    { "type": "card", "name": "Manual product card", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "name", "label": "Name", "default": "Healthy Gut" },
+      { "type": "text", "id": "badge", "label": "Badge", "default": "Launch Offer" },
+      { "type": "text", "id": "b1", "label": "Benefit 1", "default": "Relieves gas & bloating" },
+      { "type": "text", "id": "b2", "label": "Benefit 2", "default": "Improves digestion" },
+      { "type": "text", "id": "b3", "label": "Benefit 3", "default": "100% herbal" },
+      { "type": "text", "id": "price", "label": "Price", "default": "Rs. 499" },
+      { "type": "text", "id": "compare", "label": "Compare price", "default": "Rs. 799" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "max_blocks": 12,
+  "presets": [ { "name": "RV Bestsellers / Combos", "blocks": [ {"type":"card"},{"type":"card"},{"type":"card"},{"type":"card"} ] } ]
+}
+{% endschema %}

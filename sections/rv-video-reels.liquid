@@ -1,0 +1,76 @@
+{%- comment -%} Relief Veda — Video Reels (vertical autoplay-muted cards) {%- endcomment -%}
+{%- style -%}
+  .rv-reels-{{ section.id }}{ background: {{ section.settings.bg }}; padding: clamp(46px,6vw,80px) clamp(16px,4vw,40px); }
+  .rv-reels-{{ section.id }} .rv-reels__head{ max-width:1240px; margin:0 auto clamp(24px,3vw,38px); text-align:center; }
+  .rv-reels-{{ section.id }} .rv-reels__eyebrow{ font-size:12px; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:{{ section.settings.accent }}; margin:0 0 10px; }
+  .rv-reels-{{ section.id }} .rv-reels__title{ font-size: clamp(24px,3.4vw,40px); margin:0; color:{{ section.settings.heading }}; font-weight:600; letter-spacing:-0.01em; }
+  .rv-reels-{{ section.id }} .rv-reels__track{ max-width:1240px; margin:0 auto; display:grid; grid-auto-flow:column; grid-auto-columns: minmax(230px,1fr); gap: clamp(12px,1.4vw,18px); overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:8px; -webkit-overflow-scrolling:touch; }
+  .rv-reels-{{ section.id }} .rv-reel{ scroll-snap-align:start; position:relative; aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:#1A120B; box-shadow:0 6px 20px rgba(58,42,30,.16); }
+  .rv-reels-{{ section.id }} .rv-reel video,.rv-reels-{{ section.id }} .rv-reel img{ width:100%;height:100%;object-fit:cover; display:block; }
+  .rv-reels-{{ section.id }} .rv-reel__ov{ position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0) 45%); pointer-events:none; }
+  .rv-reels-{{ section.id }} .rv-reel__cap{ position:absolute; left:0;right:0;bottom:0; padding:14px; color:#fff; z-index:2; }
+  .rv-reels-{{ section.id }} .rv-reel__title{ font-size:14px; font-weight:600; margin:0 0 4px; }
+  .rv-reels-{{ section.id }} .rv-reel__cta{ display:inline-block; font-size:12px; font-weight:600; background:{{ section.settings.accent }}; color:#fff; padding:6px 12px; border-radius:6px; text-decoration:none; margin-top:6px; }
+  .rv-reels-{{ section.id }} .rv-reel__play{ position:absolute; inset:0; display:flex;align-items:center;justify-content:center; z-index:1; }
+  .rv-reels-{{ section.id }} .rv-reel__play svg{ width:54px;height:54px;opacity:.92; filter:drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
+{%- endstyle -%}
+
+<section class="rv-reels-{{ section.id }}">
+  <div class="rv-reels__head">
+    {%- if section.settings.eyebrow != blank -%}<p class="rv-reels__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    {%- if section.settings.title != blank -%}<h2 class="rv-reels__title">{{ section.settings.title }}</h2>{%- endif -%}
+  </div>
+  <div class="rv-reels__track">
+    {%- for block in section.blocks -%}
+      <div class="rv-reel" {{ block.shopify_attributes }}>
+        {%- if block.settings.video != blank -%}
+          <video {% if section.settings.autoplay %}autoplay muted loop playsinline{% else %}controls{% endif %} preload="metadata" {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url: width:600 }}"{% endif %}>
+            <source src="{{ block.settings.video }}" type="video/mp4">
+          </video>
+        {%- elsif block.settings.shopify_video != blank -%}
+          {{ block.settings.shopify_video | video_tag: image_size: '600x', autoplay: section.settings.autoplay, loop: section.settings.autoplay, muted: section.settings.autoplay, controls: false, playsinline: true }}
+        {%- elsif block.settings.poster != blank -%}
+          <img src="{{ block.settings.poster | image_url: width:600 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+          <span class="rv-reel__play"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,.35)"/><path d="M10 8l6 4-6 4z" fill="#fff"/></svg></span>
+        {%- else -%}
+          {{ 'collection-1' | placeholder_svg_tag }}
+        {%- endif -%}
+        <span class="rv-reel__ov"></span>
+        {%- if block.settings.title != blank or block.settings.cta != blank -%}
+          <div class="rv-reel__cap">
+            {%- if block.settings.title != blank -%}<p class="rv-reel__title">{{ block.settings.title }}</p>{%- endif -%}
+            {%- if block.settings.cta != blank -%}<a class="rv-reel__cta" href="{{ block.settings.link | default:'#' }}">{{ block.settings.cta }}</a>{%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RV Video Reels",
+  "tag": "section",
+  "class": "rv-section",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background", "default": "#FFFDF8" },
+    { "type": "color", "id": "heading", "label": "Heading", "default": "#2B1F14" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#1F7A4D" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "See it in action" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Real results, real stories" },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay muted", "default": true }
+  ],
+  "blocks": [
+    { "type": "reel", "name": "Reel", "settings": [
+      { "type": "video", "id": "shopify_video", "label": "Video (Shopify-hosted, best)" },
+      { "type": "text", "id": "video", "label": "OR external MP4 URL" },
+      { "type": "image_picker", "id": "poster", "label": "Poster / thumbnail" },
+      { "type": "text", "id": "title", "label": "Caption", "default": "Beat UTI naturally" },
+      { "type": "text", "id": "cta", "label": "CTA label", "default": "Shop now" },
+      { "type": "url", "id": "link", "label": "CTA link" }
+    ] }
+  ],
+  "max_blocks": 8,
+  "presets": [ { "name": "RV Video Reels", "blocks": [ {"type":"reel"},{"type":"reel"},{"type":"reel"},{"type":"reel"} ] } ]
+}
+{% endschema %}

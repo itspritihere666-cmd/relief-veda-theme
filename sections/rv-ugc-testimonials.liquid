@@ -1,0 +1,88 @@
+{%- comment -%} Relief Veda — UGC / Verified Buyer Carousel (Instagram-style cards) {%- endcomment -%}
+{%- style -%}
+  .rv-ugc-{{ section.id }}{ background: {{ section.settings.bg }}; padding: clamp(46px,6vw,80px) clamp(16px,4vw,40px); }
+  .rv-ugc-{{ section.id }} .rv-ugc__head{ max-width:1240px; margin:0 auto clamp(24px,3vw,38px); text-align:center; }
+  .rv-ugc-{{ section.id }} .rv-ugc__eyebrow{ font-size:12px; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:{{ section.settings.accent }}; margin:0 0 10px; }
+  .rv-ugc-{{ section.id }} .rv-ugc__title{ font-size: clamp(24px,3.4vw,40px); margin:0 0 8px; color:{{ section.settings.heading }}; font-weight:600; letter-spacing:-0.01em; }
+  .rv-ugc-{{ section.id }} .rv-ugc__sub{ font-size: clamp(13px,1.3vw,16px); color:{{ section.settings.muted }}; margin:0; }
+  .rv-ugc-{{ section.id }} .rv-ugc__track{ max-width:1240px; margin:0 auto; display:grid; grid-auto-flow:column; grid-auto-columns: minmax(260px, 320px); gap: clamp(12px,1.4vw,18px); overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:8px; -webkit-overflow-scrolling:touch; }
+  .rv-ugc-{{ section.id }} .rv-ugc__card{ scroll-snap-align:start; background:#fff; border-radius:16px; overflow:hidden; border:1px solid {{ section.settings.border }}; display:flex; flex-direction:column; box-shadow:0 4px 16px rgba(58,42,30,.08); }
+  .rv-ugc-{{ section.id }} .rv-ugc__media{ position:relative; aspect-ratio:4/5; background:#F4EFE5; }
+  .rv-ugc-{{ section.id }} .rv-ugc__media img{ width:100%;height:100%;object-fit:cover; }
+  .rv-ugc-{{ section.id }} .rv-ugc__tag{ position:absolute; bottom:10px; left:10px; background:rgba(255,255,255,.95); color:{{ section.settings.heading }}; font-size:11.5px; font-weight:600; padding:6px 11px; border-radius:30px; display:inline-flex; align-items:center; gap:6px; }
+  .rv-ugc-{{ section.id }} .rv-ugc__tag svg{ width:13px;height:13px;color:{{ section.settings.accent }}; }
+  .rv-ugc-{{ section.id }} .rv-ugc__body{ padding:14px 16px 16px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .rv-ugc-{{ section.id }} .rv-ugc__stars{ color:#E8A317; font-size:14px; letter-spacing:1px; }
+  .rv-ugc-{{ section.id }} .rv-ugc__quote{ font-size:14px; line-height:1.5; color:{{ section.settings.heading }}; margin:0; flex:1; }
+  .rv-ugc-{{ section.id }} .rv-ugc__person{ display:flex; align-items:center; gap:10px; border-top:1px solid {{ section.settings.border }}; padding-top:11px; }
+  .rv-ugc-{{ section.id }} .rv-ugc__avatar{ width:34px;height:34px;border-radius:50%;object-fit:cover;background:#E7DDC9; }
+  .rv-ugc-{{ section.id }} .rv-ugc__meta{ display:flex; flex-direction:column; }
+  .rv-ugc-{{ section.id }} .rv-ugc__name{ font-size:13.5px; font-weight:600; color:{{ section.settings.heading }}; }
+  .rv-ugc-{{ section.id }} .rv-ugc__concern{ font-size:11.5px; color:{{ section.settings.muted }}; }
+{%- endstyle -%}
+
+{%- liquid
+  assign verified = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 1.8 3 .2.9 2.9 2.2 2-1 2.8 1 2.8-2.2 2-.9 2.9-3 .2L12 22l-2.4-1.8-3-.2-.9-2.9-2.2-2 1-2.8-1-2.8 2.2-2 .9-2.9 3-.2z" fill="currentColor"/><path d="M8.5 12l2.2 2.2L15.5 9.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+-%}
+
+<section class="rv-ugc-{{ section.id }}">
+  <div class="rv-ugc__head">
+    {%- if section.settings.eyebrow != blank -%}<p class="rv-ugc__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    {%- if section.settings.title != blank -%}<h2 class="rv-ugc__title">{{ section.settings.title }}</h2>{%- endif -%}
+    {%- if section.settings.subtitle != blank -%}<p class="rv-ugc__sub">{{ section.settings.subtitle }}</p>{%- endif -%}
+  </div>
+  <div class="rv-ugc__track">
+    {%- for block in section.blocks -%}
+      <div class="rv-ugc__card" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <div class="rv-ugc__media">
+            <img src="{{ block.settings.image | image_url: width:640 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+            {%- if block.settings.product_tag != blank -%}<span class="rv-ugc__tag">{{ verified }}{{ block.settings.product_tag }}</span>{%- endif -%}
+          </div>
+        {%- endif -%}
+        <div class="rv-ugc__body">
+          {%- if block.settings.stars != blank -%}<div class="rv-ugc__stars">{{ block.settings.stars }}</div>{%- endif -%}
+          <p class="rv-ugc__quote">{{ block.settings.quote }}</p>
+          <div class="rv-ugc__person">
+            {%- if block.settings.avatar != blank -%}<img class="rv-ugc__avatar" src="{{ block.settings.avatar | image_url: width:80 }}" alt="" loading="lazy">{%- else -%}<span class="rv-ugc__avatar"></span>{%- endif -%}
+            <div class="rv-ugc__meta">
+              <span class="rv-ugc__name">{{ block.settings.name }}</span>
+              <span class="rv-ugc__concern">{{ block.settings.concern }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RV UGC / Testimonials",
+  "tag": "section",
+  "class": "rv-section",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background", "default": "#F7F2E9" },
+    { "type": "color", "id": "heading", "label": "Heading", "default": "#2B1F14" },
+    { "type": "color", "id": "muted", "label": "Muted", "default": "#6B5B4A" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#1F7A4D" },
+    { "type": "color", "id": "border", "label": "Border", "default": "#EAE0CD" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real people, real relief" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Trusted across India" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Tag @baidyashakti_life_care to get featured" }
+  ],
+  "blocks": [
+    { "type": "ugc", "name": "Testimonial", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Customer / product photo" },
+      { "type": "text", "id": "product_tag", "label": "Product tag", "default": "Healthy Gut" },
+      { "type": "text", "id": "stars", "label": "Stars", "default": "★★★★★" },
+      { "type": "textarea", "id": "quote", "label": "Quote", "default": "Mummy ko gas ki problem thi, ab kaafi relief hai. Achhe products hai." },
+      { "type": "image_picker", "id": "avatar", "label": "Avatar (optional)" },
+      { "type": "text", "id": "name", "label": "Name", "default": "Priya S." },
+      { "type": "text", "id": "concern", "label": "Concern / location", "default": "Gas & Bloating · Nagpur" }
+    ] }
+  ],
+  "max_blocks": 12,
+  "presets": [ { "name": "RV UGC / Testimonials", "blocks": [ {"type":"ugc"},{"type":"ugc"},{"type":"ugc"},{"type":"ugc"} ] } ]
+}
+{% endschema %}
