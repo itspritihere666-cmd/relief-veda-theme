@@ -6,15 +6,15 @@
         "o1": {
           "type": "msg",
           "settings": {
-            "icon": "tag",
-            "text": "Launch Offer — Up to 50% Off"
+            "icon": "leaf",
+            "text": "100% Ayurvedic Wellness Solutions"
           }
         },
         "o2": {
           "type": "msg",
           "settings": {
             "icon": "truck",
-            "text": "Free shipping over Rs. 499"
+            "text": "Free Shipping Above ₹999"
           }
         },
         "o3": {
@@ -61,27 +61,30 @@
           "type": "slide",
           "settings": {
             "align": "left",
-            "eyebrow": "Bestseller",
-            "title": "",
-            "btn_label": "Shop now"
+            "eyebrow": "Men's Vitality",
+            "title": "Vitalizer",
+            "btn_label": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man"
           }
         },
         "s2": {
           "type": "slide",
           "settings": {
             "align": "left",
-            "eyebrow": "New",
-            "title": "",
-            "btn_label": "Shop now"
+            "eyebrow": "Digestive Care",
+            "title": "LAX-URY",
+            "btn_label": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
           }
         },
         "s3": {
           "type": "slide",
           "settings": {
             "align": "left",
-            "eyebrow": "Combo",
-            "title": "",
-            "btn_label": "Shop now"
+            "eyebrow": "Women's Energy",
+            "title": "Zesty Energy",
+            "btn_label": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-zesty-energy-woman-essential"
           }
         }
       },
@@ -235,20 +238,6 @@
         "use_collection": true,
         "badge": "Launch Offer",
         "limit": 8
-      }
-    },
-    "rv_combos": {
-      "type": "rv-bestsellers",
-      "settings": {
-        "eyebrow": "Save more together",
-        "title": "Combos & kits",
-        "all_label": "View all combos",
-        "all_link": "shopify://collections/combos",
-        "layout": "carousel",
-        "use_collection": true,
-        "badge": "Combo Offer",
-        "limit": 6,
-        "bg": "#FFFDF8"
       }
     },
     "rv_reels": {
@@ -483,7 +472,6 @@
     "rv_trust",
     "rv_concern",
     "rv_bestsellers",
-    "rv_combos",
     "rv_reels",
     "rv_ugc",
     "rv_why",
