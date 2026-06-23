@@ -3,11 +3,33 @@
     "rv_offer": {
       "type": "rv-offer-bar",
       "blocks": {
-        "o1": { "type": "msg", "settings": { "icon": "tag", "text": "Launch Offer — Up to 50% Off" } },
-        "o2": { "type": "msg", "settings": { "icon": "truck", "text": "Free shipping over Rs. 499" } },
-        "o3": { "type": "msg", "settings": { "icon": "cod", "text": "Cash on Delivery available" } }
+        "o1": {
+          "type": "msg",
+          "settings": {
+            "icon": "tag",
+            "text": "Launch Offer — Up to 50% Off"
+          }
+        },
+        "o2": {
+          "type": "msg",
+          "settings": {
+            "icon": "truck",
+            "text": "Free shipping over Rs. 499"
+          }
+        },
+        "o3": {
+          "type": "msg",
+          "settings": {
+            "icon": "cod",
+            "text": "Cash on Delivery available"
+          }
+        }
       },
-      "block_order": ["o1", "o2", "o3"]
+      "block_order": [
+        "o1",
+        "o2",
+        "o3"
+      ]
     },
     "rv_hero": {
       "type": "rv-hero",
@@ -35,22 +57,86 @@
         "autoplay_speed": 5
       },
       "blocks": {
-        "s1": { "type": "slide", "settings": { "align": "left", "eyebrow": "Bestseller", "title": "", "btn_label": "Shop now" } },
-        "s2": { "type": "slide", "settings": { "align": "left", "eyebrow": "New", "title": "", "btn_label": "Shop now" } },
-        "s3": { "type": "slide", "settings": { "align": "left", "eyebrow": "Combo", "title": "", "btn_label": "Shop now" } }
+        "s1": {
+          "type": "slide",
+          "settings": {
+            "align": "left",
+            "eyebrow": "Bestseller",
+            "title": "",
+            "btn_label": "Shop now"
+          }
+        },
+        "s2": {
+          "type": "slide",
+          "settings": {
+            "align": "left",
+            "eyebrow": "New",
+            "title": "",
+            "btn_label": "Shop now"
+          }
+        },
+        "s3": {
+          "type": "slide",
+          "settings": {
+            "align": "left",
+            "eyebrow": "Combo",
+            "title": "",
+            "btn_label": "Shop now"
+          }
+        }
       },
-      "block_order": ["s1", "s2", "s3"]
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
     },
     "rv_trust": {
       "type": "rv-trust-strip",
       "blocks": {
-        "t1": { "type": "trust", "settings": { "icon": "leaf", "label": "100% Natural" } },
-        "t2": { "type": "trust", "settings": { "icon": "shield", "label": "100% Ayurvedic" } },
-        "t3": { "type": "trust", "settings": { "icon": "cert", "label": "GMP Certified" } },
-        "t4": { "type": "trust", "settings": { "icon": "drop", "label": "Vegan & Veg" } },
-        "t5": { "type": "trust", "settings": { "icon": "paw", "label": "Cruelty-Free" } }
+        "t1": {
+          "type": "trust",
+          "settings": {
+            "icon": "leaf",
+            "label": "100% Natural"
+          }
+        },
+        "t2": {
+          "type": "trust",
+          "settings": {
+            "icon": "shield",
+            "label": "100% Ayurvedic"
+          }
+        },
+        "t3": {
+          "type": "trust",
+          "settings": {
+            "icon": "cert",
+            "label": "GMP Certified"
+          }
+        },
+        "t4": {
+          "type": "trust",
+          "settings": {
+            "icon": "drop",
+            "label": "Vegan & Veg"
+          }
+        },
+        "t5": {
+          "type": "trust",
+          "settings": {
+            "icon": "paw",
+            "label": "Cruelty-Free"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4", "t5"]
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5"
+      ]
     },
     "rv_concern": {
       "type": "rv-concern-grid",
@@ -62,16 +148,81 @@
         "ratio": "3/4"
       },
       "blocks": {
-        "c1": { "type": "concern", "settings": { "hook": "Frequent UTI bothering you?", "cta": "Shop relief", "link": "shopify://collections/urinary-kidney-health" } },
-        "c2": { "type": "concern", "settings": { "hook": "Struggling with sugar?", "cta": "Shop diabetic care", "link": "shopify://collections/diabetic-health" } },
-        "c3": { "type": "concern", "settings": { "hook": "Gas, acidity & bloating?", "cta": "Shop digestive", "link": "shopify://collections/digestive-health" } },
-        "c4": { "type": "concern", "settings": { "hook": "Dull, tired skin?", "cta": "Shop skin care", "link": "shopify://collections/skin-health" } },
-        "c5": { "type": "concern", "settings": { "hook": "Low immunity?", "cta": "Shop immunity", "link": "shopify://collections/immunity-support" } },
-        "c6": { "type": "concern", "settings": { "hook": "Joint & knee pain?", "cta": "Shop bone & joint", "link": "shopify://collections/bone-joint" } },
-        "c7": { "type": "concern", "settings": { "hook": "PCOS or discharge?", "cta": "Shop women's health", "link": "shopify://collections/women-health" } },
-        "c8": { "type": "concern", "settings": { "hook": "Low stamina & energy?", "cta": "Shop men's health", "link": "shopify://collections/mens-health" } }
+        "c1": {
+          "type": "concern",
+          "settings": {
+            "hook": "Frequent UTI bothering you?",
+            "cta": "Shop relief",
+            "link": "shopify://collections/urinary-kidney-health"
+          }
+        },
+        "c2": {
+          "type": "concern",
+          "settings": {
+            "hook": "Struggling with sugar?",
+            "cta": "Shop diabetic care",
+            "link": "shopify://collections/diabetic-health"
+          }
+        },
+        "c3": {
+          "type": "concern",
+          "settings": {
+            "hook": "Gas, acidity & bloating?",
+            "cta": "Shop digestive",
+            "link": "shopify://collections/digestive-health"
+          }
+        },
+        "c4": {
+          "type": "concern",
+          "settings": {
+            "hook": "Dull, tired skin?",
+            "cta": "Shop skin care",
+            "link": "shopify://collections/skin-health"
+          }
+        },
+        "c5": {
+          "type": "concern",
+          "settings": {
+            "hook": "Low immunity?",
+            "cta": "Shop immunity",
+            "link": "shopify://collections/immunity-support"
+          }
+        },
+        "c6": {
+          "type": "concern",
+          "settings": {
+            "hook": "Joint & knee pain?",
+            "cta": "Shop bone & joint",
+            "link": "shopify://collections/bone-joint"
+          }
+        },
+        "c7": {
+          "type": "concern",
+          "settings": {
+            "hook": "PCOS or discharge?",
+            "cta": "Shop women's health",
+            "link": "shopify://collections/women-health"
+          }
+        },
+        "c8": {
+          "type": "concern",
+          "settings": {
+            "hook": "Low stamina & energy?",
+            "cta": "Shop men's health",
+            "link": "shopify://collections/mens-health"
+          }
+        }
       },
-      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8"
+      ]
     },
     "rv_bestsellers": {
       "type": "rv-bestsellers",
@@ -108,12 +259,41 @@
         "autoplay": true
       },
       "blocks": {
-        "r1": { "type": "reel", "settings": { "title": "Beat UTI naturally", "cta": "Shop now" } },
-        "r2": { "type": "reel", "settings": { "title": "Immunity, every day", "cta": "Shop now" } },
-        "r3": { "type": "reel", "settings": { "title": "Glow from within", "cta": "Shop now" } },
-        "r4": { "type": "reel", "settings": { "title": "The ReliefVeda journey", "cta": "Shop now" } }
+        "r1": {
+          "type": "reel",
+          "settings": {
+            "title": "Beat UTI naturally",
+            "cta": "Shop now"
+          }
+        },
+        "r2": {
+          "type": "reel",
+          "settings": {
+            "title": "Immunity, every day",
+            "cta": "Shop now"
+          }
+        },
+        "r3": {
+          "type": "reel",
+          "settings": {
+            "title": "Glow from within",
+            "cta": "Shop now"
+          }
+        },
+        "r4": {
+          "type": "reel",
+          "settings": {
+            "title": "The ReliefVeda journey",
+            "cta": "Shop now"
+          }
+        }
       },
-      "block_order": ["r1", "r2", "r3", "r4"]
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ]
     },
     "rv_ugc": {
       "type": "rv-ugc-testimonials",
@@ -123,12 +303,53 @@
         "subtitle": "Tag @baidyashakti_life_care to get featured"
       },
       "blocks": {
-        "u1": { "type": "ugc", "settings": { "product_tag": "Healthy Gut", "stars": "★★★★★", "quote": "I've struggled with digestion for years. ReliefVeda is now part of my daily routine.", "name": "Priya S.", "concern": "Gas & Bloating · Mumbai" } },
-        "u2": { "type": "ugc", "settings": { "product_tag": "Immuno Revive", "stars": "★★★★★", "quote": "The quality and experience feel premium. Love that it's rooted in Ayurveda.", "name": "Rahul M.", "concern": "Immunity · Bangalore" } },
-        "u3": { "type": "ugc", "settings": { "product_tag": "Beat UTI", "stars": "★★★★★", "quote": "Recommended ReliefVeda to my whole family. Thoughtful and effective formulations.", "name": "Neha A.", "concern": "Urinary Health · Delhi" } },
-        "u4": { "type": "ugc", "settings": { "product_tag": "Illumine", "stars": "★★★★★", "quote": "My skin looks visibly healthier. Gentle, natural and it actually works.", "name": "Anjali K.", "concern": "Skin Health · Nagpur" } }
+        "u1": {
+          "type": "ugc",
+          "settings": {
+            "product_tag": "Healthy Gut",
+            "stars": "★★★★★",
+            "quote": "I've struggled with digestion for years. ReliefVeda is now part of my daily routine.",
+            "name": "Priya S.",
+            "concern": "Gas & Bloating · Mumbai"
+          }
+        },
+        "u2": {
+          "type": "ugc",
+          "settings": {
+            "product_tag": "Immuno Revive",
+            "stars": "★★★★★",
+            "quote": "The quality and experience feel premium. Love that it's rooted in Ayurveda.",
+            "name": "Rahul M.",
+            "concern": "Immunity · Bangalore"
+          }
+        },
+        "u3": {
+          "type": "ugc",
+          "settings": {
+            "product_tag": "Beat UTI",
+            "stars": "★★★★★",
+            "quote": "Recommended ReliefVeda to my whole family. Thoughtful and effective formulations.",
+            "name": "Neha A.",
+            "concern": "Urinary Health · Delhi"
+          }
+        },
+        "u4": {
+          "type": "ugc",
+          "settings": {
+            "product_tag": "Illumine",
+            "stars": "★★★★★",
+            "quote": "My skin looks visibly healthier. Gentle, natural and it actually works.",
+            "name": "Anjali K.",
+            "concern": "Skin Health · Nagpur"
+          }
+        }
       },
-      "block_order": ["u1", "u2", "u3", "u4"]
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ]
     },
     "rv_why": {
       "type": "rv-why",
@@ -139,16 +360,65 @@
         "us_label": "ReliefVeda"
       },
       "blocks": {
-        "th1": { "type": "them", "settings": { "text": "Cheap raw powders, weak effect" } },
-        "th2": { "type": "them", "settings": { "text": "Masks symptoms only" } },
-        "th3": { "type": "them", "settings": { "text": "Chemicals & fillers" } },
-        "th4": { "type": "them", "settings": { "text": "One-size-fits-all" } },
-        "us1": { "type": "us", "settings": { "text": "A++ active herbal extracts" } },
-        "us2": { "type": "us", "settings": { "text": "Targets the root cause" } },
-        "us3": { "type": "us", "settings": { "text": "100% natural, no chemicals" } },
-        "us4": { "type": "us", "settings": { "text": "Expert-formulated per ailment" } }
+        "th1": {
+          "type": "them",
+          "settings": {
+            "text": "Cheap raw powders, weak effect"
+          }
+        },
+        "th2": {
+          "type": "them",
+          "settings": {
+            "text": "Masks symptoms only"
+          }
+        },
+        "th3": {
+          "type": "them",
+          "settings": {
+            "text": "Chemicals & fillers"
+          }
+        },
+        "th4": {
+          "type": "them",
+          "settings": {
+            "text": "One-size-fits-all"
+          }
+        },
+        "us1": {
+          "type": "us",
+          "settings": {
+            "text": "A++ active herbal extracts"
+          }
+        },
+        "us2": {
+          "type": "us",
+          "settings": {
+            "text": "Targets the root cause"
+          }
+        },
+        "us3": {
+          "type": "us",
+          "settings": {
+            "text": "100% natural, no chemicals"
+          }
+        },
+        "us4": {
+          "type": "us",
+          "settings": {
+            "text": "Expert-formulated per ailment"
+          }
+        }
       },
-      "block_order": ["th1", "th2", "th3", "th4", "us1", "us2", "us3", "us4"]
+      "block_order": [
+        "th1",
+        "th2",
+        "th3",
+        "th4",
+        "us1",
+        "us2",
+        "us3",
+        "us4"
+      ]
     },
     "rv_consult": {
       "type": "rv-consult-cta",
@@ -169,12 +439,41 @@
         "cols": 4
       },
       "blocks": {
-        "i1": { "type": "ing", "settings": { "name": "Gokhru", "desc": "Supports urinary tract & kidney health." } },
-        "i2": { "type": "ing", "settings": { "name": "Ashwagandha", "desc": "Builds strength, stamina & vitality." } },
-        "i3": { "type": "ing", "settings": { "name": "Giloy", "desc": "Natural immunity booster." } },
-        "i4": { "type": "ing", "settings": { "name": "Shatavari", "desc": "Supports women's hormonal balance." } }
+        "i1": {
+          "type": "ing",
+          "settings": {
+            "name": "Gokhru",
+            "desc": "Supports urinary tract & kidney health."
+          }
+        },
+        "i2": {
+          "type": "ing",
+          "settings": {
+            "name": "Ashwagandha",
+            "desc": "Builds strength, stamina & vitality."
+          }
+        },
+        "i3": {
+          "type": "ing",
+          "settings": {
+            "name": "Giloy",
+            "desc": "Natural immunity booster."
+          }
+        },
+        "i4": {
+          "type": "ing",
+          "settings": {
+            "name": "Shatavari",
+            "desc": "Supports women's hormonal balance."
+          }
+        }
       },
-      "block_order": ["i1", "i2", "i3", "i4"]
+      "block_order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ]
     }
   },
   "order": [
