@@ -24,6 +24,23 @@
         "height_mobile": 520
       }
     },
+    "rv_hero_products": {
+      "type": "rv-hero-products",
+      "settings": {
+        "heading": "Our Hero Products",
+        "bg": "#FFFDF8",
+        "ratio_desktop": "16/7",
+        "ratio_mobile": "4/5",
+        "autoplay": true,
+        "autoplay_speed": 5
+      },
+      "blocks": {
+        "s1": { "type": "slide", "settings": { "align": "left", "eyebrow": "Bestseller", "title": "", "btn_label": "Shop now" } },
+        "s2": { "type": "slide", "settings": { "align": "left", "eyebrow": "New", "title": "", "btn_label": "Shop now" } },
+        "s3": { "type": "slide", "settings": { "align": "left", "eyebrow": "Combo", "title": "", "btn_label": "Shop now" } }
+      },
+      "block_order": ["s1", "s2", "s3"]
+    },
     "rv_trust": {
       "type": "rv-trust-strip",
       "blocks": {
@@ -163,6 +180,7 @@
   "order": [
     "rv_offer",
     "rv_hero",
+    "rv_hero_products",
     "rv_trust",
     "rv_concern",
     "rv_bestsellers",
