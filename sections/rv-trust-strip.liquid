@@ -31,10 +31,16 @@
     font-weight:600; letter-spacing:.01em; line-height:1.25;
   }
   @media (max-width: 749px){
+    .rv-trust-{{ section.id }}{ padding:14px 12px; }
     .rv-trust-{{ section.id }} .rv-trust__row{
-      grid-template-columns: repeat(2, 1fr);
-      gap:18px 10px;
+      grid-auto-flow:column; grid-template-columns:none;
+      grid-auto-columns: minmax(62px, 1fr);
+      gap:4px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
     }
+    .rv-trust-{{ section.id }} .rv-trust__row::-webkit-scrollbar{ display:none; }
+    .rv-trust-{{ section.id }} .rv-trust__item{ gap:6px; }
+    .rv-trust-{{ section.id }} .rv-trust__ic, .rv-trust-{{ section.id }} .rv-trust__ic svg{ width:22px; height:22px; }
+    .rv-trust-{{ section.id }} .rv-trust__label{ font-size:10px; line-height:1.2; }
   }
 {%- endstyle -%}
 
