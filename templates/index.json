@@ -570,6 +570,7 @@
         "i1": {
           "type": "ing",
           "settings": {
+            "image": "shopify://shop_images/Gokhru_Tribulus_Gokshura_c8fb05b7-60bc-489a-b493-07d5f9e7c68b.png",
             "name": "Gokhru",
             "desc": "Supports urinary tract & kidney health."
           }
@@ -577,6 +578,7 @@
         "i2": {
           "type": "ing",
           "settings": {
+            "image": "shopify://shop_images/Ashwagandha.png",
             "name": "Ashwagandha",
             "desc": "Builds strength, stamina & vitality."
           }
@@ -584,6 +586,7 @@
         "i3": {
           "type": "ing",
           "settings": {
+            "image": "shopify://shop_images/Giloy.png",
             "name": "Giloy",
             "desc": "Natural immunity booster."
           }
