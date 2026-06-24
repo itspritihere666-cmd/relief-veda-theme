@@ -281,6 +281,7 @@
         "card_CmKEMm": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/healthygut_1.png",
             "name": "Healthy Gut",
             "badge": "38% OFF",
             "b1": "Relieves gas & bloating",
