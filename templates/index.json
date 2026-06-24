@@ -188,6 +188,44 @@
         "text": "#ffffff"
       }
     },
+    "rv_offer_bar_AP37Cx": {
+      "type": "rv-offer-bar",
+      "blocks": {
+        "msg_Ypq9KQ": {
+          "type": "msg",
+          "settings": {
+            "icon": "leaf",
+            "text": "100% Ayurvedic Wellness Solutions",
+            "link": ""
+          }
+        },
+        "msg_jWwBTA": {
+          "type": "msg",
+          "settings": {
+            "icon": "truck",
+            "text": "Free Shipping Above ₹999",
+            "link": ""
+          }
+        },
+        "msg_NqAUKY": {
+          "type": "msg",
+          "settings": {
+            "icon": "cod",
+            "text": "Cash on Delivery available",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "msg_Ypq9KQ",
+        "msg_jWwBTA",
+        "msg_NqAUKY"
+      ],
+      "settings": {
+        "bg": "#1f7a4d",
+        "text": "#ffffff"
+      }
+    },
     "rv_reels": {
       "type": "rv-video-reels",
       "blocks": {
@@ -472,6 +510,60 @@
         "subtitle": "Tag @baidyashakti_life_care to get featured"
       }
     },
+    "rv_ingredients": {
+      "type": "rv-ingredients",
+      "blocks": {
+        "i1": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Gokhru_Tribulus_Gokshura_c8fb05b7-60bc-489a-b493-07d5f9e7c68b.png",
+            "name": "Gokhru",
+            "desc": "Supports urinary tract & kidney health."
+          }
+        },
+        "i2": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Ashwagandha.png",
+            "name": "Ashwagandha",
+            "desc": "Builds strength, stamina & vitality."
+          }
+        },
+        "i3": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Giloy.png",
+            "name": "Giloy",
+            "desc": "Natural immunity booster."
+          }
+        },
+        "i4": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Shatavari.png",
+            "name": "Shatavari",
+            "desc": "Supports women's hormonal balance."
+          }
+        }
+      },
+      "block_order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "settings": {
+        "bg": "#f7f2e9",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "What's inside",
+        "title": "Pure herbs, potent extracts",
+        "subtitle": "We extract the active compounds from premium herbs not raw powders for consistent, effective results.",
+        "cols": 4
+      }
+    },
     "rv_why": {
       "type": "rv-why",
       "blocks": {
@@ -547,60 +639,6 @@
         "us_label": "ReliefVeda"
       }
     },
-    "rv_ingredients": {
-      "type": "rv-ingredients",
-      "blocks": {
-        "i1": {
-          "type": "ing",
-          "settings": {
-            "image": "shopify://shop_images/Gokhru_Tribulus_Gokshura_c8fb05b7-60bc-489a-b493-07d5f9e7c68b.png",
-            "name": "Gokhru",
-            "desc": "Supports urinary tract & kidney health."
-          }
-        },
-        "i2": {
-          "type": "ing",
-          "settings": {
-            "image": "shopify://shop_images/Ashwagandha.png",
-            "name": "Ashwagandha",
-            "desc": "Builds strength, stamina & vitality."
-          }
-        },
-        "i3": {
-          "type": "ing",
-          "settings": {
-            "image": "shopify://shop_images/Giloy.png",
-            "name": "Giloy",
-            "desc": "Natural immunity booster."
-          }
-        },
-        "i4": {
-          "type": "ing",
-          "settings": {
-            "image": "shopify://shop_images/Shatavari.png",
-            "name": "Shatavari",
-            "desc": "Supports women's hormonal balance."
-          }
-        }
-      },
-      "block_order": [
-        "i1",
-        "i2",
-        "i3",
-        "i4"
-      ],
-      "settings": {
-        "bg": "#f7f2e9",
-        "heading": "#2b1f14",
-        "muted": "#6b5b4a",
-        "accent": "#1f7a4d",
-        "border": "#eae0cd",
-        "eyebrow": "What's inside",
-        "title": "Pure herbs, potent extracts",
-        "subtitle": "We extract the active compounds from premium herbs not raw powders for consistent, effective results.",
-        "cols": 4
-      }
-    },
     "rv_consult": {
       "type": "rv-consult-cta",
       "settings": {
@@ -621,9 +659,10 @@
   },
   "order": [
     "rv_hero_products",
-    "rv_bestsellers",
     "rv_offer",
+    "rv_bestsellers",
     "rv_reels",
+    "rv_offer_bar_AP37Cx",
     "rv_concern",
     "rv_trust",
     "rv_ugc",
