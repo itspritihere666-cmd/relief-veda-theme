@@ -29,7 +29,7 @@
     {%- for block in section.blocks -%}
       <div class="rv-reel" {{ block.shopify_attributes }}>
         {%- if block.settings.video != blank -%}
-          <video {% if section.settings.autoplay %}autoplay muted loop playsinline{% else %}controls{% endif %} preload="metadata" {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url: width:600 }}"{% endif %}>
+          <video {% if section.settings.autoplay %}muted loop playsinline data-rv-autoplay{% else %}controls{% endif %} preload="none" {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url: width:600 }}"{% endif %}>
             <source src="{{ block.settings.video }}" type="video/mp4">
           </video>
         {%- elsif block.settings.shopify_video != blank -%}
@@ -65,6 +65,21 @@
     var ICON_OFF = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9l5 5m0-5l-5 5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>';
     var ICON_ON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a5 5 0 010 8M18.5 5.5a8 8 0 010 13" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>';
     var reels = [].slice.call(root.querySelectorAll('.rv-reel'));
+
+    // Lazy play: only play videos that are on screen, pause the rest (mobile/perf).
+    if('IntersectionObserver' in window){
+      var vio = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          var v = e.target.querySelector('video'); if(!v) return;
+          if(e.isIntersecting){ var p = v.play(); if(p && p.catch){ p.catch(function(){}); } }
+          else { v.pause(); }
+        });
+      }, { threshold: 0.5 });
+      reels.forEach(function(r){ vio.observe(r); });
+    } else {
+      reels.forEach(function(r){ var v = r.querySelector('video'); if(v){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); } });
+    }
+
     reels.forEach(function(reel){
       var btn = reel.querySelector('[data-rv-sound]');
       var vid = reel.querySelector('video');

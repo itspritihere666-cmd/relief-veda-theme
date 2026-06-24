@@ -58,7 +58,7 @@
         "heading": "",
         "bg": "#fffdf8",
         "ratio_desktop": "16/7",
-        "ratio_mobile": "4/5",
+        "ratio_mobile": "16/9",
         "autoplay": true,
         "autoplay_speed": 5,
         "btn_bg": "#1f7a4d",
