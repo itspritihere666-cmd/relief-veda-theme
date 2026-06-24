@@ -1,0 +1,41 @@
+{%- comment -%} Relief Veda — minimal scroll reveal (fade-up + stagger). Additive, safe. {%- endcomment -%}
+<style>
+  html.rv-anim [data-rvr]{ opacity:0; transform:translateY(22px); will-change:opacity,transform; }
+  html.rv-anim [data-rvr].rvr-in{
+    opacity:1; transform:none;
+    transition:opacity .65s ease, transform .65s cubic-bezier(.22,.61,.36,1);
+  }
+  @media (prefers-reduced-motion: reduce){
+    html.rv-anim [data-rvr]{ opacity:1 !important; transform:none !important; transition:none !important; }
+  }
+</style>
+<script>
+(function(){
+  var d = document;
+  function run(){
+    d.documentElement.classList.add('rv-anim');
+    var sel = '.rv-section h2, .rv-concern__card, .rv-card, .rv-ing__card, .rv-ugc__card, .rv-reel, .rv-cmp__col, .rv-trust__item';
+    var els = [].slice.call(d.querySelectorAll(sel));
+    if(!els.length) return;
+    els.forEach(function(el){ el.setAttribute('data-rvr',''); });
+    if(!('IntersectionObserver' in window)){
+      els.forEach(function(el){ el.classList.add('rvr-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        var el = e.target;
+        var sibs = [].slice.call(el.parentNode.children).filter(function(c){ return c.hasAttribute('data-rvr'); });
+        var i = sibs.indexOf(el); if(i < 0) i = 0;
+        el.style.transitionDelay = (Math.min(i, 6) * 70) + 'ms';
+        el.classList.add('rvr-in');
+        io.unobserve(el);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function(el){ io.observe(el); });
+  }
+  if(d.readyState !== 'loading'){ run(); }
+  else { d.addEventListener('DOMContentLoaded', run); }
+})();
+</script>
