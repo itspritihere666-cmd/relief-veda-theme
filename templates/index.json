@@ -282,6 +282,7 @@
         "c3": {
           "type": "concern",
           "settings": {
+            "image": "shopify://shop_images/Gas_acidity_bloating.png",
             "hook": "Gas, acidity & bloating?",
             "cta": "Shop digestive",
             "link": "shopify://collections/digestive-health"
@@ -290,6 +291,7 @@
         "c4": {
           "type": "concern",
           "settings": {
+            "image": "shopify://shop_images/Dull_tired_skin.png",
             "hook": "Dull, tired skin?",
             "cta": "Shop skin care",
             "link": "shopify://collections/skin-health"
