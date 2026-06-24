@@ -23,6 +23,15 @@
     .Footer .Footer__Content, .Footer .Linklist a, .Footer .Linklist__Item{ font-size:12.5px !important; line-height:1.85 !important; }
     .Footer .Footer__Title{ font-size:12.5px !important; margin-bottom:8px !important; }
   }
+
+  /* --- Product card polish (collection / search / recommendations) --- */
+  .ProductItem__ImageWrapper{ border-radius:12px !important; overflow:hidden; background:#F4EFE5; }
+  .ProductItem__ImageWrapper, .ProductItem__Image{ transition:transform .4s ease, box-shadow .3s ease; }
+  .ProductItem:hover .ProductItem__ImageWrapper{ box-shadow:0 14px 30px rgba(58,42,30,.16); }
+  .ProductItem:hover .ProductItem__Image{ transform:scale(1.03); }
+  .ProductItem__Title{ font-weight:600 !important; letter-spacing:-.01em; }
+  .ProductItem__Label, .ProductItem__LabelList .ProductItem__Label{ background:#1F7A4D !important; color:#fff !important; border-radius:6px !important; font-weight:700; letter-spacing:.02em; }
+  .Price--compareAt, .ProductItem__Price s, s.Price{ color:#9b8a76 !important; }
 </style>
 <script>
 (function(){
