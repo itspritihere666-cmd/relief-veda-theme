@@ -143,7 +143,7 @@
         "all_label": "View all",
         "all_link": "shopify://collections/shop-all",
         "badge": "Launch Offer",
-        "layout": "grid",
+        "layout": "carousel",
         "cols": 4,
         "use_collection": true,
         "collection": "",
@@ -327,6 +327,7 @@
         "c8": {
           "type": "concern",
           "settings": {
+            "image": "shopify://shop_images/Low_stamina_energy_men.png",
             "hook": "Low stamina & energy?",
             "cta": "Shop men's health",
             "link": "shopify://collections/mens-health"
