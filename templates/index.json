@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "rv_offer": {
@@ -7,21 +16,24 @@
           "type": "msg",
           "settings": {
             "icon": "leaf",
-            "text": "100% Ayurvedic Wellness Solutions"
+            "text": "100% Ayurvedic Wellness Solutions",
+            "link": ""
           }
         },
         "o2": {
           "type": "msg",
           "settings": {
             "icon": "truck",
-            "text": "Free Shipping Above ₹999"
+            "text": "Free Shipping Above ₹999",
+            "link": ""
           }
         },
         "o3": {
           "type": "msg",
           "settings": {
             "icon": "cod",
-            "text": "Cash on Delivery available"
+            "text": "Cash on Delivery available",
+            "link": ""
           }
         }
       },
@@ -29,47 +41,49 @@
         "o1",
         "o2",
         "o3"
-      ]
+      ],
+      "settings": {
+        "bg": "#1f7a4d",
+        "text": "#ffffff"
+      }
     },
     "rv_hero_products": {
       "type": "rv-hero-products",
-      "settings": {
-        "heading": "",
-        "bg": "#FFFDF8",
-        "ratio_desktop": "16/7",
-        "ratio_mobile": "4/5",
-        "autoplay": true,
-        "autoplay_speed": 5
-      },
       "blocks": {
         "s1": {
           "type": "slide",
           "settings": {
-            "align": "left",
+            "image": "shopify://shop_images/virtilizer_2.png",
+            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man",
             "eyebrow": "",
             "title": "",
-            "btn_label": "Learn more",
-            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man"
+            "align": "left",
+            "text_color": "#ffffff",
+            "btn_label": "Buy Now"
           }
         },
         "s2": {
           "type": "slide",
           "settings": {
-            "align": "left",
+            "image": "shopify://shop_images/beat_uti.png",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti",
             "eyebrow": "",
             "title": "",
-            "btn_label": "Learn more",
-            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
+            "align": "left",
+            "text_color": "#ffffff",
+            "btn_label": "Learn more"
           }
         },
         "s3": {
           "type": "slide",
           "settings": {
-            "align": "left",
+            "image": "shopify://shop_images/laxury_hero_section.png",
+            "link": "https://reliefveda.com/products/baidyashakti-lax-ury",
             "eyebrow": "",
             "title": "",
-            "btn_label": "Learn more",
-            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
+            "align": "left",
+            "text_color": "#ffffff",
+            "btn_label": "Learn more"
           }
         }
       },
@@ -77,7 +91,18 @@
         "s1",
         "s2",
         "s3"
-      ]
+      ],
+      "settings": {
+        "heading": "",
+        "bg": "#fffdf8",
+        "ratio_desktop": "16/7",
+        "ratio_mobile": "4/5",
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "btn_bg": "#1f7a4d",
+        "btn_text": "#ffffff",
+        "btn_radius": 8
+      }
     },
     "rv_trust": {
       "type": "rv-trust-strip",
@@ -124,17 +149,16 @@
         "t3",
         "t4",
         "t5"
-      ]
+      ],
+      "settings": {
+        "bg": "#f7f2e9",
+        "text": "#3a2a1e",
+        "icon_color": "#1f7a4d",
+        "border": "#e7ddc9"
+      }
     },
     "rv_concern": {
       "type": "rv-concern-grid",
-      "settings": {
-        "eyebrow": "Find your solution",
-        "title": "Shop by concern",
-        "subtitle": "Tell us what's troubling you — there's a root-cause Ayurvedic formulation for it.",
-        "cols": 4,
-        "ratio": "3/4"
-      },
       "blocks": {
         "c1": {
           "type": "concern",
@@ -210,55 +234,78 @@
         "c6",
         "c7",
         "c8"
-      ]
+      ],
+      "settings": {
+        "bg": "#fffdf8",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "card_fallback": "#3a2a1e",
+        "eyebrow": "Find your solution",
+        "title": "Shop by concern",
+        "subtitle": "Tell us what's troubling you — there's a root-cause Ayurvedic formulation for it.",
+        "cols": 4,
+        "ratio": "3/4",
+        "radius": 14
+      }
     },
     "rv_bestsellers": {
       "type": "rv-bestsellers",
       "settings": {
+        "bg": "#f7f2e9",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
         "eyebrow": "Loved by thousands",
         "title": "Bestsellers",
         "all_label": "View all",
         "all_link": "shopify://collections/shop-all",
-        "layout": "carousel",
-        "use_collection": true,
         "badge": "Launch Offer",
+        "layout": "carousel",
+        "cols": 4,
+        "use_collection": true,
+        "collection": "",
         "limit": 8
       }
     },
     "rv_reels": {
       "type": "rv-video-reels",
-      "settings": {
-        "eyebrow": "See it in action",
-        "title": "Real results, real stories",
-        "autoplay": true
-      },
       "blocks": {
         "r1": {
           "type": "reel",
           "settings": {
+            "video": "",
             "title": "Beat UTI naturally",
-            "cta": "Shop now"
+            "cta": "Shop now",
+            "link": ""
           }
         },
         "r2": {
           "type": "reel",
           "settings": {
+            "video": "",
             "title": "Immunity, every day",
-            "cta": "Shop now"
+            "cta": "Shop now",
+            "link": ""
           }
         },
         "r3": {
           "type": "reel",
           "settings": {
+            "video": "",
             "title": "Glow from within",
-            "cta": "Shop now"
+            "cta": "Shop now",
+            "link": ""
           }
         },
         "r4": {
           "type": "reel",
           "settings": {
+            "video": "",
             "title": "The ReliefVeda journey",
-            "cta": "Shop now"
+            "cta": "Shop now",
+            "link": ""
           }
         }
       },
@@ -267,15 +314,18 @@
         "r2",
         "r3",
         "r4"
-      ]
+      ],
+      "settings": {
+        "bg": "#fffdf8",
+        "heading": "#2b1f14",
+        "accent": "#1f7a4d",
+        "eyebrow": "See it in action",
+        "title": "Real results, real stories",
+        "autoplay": true
+      }
     },
     "rv_ugc": {
       "type": "rv-ugc-testimonials",
-      "settings": {
-        "eyebrow": "Real people, real relief",
-        "title": "Trusted across India",
-        "subtitle": "Tag @baidyashakti_life_care to get featured"
-      },
       "blocks": {
         "u1": {
           "type": "ugc",
@@ -323,16 +373,20 @@
         "u2",
         "u3",
         "u4"
-      ]
+      ],
+      "settings": {
+        "bg": "#f7f2e9",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "Real people, real relief",
+        "title": "Trusted across India",
+        "subtitle": "Tag @baidyashakti_life_care to get featured"
+      }
     },
     "rv_why": {
       "type": "rv-why",
-      "settings": {
-        "eyebrow": "The ReliefVeda difference",
-        "title": "Not your average supplement",
-        "them_label": "Generic Products",
-        "us_label": "ReliefVeda"
-      },
       "blocks": {
         "th1": {
           "type": "them",
@@ -392,26 +446,39 @@
         "us2",
         "us3",
         "us4"
-      ]
+      ],
+      "settings": {
+        "bg": "#fffdf8",
+        "heading": "#2b1f14",
+        "muted": "#7a6b59",
+        "accent": "#1f7a4d",
+        "us_bg": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "The ReliefVeda difference",
+        "title": "Not your average supplement",
+        "them_label": "Generic Products",
+        "us_label": "ReliefVeda"
+      }
     },
     "rv_consult": {
       "type": "rv-consult-cta",
       "settings": {
+        "page_bg": "#fffdf8",
+        "bg": "#2b1f14",
+        "text": "#ffffff",
+        "media_bg": "#3a2a1e",
         "eyebrow": "Free guidance",
         "title": "Talk to our Ayurvedic expert — free",
         "subtitle": "Not sure which product is right for you? Get a free consultation and a personalised recommendation.",
         "btn_label": "Book free consultation",
-        "show_wa": true
+        "btn_link": "",
+        "show_wa": true,
+        "btn_bg": "#1f7a4d",
+        "btn_text": "#ffffff"
       }
     },
     "rv_ingredients": {
       "type": "rv-ingredients",
-      "settings": {
-        "eyebrow": "What's inside",
-        "title": "Pure herbs, potent extracts",
-        "subtitle": "We extract the active compounds from premium herbs — not raw powders — for consistent, effective results.",
-        "cols": 4
-      },
       "blocks": {
         "i1": {
           "type": "ing",
@@ -447,7 +514,18 @@
         "i2",
         "i3",
         "i4"
-      ]
+      ],
+      "settings": {
+        "bg": "#f7f2e9",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "What's inside",
+        "title": "Pure herbs, potent extracts",
+        "subtitle": "We extract the active compounds from premium herbs — not raw powders — for consistent, effective results.",
+        "cols": 4
+      }
     }
   },
   "order": [
