@@ -66,6 +66,44 @@
         "btn_radius": 8
       }
     },
+    "rv_offer": {
+      "type": "rv-offer-bar",
+      "blocks": {
+        "o1": {
+          "type": "msg",
+          "settings": {
+            "icon": "leaf",
+            "text": "100% Ayurvedic Wellness Solutions",
+            "link": ""
+          }
+        },
+        "o2": {
+          "type": "msg",
+          "settings": {
+            "icon": "truck",
+            "text": "Free Shipping Above ₹999",
+            "link": ""
+          }
+        },
+        "o3": {
+          "type": "msg",
+          "settings": {
+            "icon": "cod",
+            "text": "Cash on Delivery available",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "o1",
+        "o2",
+        "o3"
+      ],
+      "settings": {
+        "bg": "#1f7a4d",
+        "text": "#ffffff"
+      }
+    },
     "rv_bestsellers": {
       "type": "rv-bestsellers",
       "blocks": {
@@ -150,82 +188,6 @@
         "limit": 8
       }
     },
-    "rv_offer": {
-      "type": "rv-offer-bar",
-      "blocks": {
-        "o1": {
-          "type": "msg",
-          "settings": {
-            "icon": "leaf",
-            "text": "100% Ayurvedic Wellness Solutions",
-            "link": ""
-          }
-        },
-        "o2": {
-          "type": "msg",
-          "settings": {
-            "icon": "truck",
-            "text": "Free Shipping Above ₹999",
-            "link": ""
-          }
-        },
-        "o3": {
-          "type": "msg",
-          "settings": {
-            "icon": "cod",
-            "text": "Cash on Delivery available",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "o1",
-        "o2",
-        "o3"
-      ],
-      "settings": {
-        "bg": "#1f7a4d",
-        "text": "#ffffff"
-      }
-    },
-    "rv_offer_bar_AP37Cx": {
-      "type": "rv-offer-bar",
-      "blocks": {
-        "msg_Ypq9KQ": {
-          "type": "msg",
-          "settings": {
-            "icon": "leaf",
-            "text": "100% Ayurvedic Wellness Solutions",
-            "link": ""
-          }
-        },
-        "msg_jWwBTA": {
-          "type": "msg",
-          "settings": {
-            "icon": "truck",
-            "text": "Free Shipping Above ₹999",
-            "link": ""
-          }
-        },
-        "msg_NqAUKY": {
-          "type": "msg",
-          "settings": {
-            "icon": "cod",
-            "text": "Cash on Delivery available",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "msg_Ypq9KQ",
-        "msg_jWwBTA",
-        "msg_NqAUKY"
-      ],
-      "settings": {
-        "bg": "#1f7a4d",
-        "text": "#ffffff"
-      }
-    },
     "rv_reels": {
       "type": "rv-video-reels",
       "blocks": {
@@ -294,6 +256,44 @@
         "eyebrow": "See it in action",
         "title": "Real results, real stories",
         "autoplay": true
+      }
+    },
+    "rv_offer_bar_AP37Cx": {
+      "type": "rv-offer-bar",
+      "blocks": {
+        "msg_Ypq9KQ": {
+          "type": "msg",
+          "settings": {
+            "icon": "leaf",
+            "text": "100% Ayurvedic Wellness Solutions",
+            "link": ""
+          }
+        },
+        "msg_jWwBTA": {
+          "type": "msg",
+          "settings": {
+            "icon": "truck",
+            "text": "Free Shipping Above ₹999",
+            "link": ""
+          }
+        },
+        "msg_NqAUKY": {
+          "type": "msg",
+          "settings": {
+            "icon": "cod",
+            "text": "Cash on Delivery available",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "msg_Ypq9KQ",
+        "msg_jWwBTA",
+        "msg_NqAUKY"
+      ],
+      "settings": {
+        "bg": "#1f7a4d",
+        "text": "#ffffff"
       }
     },
     "rv_concern": {
@@ -650,6 +650,8 @@
         "title": "Talk to our Ayurvedic expert free",
         "subtitle": "Not sure which product is right for you? Get a free consultation and a personalised recommendation.",
         "btn_label": "Book free consultation",
+        "wa_number": "+91 70309 31091",
+        "wa_message": "Hi Relief Veda, I'd like a free Ayurvedic consultation.",
         "btn_link": "",
         "show_wa": true,
         "btn_bg": "#1f7a4d",
