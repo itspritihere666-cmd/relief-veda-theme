@@ -309,6 +309,7 @@
         "c6": {
           "type": "concern",
           "settings": {
+            "image": "shopify://shop_images/Joint_knee_pain.png",
             "hook": "Joint & knee pain?",
             "cta": "Shop bone & joint",
             "link": "shopify://collections/bone-joint"
