@@ -17,6 +17,19 @@
   }
 {%- endstyle -%}
 
+{%- liquid
+  assign wa = section.settings.wa_number | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')'
+  if wa != blank
+    assign cta_href = 'https://wa.me/' | append: wa
+    if section.settings.wa_message != blank
+      assign cta_href = cta_href | append: '?text=' | append: section.settings.wa_message | url_encode
+    endif
+    assign cta_target = '_blank'
+  else
+    assign cta_href = section.settings.btn_link | default: '#'
+    assign cta_target = '_self'
+  endif
+-%}
 <section class="rv-consult-{{ section.id }}">
   <div class="rv-consult__inner">
     <div class="rv-consult__copy">
@@ -24,7 +37,7 @@
       {%- if section.settings.title != blank -%}<h2 class="rv-consult__title">{{ section.settings.title }}</h2>{%- endif -%}
       {%- if section.settings.subtitle != blank -%}<p class="rv-consult__sub">{{ section.settings.subtitle }}</p>{%- endif -%}
       {%- if section.settings.btn_label != blank -%}
-        <a class="rv-consult__cta" href="{{ section.settings.btn_link | default:'#' }}">
+        <a class="rv-consult__cta" href="{{ cta_href }}" target="{{ cta_target }}" rel="noopener">
           {%- if section.settings.show_wa -%}<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1112 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 01-1.9-1.2 7.3 7.3 0 01-1.4-1.7c-.1-.3 0-.4.1-.5l.4-.5.3-.4v-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 00-.7.3 2.8 2.8 0 00-.9 2.1 4.9 4.9 0 001 2.6 11 11 0 004.3 3.8c2 .8 2 .5 2.4.5a2.5 2.5 0 001.6-1.2 2 2 0 00.2-1.2c-.1-.1-.2-.1-.4-.2z"/></svg>{%- endif -%}
           {{ section.settings.btn_label }}
         </a>
@@ -51,7 +64,10 @@
     { "type": "text", "id": "title", "label": "Title", "default": "Talk to our Ayurvedic expert — free" },
     { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Not sure which product is right for you? Get a free consultation and a personalised recommendation." },
     { "type": "text", "id": "btn_label", "label": "Button label", "default": "Book free consultation" },
-    { "type": "url", "id": "btn_link", "label": "Button link" },
+    { "type": "header", "content": "WhatsApp" },
+    { "type": "text", "id": "wa_number", "label": "WhatsApp number (country code, no +)", "info": "e.g. 919876543210 for +91 98765 43210. Leave blank to use the link below instead." },
+    { "type": "text", "id": "wa_message", "label": "Pre-filled message", "default": "Hi Relief Veda, I'd like a free Ayurvedic consultation." },
+    { "type": "url", "id": "btn_link", "label": "Button link (used only if no WhatsApp number)" },
     { "type": "checkbox", "id": "show_wa", "label": "Show WhatsApp icon", "default": true },
     { "type": "color", "id": "btn_bg", "label": "Button bg", "default": "#1F7A4D" },
     { "type": "color", "id": "btn_text", "label": "Button text", "default": "#FFFFFF" }
