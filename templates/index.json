@@ -632,7 +632,7 @@
         "muted": "#7a6b59",
         "accent": "#1f7a4d",
         "us_bg": "#1f7a4d",
-        "border": "#eae0cd",
+        "border": "#251E18",
         "eyebrow": "The ReliefVeda difference",
         "title": "Not your average supplement",
         "them_label": "Generic Products",
@@ -643,9 +643,9 @@
       "type": "rv-consult-cta",
       "settings": {
         "page_bg": "#f5f5f6",
-        "bg": "#2b1f14",
+        "bg": "#1F7A4D",
         "text": "#ffffff",
-        "media_bg": "#3a2a1e",
+        "media_bg": "#251E18",
         "image": "shopify://shop_images/expert_img2.png",
         "eyebrow": "Free guidance",
         "title": "Talk to our Ayurvedic expert free",
@@ -655,8 +655,8 @@
         "wa_message": "Hi Relief Veda, I'd like a free Ayurvedic consultation.",
         "btn_link": "",
         "show_wa": true,
-        "btn_bg": "#1f7a4d",
-        "btn_text": "#ffffff"
+        "btn_bg": "#F5F5F6",
+        "btn_text": "#1F7A4D"
       }
     }
   },
