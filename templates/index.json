@@ -547,23 +547,6 @@
         "us_label": "ReliefVeda"
       }
     },
-    "rv_consult": {
-      "type": "rv-consult-cta",
-      "settings": {
-        "page_bg": "#fffdf8",
-        "bg": "#2b1f14",
-        "text": "#ffffff",
-        "media_bg": "#3a2a1e",
-        "eyebrow": "Free guidance",
-        "title": "Talk to our Ayurvedic expert free",
-        "subtitle": "Not sure which product is right for you? Get a free consultation and a personalised recommendation.",
-        "btn_label": "Book free consultation",
-        "btn_link": "",
-        "show_wa": true,
-        "btn_bg": "#1f7a4d",
-        "btn_text": "#ffffff"
-      }
-    },
     "rv_ingredients": {
       "type": "rv-ingredients",
       "blocks": {
@@ -617,6 +600,23 @@
         "subtitle": "We extract the active compounds from premium herbs not raw powders for consistent, effective results.",
         "cols": 4
       }
+    },
+    "rv_consult": {
+      "type": "rv-consult-cta",
+      "settings": {
+        "page_bg": "#fffdf8",
+        "bg": "#2b1f14",
+        "text": "#ffffff",
+        "media_bg": "#3a2a1e",
+        "eyebrow": "Free guidance",
+        "title": "Talk to our Ayurvedic expert free",
+        "subtitle": "Not sure which product is right for you? Get a free consultation and a personalised recommendation.",
+        "btn_label": "Book free consultation",
+        "btn_link": "",
+        "show_wa": true,
+        "btn_bg": "#1f7a4d",
+        "btn_text": "#ffffff"
+      }
     }
   },
   "order": [
@@ -627,8 +627,8 @@
     "rv_concern",
     "rv_trust",
     "rv_ugc",
+    "rv_ingredients",
     "rv_why",
-    "rv_consult",
-    "rv_ingredients"
+    "rv_consult"
   ]
 }
