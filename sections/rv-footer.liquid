@@ -10,7 +10,7 @@
 -%}
 
 {%- style -%}
-  .rv-foot-{{ id }}{ background:{{ section.settings.bg }}; color:{{ section.settings.text }}; }
+  .rv-foot-{{ id }}{ background:{{ section.settings.bg }}; color:{{ section.settings.text }}; border-top:1px solid {{ section.settings.border }}; }
   .rv-foot-{{ id }} a{ color:inherit; text-decoration:none; }
   .rv-foot-{{ id }} .rv-foot__inner{ max-width:1240px; margin:0 auto; padding: clamp(40px,5vw,64px) clamp(16px,4vw,40px) 22px; }
   .rv-foot-{{ id }} .rv-foot__top{ display:grid; grid-template-columns: 1.4fr repeat({{ section.blocks.size }}, 1fr); gap: clamp(24px,3vw,46px); }
@@ -125,12 +125,12 @@
   "class": "rv-section rv-footer-section",
   "max_blocks": 4,
   "settings": [
-    { "type": "color", "id": "bg", "label": "Background", "default": "#241813" },
-    { "type": "color", "id": "text", "label": "Text", "default": "#EBE2D2" },
-    { "type": "color", "id": "heading_color", "label": "Headings", "default": "#FFFFFF" },
-    { "type": "color", "id": "accent", "label": "Accent (hover)", "default": "#7FB89A" },
-    { "type": "color", "id": "border", "label": "Border / divider", "default": "rgba(255,255,255,0.16)" },
-    { "type": "color", "id": "pay_bg", "label": "Payment badge bg", "default": "rgba(255,255,255,0.06)" },
+    { "type": "color", "id": "bg", "label": "Background", "default": "#F4EEE2" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#5B4A38" },
+    { "type": "color", "id": "heading_color", "label": "Headings", "default": "#2B1F14" },
+    { "type": "color", "id": "accent", "label": "Accent (hover)", "default": "#1F7A4D" },
+    { "type": "color", "id": "border", "label": "Border / divider", "default": "#E0D5C1" },
+    { "type": "color", "id": "pay_bg", "label": "Payment badge bg", "default": "#FFFFFF" },
     { "type": "header", "content": "Brand" },
     { "type": "image_picker", "id": "logo", "label": "Logo (optional)" },
     { "type": "text", "id": "brand_name", "label": "Brand name (if no logo)", "default": "Relief Veda" },
