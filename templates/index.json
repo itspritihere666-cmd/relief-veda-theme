@@ -264,6 +264,7 @@
         "c1": {
           "type": "concern",
           "settings": {
+            "image": "shopify://shop_images/Frequent_UTI.png",
             "hook": "Frequent UTI bothering you?",
             "cta": "Shop relief",
             "link": "shopify://collections/urinary-kidney-health"
@@ -272,6 +273,7 @@
         "c2": {
           "type": "concern",
           "settings": {
+            "image": "shopify://shop_images/Struggling_with_sugar_diabetic.png",
             "hook": "Struggling with sugar?",
             "cta": "Shop diabetic care",
             "link": "shopify://collections/diabetic-health"
@@ -347,7 +349,7 @@
         "subtitle": "Tell us what's troubling you there's a root cause Ayurvedic formulation for it.",
         "cols": 4,
         "ratio": "1/1",
-        "radius": 18
+        "radius": 10
       }
     },
     "rv_trust": {
