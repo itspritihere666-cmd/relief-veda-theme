@@ -318,6 +318,7 @@
         "c7": {
           "type": "concern",
           "settings": {
+            "image": "shopify://shop_images/PCOS_women_s_health.png",
             "hook": "PCOS or discharge?",
             "cta": "Shop women's health",
             "link": "shopify://collections/women-health"
