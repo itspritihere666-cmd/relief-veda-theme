@@ -252,6 +252,19 @@
     "rv_bestsellers": {
       "type": "rv-bestsellers",
       "blocks": {
+        "card_CNmYRB": {
+          "type": "card",
+          "settings": {
+            "name": "LAX-URY (digestive)",
+            "badge": "38% OFF",
+            "b1": "Relieves constipation & gas",
+            "b2": "Eases acidity & bloating",
+            "b3": "Improves daily digestion",
+            "price": "Rs. 499",
+            "compare": "Rs. 799",
+            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
+          }
+        },
         "card_9peKFn": {
           "type": "card",
           "settings": {
@@ -293,6 +306,7 @@
         }
       },
       "block_order": [
+        "card_CNmYRB",
         "card_9peKFn",
         "card_CmKEMm",
         "card_FhPw4K"
