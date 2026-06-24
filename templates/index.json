@@ -361,7 +361,7 @@
           "settings": {
             "shopify_video": "shopify://files/videos/ILLUMINE.mp4",
             "video": "",
-            "title": "Glow from within",
+            "title": "Illumine",
             "cta": "Shop now",
             "link": ""
           }
@@ -369,8 +369,9 @@
         "r4": {
           "type": "reel",
           "settings": {
+            "shopify_video": "shopify://files/videos/ZESTY ENERGY.mp4",
             "video": "",
-            "title": "The ReliefVeda journey",
+            "title": "Zesty Energy",
             "cta": "Shop now",
             "link": ""
           }
