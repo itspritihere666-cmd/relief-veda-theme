@@ -255,6 +255,7 @@
         "card_CNmYRB": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/laxury_1.png",
             "name": "LAX-URY (digestive)",
             "badge": "38% OFF",
             "b1": "Relieves constipation & gas",
@@ -268,6 +269,7 @@
         "card_9peKFn": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/products.jpg",
             "name": "Beat UTI (urinary relief)",
             "badge": "50% OFF",
             "b1": "Relieves burning & pain",
@@ -295,6 +297,7 @@
         "card_FhPw4K": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/vitalizer_1.png",
             "name": "Vitalizer (men's vitality)",
             "badge": "58% OFF",
             "b1": "Boosts energy & stamina",
