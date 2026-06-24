@@ -74,7 +74,7 @@
         "settings": {
           "enable_bar": true,
           "home_page_only": false,
-          "background": "#1F7A4D",
+          "background": "#1f7a4d",
           "text_color": "#ffffff",
           "content": "100% Ayurvedic Wellness Solutions • Free Shipping Above ₹999",
           "link": ""
@@ -171,6 +171,25 @@
           "content": "<p>Thank you</p>",
           "show_newsletter": true,
           "apparition_delay": 5
+        }
+      },
+      "rv-footer": {
+        "type": "rv-footer",
+        "settings": {
+          "bg": "#f4eee2",
+          "text": "#5b4a38",
+          "heading_color": "#2b1f14",
+          "accent": "#1f7a4d",
+          "border": "#e0d5c1",
+          "pay_bg": "#ffffff",
+          "brand_name": "Relief Veda",
+          "about": "100% Ayurvedic wellness solutions by Baidyashakti potent herbal extracts formulated for everyday ailments. Trusted across India.",
+          "instagram": "",
+          "facebook": "",
+          "youtube": "",
+          "whatsapp": "",
+          "show_payments": true,
+          "copyright": "Baidyashakti Lifecare Pvt. Ltd."
         }
       }
     },
