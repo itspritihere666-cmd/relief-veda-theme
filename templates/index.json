@@ -594,6 +594,7 @@
         "i4": {
           "type": "ing",
           "settings": {
+            "image": "shopify://shop_images/Shatavari.png",
             "name": "Shatavari",
             "desc": "Supports women's hormonal balance."
           }
