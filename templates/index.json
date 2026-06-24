@@ -66,57 +66,88 @@
         "btn_radius": 8
       }
     },
-    "rv_trust": {
-      "type": "rv-trust-strip",
+    "rv_bestsellers": {
+      "type": "rv-bestsellers",
       "blocks": {
-        "t1": {
-          "type": "trust",
+        "card_CNmYRB": {
+          "type": "card",
           "settings": {
-            "icon": "leaf",
-            "label": "100% Natural"
+            "image": "shopify://shop_images/laxury_1.png",
+            "name": "LAX-URY (digestive)",
+            "badge": "38% OFF",
+            "b1": "Relieves constipation & gas",
+            "b2": "Eases acidity & bloating",
+            "b3": "Improves daily digestion",
+            "price": "Rs. 499",
+            "compare": "Rs. 799",
+            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
           }
         },
-        "t2": {
-          "type": "trust",
+        "card_9peKFn": {
+          "type": "card",
           "settings": {
-            "icon": "shield",
-            "label": "100% Ayurvedic"
+            "image": "shopify://shop_images/products.jpg",
+            "name": "Beat UTI (urinary relief)",
+            "badge": "50% OFF",
+            "b1": "Relieves burning & pain",
+            "b2": "Flushes UTI-causing bacteria",
+            "b3": "Antibiotic-free, no side effects",
+            "price": "Rs. 499",
+            "compare": "Rs. 999",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
           }
         },
-        "t3": {
-          "type": "trust",
+        "card_CmKEMm": {
+          "type": "card",
           "settings": {
-            "icon": "cert",
-            "label": "GMP Certified"
+            "image": "shopify://shop_images/healthygut_1.png",
+            "name": "Healthy Gut",
+            "badge": "38% OFF",
+            "b1": "Relieves gas & bloating",
+            "b2": "Improves digestion",
+            "b3": "100% herbal",
+            "price": "Rs. 499",
+            "compare": "Rs. 799",
+            "link": ""
           }
         },
-        "t4": {
-          "type": "trust",
+        "card_FhPw4K": {
+          "type": "card",
           "settings": {
-            "icon": "drop",
-            "label": "Vegan & Veg"
-          }
-        },
-        "t5": {
-          "type": "trust",
-          "settings": {
-            "icon": "paw",
-            "label": "Cruelty-Free"
+            "image": "shopify://shop_images/vitalizer_1.png",
+            "name": "Vitalizer (men's vitality)",
+            "badge": "58% OFF",
+            "b1": "Boosts energy & stamina",
+            "b2": "Supports testosterone naturally",
+            "b3": "100% Ayurvedic, no steroids",
+            "price": "Rs. 499",
+            "compare": "Rs. 1,199",
+            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man"
           }
         }
       },
       "block_order": [
-        "t1",
-        "t2",
-        "t3",
-        "t4",
-        "t5"
+        "card_CNmYRB",
+        "card_9peKFn",
+        "card_CmKEMm",
+        "card_FhPw4K"
       ],
       "settings": {
         "bg": "#f7f2e9",
-        "text": "#3a2a1e",
-        "icon_color": "#1f7a4d",
-        "border": "#e7ddc9"
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "Loved by thousands",
+        "title": "Bestsellers",
+        "all_label": "View all",
+        "all_link": "shopify://collections/shop-all",
+        "badge": "Launch Offer",
+        "layout": "grid",
+        "cols": 4,
+        "use_collection": true,
+        "collection": "",
+        "limit": 8
       }
     },
     "rv_offer": {
@@ -155,6 +186,76 @@
       "settings": {
         "bg": "#1f7a4d",
         "text": "#ffffff"
+      }
+    },
+    "rv_reels": {
+      "type": "rv-video-reels",
+      "blocks": {
+        "reel_XxCidD": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/Immuno Revive.mp4",
+            "video": "",
+            "title": "Immuno Revive",
+            "cta": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-immuno-revive-immunity-booster"
+          }
+        },
+        "r1": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/SaveVid.Net_AQOkKwkVQJTJ9IS-1SUdPkjIzj33UE6LWTMCMq8StySj7cyRfhGxCL-GHjwvQA4aZL58ap1uFNxJCcgOlbS63EuVzqNAeb4Y5ELpfVU.mp4",
+            "video": "",
+            "title": "Beat UTI",
+            "cta": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
+          }
+        },
+        "r2": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/SaveVid.Net_AQOmycNvq8ZUORnNgG3uuJ1k67fwOygFdjFXp4yNRLtCUnq0ptf2XyGgS0Z1to6R3astoGvubbfvL-U3y1HKebBKvaafGpNJ1tNK_gU.mp4",
+            "video": "",
+            "title": " Healthy Gut",
+            "cta": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakt-healthy-gut"
+          }
+        },
+        "r3": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/ILLUMINE.mp4",
+            "video": "",
+            "title": "Illumine",
+            "cta": "Shop now",
+            "link": ""
+          }
+        },
+        "r4": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/ZESTY ENERGY.mp4",
+            "video": "",
+            "title": "Zesty Energy",
+            "cta": "Shop now",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "reel_XxCidD",
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "settings": {
+        "bg": "#fffdf8",
+        "heading": "#2b1f14",
+        "accent": "#1f7a4d",
+        "eyebrow": "See it in action",
+        "title": "Real results, real stories",
+        "autoplay": true
       }
     },
     "rv_concern": {
@@ -249,147 +350,57 @@
         "radius": 18
       }
     },
-    "rv_bestsellers": {
-      "type": "rv-bestsellers",
+    "rv_trust": {
+      "type": "rv-trust-strip",
       "blocks": {
-        "card_CNmYRB": {
-          "type": "card",
+        "t1": {
+          "type": "trust",
           "settings": {
-            "image": "shopify://shop_images/laxury_1.png",
-            "name": "LAX-URY (digestive)",
-            "badge": "38% OFF",
-            "b1": "Relieves constipation & gas",
-            "b2": "Eases acidity & bloating",
-            "b3": "Improves daily digestion",
-            "price": "Rs. 499",
-            "compare": "Rs. 799",
-            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
+            "icon": "leaf",
+            "label": "100% Natural"
           }
         },
-        "card_9peKFn": {
-          "type": "card",
+        "t2": {
+          "type": "trust",
           "settings": {
-            "image": "shopify://shop_images/products.jpg",
-            "name": "Beat UTI (urinary relief)",
-            "badge": "50% OFF",
-            "b1": "Relieves burning & pain",
-            "b2": "Flushes UTI-causing bacteria",
-            "b3": "Antibiotic-free, no side effects",
-            "price": "Rs. 499",
-            "compare": "Rs. 999",
-            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
+            "icon": "shield",
+            "label": "100% Ayurvedic"
           }
         },
-        "card_CmKEMm": {
-          "type": "card",
+        "t3": {
+          "type": "trust",
           "settings": {
-            "image": "shopify://shop_images/healthygut_1.png",
-            "name": "Healthy Gut",
-            "badge": "38% OFF",
-            "b1": "Relieves gas & bloating",
-            "b2": "Improves digestion",
-            "b3": "100% herbal",
-            "price": "Rs. 499",
-            "compare": "Rs. 799",
-            "link": ""
+            "icon": "cert",
+            "label": "GMP Certified"
           }
         },
-        "card_FhPw4K": {
-          "type": "card",
+        "t4": {
+          "type": "trust",
           "settings": {
-            "image": "shopify://shop_images/vitalizer_1.png",
-            "name": "Vitalizer (men's vitality)",
-            "badge": "58% OFF",
-            "b1": "Boosts energy & stamina",
-            "b2": "Supports testosterone naturally",
-            "b3": "100% Ayurvedic, no steroids",
-            "price": "Rs. 499",
-            "compare": "Rs. 1,199",
-            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man"
+            "icon": "drop",
+            "label": "Vegan & Veg"
+          }
+        },
+        "t5": {
+          "type": "trust",
+          "settings": {
+            "icon": "paw",
+            "label": "Cruelty-Free"
           }
         }
       },
       "block_order": [
-        "card_CNmYRB",
-        "card_9peKFn",
-        "card_CmKEMm",
-        "card_FhPw4K"
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5"
       ],
       "settings": {
         "bg": "#f7f2e9",
-        "heading": "#2b1f14",
-        "muted": "#6b5b4a",
-        "accent": "#1f7a4d",
-        "border": "#eae0cd",
-        "eyebrow": "Loved by thousands",
-        "title": "Bestsellers",
-        "all_label": "View all",
-        "all_link": "shopify://collections/shop-all",
-        "badge": "Launch Offer",
-        "layout": "grid",
-        "cols": 4,
-        "use_collection": true,
-        "collection": "",
-        "limit": 8
-      }
-    },
-    "rv_reels": {
-      "type": "rv-video-reels",
-      "blocks": {
-        "r1": {
-          "type": "reel",
-          "settings": {
-            "shopify_video": "shopify://files/videos/SaveVid.Net_AQOkKwkVQJTJ9IS-1SUdPkjIzj33UE6LWTMCMq8StySj7cyRfhGxCL-GHjwvQA4aZL58ap1uFNxJCcgOlbS63EuVzqNAeb4Y5ELpfVU.mp4",
-            "video": "",
-            "title": "Beat UTI",
-            "cta": "Shop now",
-            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
-          }
-        },
-        "r2": {
-          "type": "reel",
-          "settings": {
-            "shopify_video": "shopify://files/videos/SaveVid.Net_AQOmycNvq8ZUORnNgG3uuJ1k67fwOygFdjFXp4yNRLtCUnq0ptf2XyGgS0Z1to6R3astoGvubbfvL-U3y1HKebBKvaafGpNJ1tNK_gU.mp4",
-            "video": "",
-            "title": " Healthy Gut",
-            "cta": "Shop now",
-            "link": "https://reliefveda.com/products/baidyashakt-healthy-gut"
-          }
-        },
-        "r3": {
-          "type": "reel",
-          "settings": {
-            "shopify_video": "shopify://files/videos/ILLUMINE.mp4",
-            "video": "",
-            "title": "Illumine",
-            "cta": "Shop now",
-            "link": ""
-          }
-        },
-        "r4": {
-          "type": "reel",
-          "settings": {
-            "shopify_video": "shopify://files/videos/ZESTY ENERGY.mp4",
-            "video": "",
-            "title": "Zesty Energy",
-            "cta": "Shop now",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "r1",
-        "r2",
-        "r3",
-        "r4"
-      ],
-      "settings": {
-        "bg": "#fffdf8",
-        "heading": "#2b1f14",
-        "accent": "#1f7a4d",
-        "eyebrow": "See it in action",
-        "title": "Real results, real stories",
-        "autoplay": true
+        "text": "#3a2a1e",
+        "icon_color": "#1f7a4d",
+        "border": "#e7ddc9"
       }
     },
     "rv_ugc": {
@@ -598,11 +609,11 @@
   },
   "order": [
     "rv_hero_products",
-    "rv_trust",
-    "rv_offer",
-    "rv_concern",
     "rv_bestsellers",
+    "rv_offer",
     "rv_reels",
+    "rv_concern",
+    "rv_trust",
     "rv_ugc",
     "rv_why",
     "rv_consult",
