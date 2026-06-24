@@ -642,7 +642,7 @@
     "rv_consult": {
       "type": "rv-consult-cta",
       "settings": {
-        "page_bg": "#F5F5F6",
+        "page_bg": "#f5f5f6",
         "bg": "#2b1f14",
         "text": "#ffffff",
         "media_bg": "#3a2a1e",
@@ -651,7 +651,7 @@
         "title": "Talk to our Ayurvedic expert free",
         "subtitle": "Not sure which product is right for you? Get a free consultation and a personalised recommendation.",
         "btn_label": "Book free consultation",
-        "wa_number": "+91 70309 31091",
+        "wa_number": "917030931091",
         "wa_message": "Hi Relief Veda, I'd like a free Ayurvedic consultation.",
         "btn_link": "",
         "show_wa": true,
