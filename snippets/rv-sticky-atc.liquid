@@ -1,0 +1,53 @@
+{%- comment -%} Relief Veda — Sticky mobile Add-to-Cart bar (product pages only) {%- endcomment -%}
+{%- if template contains 'product' and product -%}
+<style>
+  .rv-satc{ position:fixed; left:0; right:0; bottom:0; z-index:80;
+    display:flex; align-items:center; gap:12px;
+    background:#FFFDF8; border-top:1px solid #E7DDC9;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    box-shadow:0 -6px 20px rgba(43,31,20,.12);
+    transform:translateY(120%); transition:transform .3s cubic-bezier(.22,.61,.36,1); }
+  .rv-satc.is-on{ transform:none; }
+  .rv-satc__media{ width:44px;height:44px;border-radius:8px;object-fit:cover;background:#F4EFE5;flex:none; }
+  .rv-satc__info{ display:flex;flex-direction:column;min-width:0;flex:1; }
+  .rv-satc__name{ font-size:12.5px;font-weight:600;color:#2B1F14;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .rv-satc__price{ font-size:13px;font-weight:700;color:#2B1F14; }
+  .rv-satc__price s{ font-weight:400;color:#9b8a76;font-size:12px;margin-left:5px; }
+  .rv-satc__btn{ flex:none; background:#1F7A4D;color:#fff;border:none;border-radius:9px;
+    padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;
+    box-shadow:0 4px 14px rgba(31,122,77,.3); transition:transform .15s ease; }
+  .rv-satc__btn:active{ transform:scale(.97); }
+  @media (min-width:750px){ .rv-satc{ display:none !important; } }
+</style>
+<div class="rv-satc" id="rvSatc" aria-hidden="true">
+  {%- if product.featured_image -%}
+    <img class="rv-satc__media" src="{{ product.featured_image | image_url: width:120 }}" alt="">
+  {%- endif -%}
+  <div class="rv-satc__info">
+    <span class="rv-satc__name">{{ product.title | strip_html }}</span>
+    <span class="rv-satc__price">{{ product.price | money }}{%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s>{%- endif -%}</span>
+  </div>
+  <button class="rv-satc__btn" id="rvSatcBtn" type="button">Add to cart</button>
+</div>
+<script>
+(function(){
+  function init(){
+    var bar = document.getElementById('rvSatc'); if(!bar) return;
+    var realBtn = document.querySelector('.ProductForm__AddToCart');
+    var btn = document.getElementById('rvSatcBtn');
+    if(realBtn){
+      btn.addEventListener('click', function(){ realBtn.click(); realBtn.focus(); });
+    } else { btn.style.display='none'; }
+    var anchor = document.querySelector('.ProductForm__BuyButtons') || realBtn;
+    if('IntersectionObserver' in window && anchor){
+      var io = new IntersectionObserver(function(es){
+        es.forEach(function(e){ bar.classList.toggle('is-on', !e.isIntersecting); });
+      }, { threshold: 0 });
+      io.observe(anchor);
+    }
+  }
+  if(document.readyState !== 'loading'){ init(); }
+  else { document.addEventListener('DOMContentLoaded', init); }
+})();
+</script>
+{%- endif -%}
