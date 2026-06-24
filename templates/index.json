@@ -61,9 +61,9 @@
           "type": "slide",
           "settings": {
             "align": "left",
-            "eyebrow": "Men's Vitality",
-            "title": "Vitalizer",
-            "btn_label": "Shop now",
+            "eyebrow": "",
+            "title": "",
+            "btn_label": "Learn more",
             "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man"
           }
         },
@@ -71,20 +71,20 @@
           "type": "slide",
           "settings": {
             "align": "left",
-            "eyebrow": "Digestive Care",
-            "title": "LAX-URY",
-            "btn_label": "Shop now",
-            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
+            "eyebrow": "",
+            "title": "",
+            "btn_label": "Learn more",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
           }
         },
         "s3": {
           "type": "slide",
           "settings": {
             "align": "left",
-            "eyebrow": "Women's Energy",
-            "title": "Zesty Energy",
-            "btn_label": "Shop now",
-            "link": "https://reliefveda.com/products/baidyashakti-zesty-energy-woman-essential"
+            "eyebrow": "",
+            "title": "",
+            "btn_label": "Learn more",
+            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
           }
         }
       },
@@ -479,5 +479,3 @@
     "rv_ingredients"
   ]
 }
-
-
