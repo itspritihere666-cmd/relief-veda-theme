@@ -1,75 +1,51 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "rv_offer": {
-      "type": "rv-offer-bar",
-      "blocks": {
-        "o1": {
-          "type": "msg",
-          "settings": {
-            "icon": "leaf",
-            "text": "100% Ayurvedic Wellness Solutions"
-          }
-        },
-        "o2": {
-          "type": "msg",
-          "settings": {
-            "icon": "truck",
-            "text": "Free Shipping Above ₹999"
-          }
-        },
-        "o3": {
-          "type": "msg",
-          "settings": {
-            "icon": "cod",
-            "text": "Cash on Delivery available"
-          }
-        }
-      },
-      "block_order": [
-        "o1",
-        "o2",
-        "o3"
-      ]
-    },
     "rv_hero_products": {
       "type": "rv-hero-products",
-      "settings": {
-        "heading": "",
-        "bg": "#FFFDF8",
-        "ratio_desktop": "16/7",
-        "ratio_mobile": "4/5",
-        "autoplay": true,
-        "autoplay_speed": 5
-      },
       "blocks": {
         "s1": {
           "type": "slide",
           "settings": {
-            "align": "left",
+            "image": "shopify://shop_images/virtilizer_2.png",
+            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man",
             "eyebrow": "",
             "title": "",
-            "btn_label": "Learn more",
-            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man"
+            "align": "left",
+            "text_color": "#ffffff",
+            "btn_label": "Buy Now"
           }
         },
         "s2": {
           "type": "slide",
           "settings": {
-            "align": "left",
+            "image": "shopify://shop_images/beat_uti.png",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti",
             "eyebrow": "",
             "title": "",
-            "btn_label": "Learn more",
-            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
+            "align": "left",
+            "text_color": "#ffffff",
+            "btn_label": "Learn more"
           }
         },
         "s3": {
           "type": "slide",
           "settings": {
-            "align": "left",
+            "image": "shopify://shop_images/laxury_hero_section.png",
+            "link": "https://reliefveda.com/products/baidyashakti-lax-ury",
             "eyebrow": "",
             "title": "",
-            "btn_label": "Learn more",
-            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
+            "align": "left",
+            "text_color": "#ffffff",
+            "btn_label": "Learn more"
           }
         }
       },
@@ -77,7 +53,348 @@
         "s1",
         "s2",
         "s3"
-      ]
+      ],
+      "settings": {
+        "heading": "",
+        "bg": "#fffdf8",
+        "ratio_desktop": "16/7",
+        "ratio_mobile": "4/5",
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "btn_bg": "#1f7a4d",
+        "btn_text": "#ffffff",
+        "btn_radius": 8
+      }
+    },
+    "rv_bestsellers": {
+      "type": "rv-bestsellers",
+      "blocks": {
+        "card_CNmYRB": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/laxury_1.png",
+            "name": "LAX-URY (digestive)",
+            "badge": "38% OFF",
+            "b1": "Relieves constipation & gas",
+            "b2": "Eases acidity & bloating",
+            "b3": "Improves daily digestion",
+            "price": "Rs. 499",
+            "compare": "Rs. 799",
+            "link": "https://reliefveda.com/products/baidyashakti-lax-ury"
+          }
+        },
+        "card_9peKFn": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/products.jpg",
+            "name": "Beat UTI (urinary relief)",
+            "badge": "50% OFF",
+            "b1": "Relieves burning & pain",
+            "b2": "Flushes UTI-causing bacteria",
+            "b3": "Antibiotic-free, no side effects",
+            "price": "Rs. 499",
+            "compare": "Rs. 999",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
+          }
+        },
+        "card_CmKEMm": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/healthygut_1.png",
+            "name": "Healthy Gut",
+            "badge": "38% OFF",
+            "b1": "Relieves gas & bloating",
+            "b2": "Improves digestion",
+            "b3": "100% herbal",
+            "price": "Rs. 499",
+            "compare": "Rs. 799",
+            "link": ""
+          }
+        },
+        "card_FhPw4K": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/vitalizer_1.png",
+            "name": "Vitalizer (men's vitality)",
+            "badge": "58% OFF",
+            "b1": "Boosts energy & stamina",
+            "b2": "Supports testosterone naturally",
+            "b3": "100% Ayurvedic, no steroids",
+            "price": "Rs. 499",
+            "compare": "Rs. 1,199",
+            "link": "https://reliefveda.com/products/baidyashakti-vitalizer-erectile-dysfunction-for-man"
+          }
+        }
+      },
+      "block_order": [
+        "card_CNmYRB",
+        "card_9peKFn",
+        "card_CmKEMm",
+        "card_FhPw4K"
+      ],
+      "settings": {
+        "bg": "#f7f2e9",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "Loved by thousands",
+        "title": "Bestsellers",
+        "all_label": "View all",
+        "all_link": "shopify://collections/shop-all",
+        "badge": "Launch Offer",
+        "layout": "carousel",
+        "cols": 4,
+        "use_collection": true,
+        "collection": "",
+        "limit": 8
+      }
+    },
+    "rv_offer": {
+      "type": "rv-offer-bar",
+      "blocks": {
+        "o1": {
+          "type": "msg",
+          "settings": {
+            "icon": "leaf",
+            "text": "100% Ayurvedic Wellness Solutions",
+            "link": ""
+          }
+        },
+        "o2": {
+          "type": "msg",
+          "settings": {
+            "icon": "truck",
+            "text": "Free Shipping Above ₹999",
+            "link": ""
+          }
+        },
+        "o3": {
+          "type": "msg",
+          "settings": {
+            "icon": "cod",
+            "text": "Cash on Delivery available",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "o1",
+        "o2",
+        "o3"
+      ],
+      "settings": {
+        "bg": "#1f7a4d",
+        "text": "#ffffff"
+      }
+    },
+    "rv_offer_bar_AP37Cx": {
+      "type": "rv-offer-bar",
+      "blocks": {
+        "msg_Ypq9KQ": {
+          "type": "msg",
+          "settings": {
+            "icon": "leaf",
+            "text": "100% Ayurvedic Wellness Solutions",
+            "link": ""
+          }
+        },
+        "msg_jWwBTA": {
+          "type": "msg",
+          "settings": {
+            "icon": "truck",
+            "text": "Free Shipping Above ₹999",
+            "link": ""
+          }
+        },
+        "msg_NqAUKY": {
+          "type": "msg",
+          "settings": {
+            "icon": "cod",
+            "text": "Cash on Delivery available",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "msg_Ypq9KQ",
+        "msg_jWwBTA",
+        "msg_NqAUKY"
+      ],
+      "settings": {
+        "bg": "#1f7a4d",
+        "text": "#ffffff"
+      }
+    },
+    "rv_reels": {
+      "type": "rv-video-reels",
+      "blocks": {
+        "r1": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/SaveVid.Net_AQOkKwkVQJTJ9IS-1SUdPkjIzj33UE6LWTMCMq8StySj7cyRfhGxCL-GHjwvQA4aZL58ap1uFNxJCcgOlbS63EuVzqNAeb4Y5ELpfVU.mp4",
+            "video": "",
+            "title": "Beat UTI",
+            "cta": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
+          }
+        },
+        "r2": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/SaveVid.Net_AQOmycNvq8ZUORnNgG3uuJ1k67fwOygFdjFXp4yNRLtCUnq0ptf2XyGgS0Z1to6R3astoGvubbfvL-U3y1HKebBKvaafGpNJ1tNK_gU.mp4",
+            "video": "",
+            "title": " Healthy Gut",
+            "cta": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakt-healthy-gut"
+          }
+        },
+        "reel_XxCidD": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/Immuno Revive.mp4",
+            "video": "",
+            "title": "Immuno Revive",
+            "cta": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-immuno-revive-immunity-booster"
+          }
+        },
+        "r3": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/ILLUMINE.mp4",
+            "video": "",
+            "title": "Illumine",
+            "cta": "Shop now",
+            "link": ""
+          }
+        },
+        "r4": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/ZESTY ENERGY.mp4",
+            "video": "",
+            "title": "Zesty Energy",
+            "cta": "Shop now",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "reel_XxCidD",
+        "r3",
+        "r4"
+      ],
+      "settings": {
+        "bg": "#fffdf8",
+        "heading": "#2b1f14",
+        "accent": "#1f7a4d",
+        "eyebrow": "See it in action",
+        "title": "Real results, real stories",
+        "autoplay": true
+      }
+    },
+    "rv_concern": {
+      "type": "rv-concern-grid",
+      "blocks": {
+        "c1": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/Frequent_UTI.png",
+            "hook": "Frequent UTI bothering you?",
+            "cta": "Shop relief",
+            "link": "shopify://collections/urinary-kidney-health"
+          }
+        },
+        "c2": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/Struggling_with_sugar_diabetic.png",
+            "hook": "Struggling with sugar?",
+            "cta": "Shop diabetic care",
+            "link": "shopify://collections/diabetic-health"
+          }
+        },
+        "c3": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/Gas_acidity_bloating.png",
+            "hook": "Gas, acidity & bloating?",
+            "cta": "Shop digestive",
+            "link": "shopify://collections/digestive-health"
+          }
+        },
+        "c4": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/Dull_tired_skin.png",
+            "hook": "Dull, tired skin?",
+            "cta": "Shop skin care",
+            "link": "shopify://collections/skin-health"
+          }
+        },
+        "c5": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/Low_immunity.png",
+            "hook": "Low immunity?",
+            "cta": "Shop immunity",
+            "link": "shopify://collections/immunity-support"
+          }
+        },
+        "c6": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/Joint_knee_pain.png",
+            "hook": "Joint & knee pain?",
+            "cta": "Shop bone & joint",
+            "link": "shopify://collections/bone-joint"
+          }
+        },
+        "c7": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/PCOS_women_s_health.png",
+            "hook": "PCOS or discharge?",
+            "cta": "Shop women's health",
+            "link": "shopify://collections/women-health"
+          }
+        },
+        "c8": {
+          "type": "concern",
+          "settings": {
+            "image": "shopify://shop_images/Low_stamina_energy_men.png",
+            "hook": "Low stamina & energy?",
+            "cta": "Shop men's health",
+            "link": "shopify://collections/mens-health"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8"
+      ],
+      "settings": {
+        "bg": "#fffdf8",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "card_fallback": "#3a2a1e",
+        "eyebrow": "Find your solution",
+        "title": "Shop by concern",
+        "subtitle": "Tell us what's troubling you there's a root cause Ayurvedic formulation for it.",
+        "cols": 4,
+        "ratio": "1/1",
+        "radius": 10
+      }
     },
     "rv_trust": {
       "type": "rv-trust-strip",
@@ -124,158 +441,16 @@
         "t3",
         "t4",
         "t5"
-      ]
-    },
-    "rv_concern": {
-      "type": "rv-concern-grid",
+      ],
       "settings": {
-        "eyebrow": "Find your solution",
-        "title": "Shop by concern",
-        "subtitle": "Tell us what's troubling you — there's a root-cause Ayurvedic formulation for it.",
-        "cols": 4,
-        "ratio": "3/4"
-      },
-      "blocks": {
-        "c1": {
-          "type": "concern",
-          "settings": {
-            "hook": "Frequent UTI bothering you?",
-            "cta": "Shop relief",
-            "link": "shopify://collections/urinary-kidney-health"
-          }
-        },
-        "c2": {
-          "type": "concern",
-          "settings": {
-            "hook": "Struggling with sugar?",
-            "cta": "Shop diabetic care",
-            "link": "shopify://collections/diabetic-health"
-          }
-        },
-        "c3": {
-          "type": "concern",
-          "settings": {
-            "hook": "Gas, acidity & bloating?",
-            "cta": "Shop digestive",
-            "link": "shopify://collections/digestive-health"
-          }
-        },
-        "c4": {
-          "type": "concern",
-          "settings": {
-            "hook": "Dull, tired skin?",
-            "cta": "Shop skin care",
-            "link": "shopify://collections/skin-health"
-          }
-        },
-        "c5": {
-          "type": "concern",
-          "settings": {
-            "hook": "Low immunity?",
-            "cta": "Shop immunity",
-            "link": "shopify://collections/immunity-support"
-          }
-        },
-        "c6": {
-          "type": "concern",
-          "settings": {
-            "hook": "Joint & knee pain?",
-            "cta": "Shop bone & joint",
-            "link": "shopify://collections/bone-joint"
-          }
-        },
-        "c7": {
-          "type": "concern",
-          "settings": {
-            "hook": "PCOS or discharge?",
-            "cta": "Shop women's health",
-            "link": "shopify://collections/women-health"
-          }
-        },
-        "c8": {
-          "type": "concern",
-          "settings": {
-            "hook": "Low stamina & energy?",
-            "cta": "Shop men's health",
-            "link": "shopify://collections/mens-health"
-          }
-        }
-      },
-      "block_order": [
-        "c1",
-        "c2",
-        "c3",
-        "c4",
-        "c5",
-        "c6",
-        "c7",
-        "c8"
-      ]
-    },
-    "rv_bestsellers": {
-      "type": "rv-bestsellers",
-      "settings": {
-        "eyebrow": "Loved by thousands",
-        "title": "Bestsellers",
-        "all_label": "View all",
-        "all_link": "shopify://collections/shop-all",
-        "layout": "carousel",
-        "use_collection": true,
-        "badge": "Launch Offer",
-        "limit": 8
+        "bg": "#f7f2e9",
+        "text": "#3a2a1e",
+        "icon_color": "#1f7a4d",
+        "border": "#e7ddc9"
       }
-    },
-    "rv_reels": {
-      "type": "rv-video-reels",
-      "settings": {
-        "eyebrow": "See it in action",
-        "title": "Real results, real stories",
-        "autoplay": true
-      },
-      "blocks": {
-        "r1": {
-          "type": "reel",
-          "settings": {
-            "title": "Beat UTI naturally",
-            "cta": "Shop now"
-          }
-        },
-        "r2": {
-          "type": "reel",
-          "settings": {
-            "title": "Immunity, every day",
-            "cta": "Shop now"
-          }
-        },
-        "r3": {
-          "type": "reel",
-          "settings": {
-            "title": "Glow from within",
-            "cta": "Shop now"
-          }
-        },
-        "r4": {
-          "type": "reel",
-          "settings": {
-            "title": "The ReliefVeda journey",
-            "cta": "Shop now"
-          }
-        }
-      },
-      "block_order": [
-        "r1",
-        "r2",
-        "r3",
-        "r4"
-      ]
     },
     "rv_ugc": {
       "type": "rv-ugc-testimonials",
-      "settings": {
-        "eyebrow": "Real people, real relief",
-        "title": "Trusted across India",
-        "subtitle": "Tag @baidyashakti_life_care to get featured"
-      },
       "blocks": {
         "u1": {
           "type": "ugc",
@@ -323,16 +498,74 @@
         "u2",
         "u3",
         "u4"
-      ]
+      ],
+      "settings": {
+        "bg": "#f7f2e9",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "Real people, real relief",
+        "title": "Trusted across India",
+        "subtitle": "Tag @baidyashakti_life_care to get featured"
+      }
+    },
+    "rv_ingredients": {
+      "type": "rv-ingredients",
+      "blocks": {
+        "i1": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Gokhru_Tribulus_Gokshura_c8fb05b7-60bc-489a-b493-07d5f9e7c68b.png",
+            "name": "Gokhru",
+            "desc": "Supports urinary tract & kidney health."
+          }
+        },
+        "i2": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Ashwagandha.png",
+            "name": "Ashwagandha",
+            "desc": "Builds strength, stamina & vitality."
+          }
+        },
+        "i3": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Giloy.png",
+            "name": "Giloy",
+            "desc": "Natural immunity booster."
+          }
+        },
+        "i4": {
+          "type": "ing",
+          "settings": {
+            "image": "shopify://shop_images/Shatavari.png",
+            "name": "Shatavari",
+            "desc": "Supports women's hormonal balance."
+          }
+        }
+      },
+      "block_order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "settings": {
+        "bg": "#f7f2e9",
+        "heading": "#2b1f14",
+        "muted": "#6b5b4a",
+        "accent": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "What's inside",
+        "title": "Pure herbs, potent extracts",
+        "subtitle": "We extract the active compounds from premium herbs not raw powders for consistent, effective results.",
+        "cols": 4
+      }
     },
     "rv_why": {
       "type": "rv-why",
-      "settings": {
-        "eyebrow": "The ReliefVeda difference",
-        "title": "Not your average supplement",
-        "them_label": "Generic Products",
-        "us_label": "ReliefVeda"
-      },
       "blocks": {
         "th1": {
           "type": "them",
@@ -392,74 +625,49 @@
         "us2",
         "us3",
         "us4"
-      ]
+      ],
+      "settings": {
+        "bg": "#fffdf8",
+        "heading": "#2b1f14",
+        "muted": "#7a6b59",
+        "accent": "#1f7a4d",
+        "us_bg": "#1f7a4d",
+        "border": "#eae0cd",
+        "eyebrow": "The ReliefVeda difference",
+        "title": "Not your average supplement",
+        "them_label": "Generic Products",
+        "us_label": "ReliefVeda"
+      }
     },
     "rv_consult": {
       "type": "rv-consult-cta",
       "settings": {
+        "page_bg": "#fffdf8",
+        "bg": "#2b1f14",
+        "text": "#ffffff",
+        "media_bg": "#3a2a1e",
         "eyebrow": "Free guidance",
-        "title": "Talk to our Ayurvedic expert — free",
+        "title": "Talk to our Ayurvedic expert free",
         "subtitle": "Not sure which product is right for you? Get a free consultation and a personalised recommendation.",
         "btn_label": "Book free consultation",
-        "show_wa": true
+        "btn_link": "",
+        "show_wa": true,
+        "btn_bg": "#1f7a4d",
+        "btn_text": "#ffffff"
       }
-    },
-    "rv_ingredients": {
-      "type": "rv-ingredients",
-      "settings": {
-        "eyebrow": "What's inside",
-        "title": "Pure herbs, potent extracts",
-        "subtitle": "We extract the active compounds from premium herbs — not raw powders — for consistent, effective results.",
-        "cols": 4
-      },
-      "blocks": {
-        "i1": {
-          "type": "ing",
-          "settings": {
-            "name": "Gokhru",
-            "desc": "Supports urinary tract & kidney health."
-          }
-        },
-        "i2": {
-          "type": "ing",
-          "settings": {
-            "name": "Ashwagandha",
-            "desc": "Builds strength, stamina & vitality."
-          }
-        },
-        "i3": {
-          "type": "ing",
-          "settings": {
-            "name": "Giloy",
-            "desc": "Natural immunity booster."
-          }
-        },
-        "i4": {
-          "type": "ing",
-          "settings": {
-            "name": "Shatavari",
-            "desc": "Supports women's hormonal balance."
-          }
-        }
-      },
-      "block_order": [
-        "i1",
-        "i2",
-        "i3",
-        "i4"
-      ]
     }
   },
   "order": [
-    "rv_offer",
     "rv_hero_products",
-    "rv_trust",
-    "rv_concern",
+    "rv_offer",
     "rv_bestsellers",
     "rv_reels",
+    "rv_offer_bar_AP37Cx",
+    "rv_concern",
+    "rv_trust",
     "rv_ugc",
+    "rv_ingredients",
     "rv_why",
-    "rv_consult",
-    "rv_ingredients"
+    "rv_consult"
   ]
 }
