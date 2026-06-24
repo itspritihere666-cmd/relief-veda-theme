@@ -21,14 +21,17 @@
       {%- if settings.cart_show_free_shipping_threshold -%}
         {%- assign threshold_in_cents = settings.cart_free_shipping_threshold | times: 100 -%}
 
-        <div class="Cart__ShippingNotice Text--subdued">
+        <div class="Cart__ShippingNotice Text--subdued rv-ship">
           <div class="Drawer__Container">
+            {%- assign rv_pct = cart.total_price | times: 100 | divided_by: threshold_in_cents -%}
+            {%- if rv_pct > 100 -%}{%- assign rv_pct = 100 -%}{%- endif -%}
             {%- if cart.total_price >= threshold_in_cents -%}
-              <p>{{- 'cart.general.free_shipping' | t -}}</p>
+              <p class="rv-ship__msg">{{- 'cart.general.free_shipping' | t -}}</p>
             {%- else -%}
               {%- capture remaining_amount -%}<span>{{ cart.total_price | minus: threshold_in_cents | abs | money }}</span>{%- endcapture -%}
-              <p>{{- 'cart.general.free_shipping_remaining_html' | t: remaining_amount: remaining_amount -}}</p>
+              <p class="rv-ship__msg">{{- 'cart.general.free_shipping_remaining_html' | t: remaining_amount: remaining_amount -}}</p>
             {%- endif -%}
+            <div class="rv-ship__track"><div class="rv-ship__fill" style="width:{{ rv_pct }}%"></div></div>
           </div>
         </div>
       {%- endif -%}
