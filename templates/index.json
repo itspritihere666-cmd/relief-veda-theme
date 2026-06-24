@@ -243,10 +243,10 @@
         "card_fallback": "#3a2a1e",
         "eyebrow": "Find your solution",
         "title": "Shop by concern",
-        "subtitle": "Tell us what's troubling you — there's a root-cause Ayurvedic formulation for it.",
+        "subtitle": "Tell us what's troubling you there's a root cause Ayurvedic formulation for it.",
         "cols": 4,
         "ratio": "3/4",
-        "radius": 14
+        "radius": 18
       }
     },
     "rv_bestsellers": {
