@@ -189,7 +189,8 @@
 
 <script>
 (function(){
-  var root = document.currentScript.closest('[data-rvhp]');
+  function initRvhp(){
+  var root = document.querySelector('.rvhp-{{ sec }}');
   if(!root) return;
   var track = root.querySelector('[data-rvhp-track]');
   var slides = track.children;
@@ -238,6 +239,9 @@
   });
 
   go(0); start();
+  }
+  if(document.readyState !== 'loading'){ initRvhp(); }
+  else { document.addEventListener('DOMContentLoaded', initRvhp); }
 })();
 </script>
 
