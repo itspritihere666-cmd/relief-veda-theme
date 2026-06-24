@@ -5,7 +5,13 @@
   .rv-bar-{{ section.id }} .rv-bar__item{ display:inline-flex; align-items:center; gap:7px; }
   .rv-bar-{{ section.id }} .rv-bar__item svg{ width:15px;height:15px;opacity:.9; }
   .rv-bar-{{ section.id }} a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
-  @media (max-width:749px){ .rv-bar-{{ section.id }} .rv-bar__row{ gap:8px 18px; font-size:11.5px; padding:8px 12px; } }
+  @media (max-width:749px){
+    .rv-bar-{{ section.id }}{ position:sticky; top:0; z-index:60; }
+    .rv-bar-{{ section.id }} .rv-bar__row{ justify-content:center; gap:0; font-size:12px; padding:9px 12px; min-height:18px; }
+    .rv-bar-{{ section.id }} .rv-bar__item{ display:none; }
+    .rv-bar-{{ section.id }} .rv-bar__item.rv-on{ display:inline-flex; animation: rvbar-fade .5s ease; }
+    @keyframes rvbar-fade{ from{ opacity:.15; transform:translateY(3px);} to{ opacity:1; transform:none; } }
+  }
 {%- endstyle -%}
 
 {%- liquid
@@ -32,6 +38,27 @@
     {%- endfor -%}
   </div>
 </section>
+
+<script>
+(function(){
+  function init(){
+    var root = document.querySelector('.rv-bar-{{ section.id }}');
+    if(!root) return;
+    var items = [].slice.call(root.querySelectorAll('.rv-bar__item'));
+    if(items.length < 2) return;
+    var mq = window.matchMedia('(max-width:749px)');
+    var i = 0, timer = null;
+    function show(n){ items.forEach(function(el,j){ el.classList.toggle('rv-on', j===n); }); }
+    function tick(){ i = (i+1) % items.length; show(i); }
+    function start(){ stop(); if(mq.matches){ i = 0; show(0); timer = setInterval(tick, 3000); } else { items.forEach(function(el){ el.classList.remove('rv-on'); }); } }
+    function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+    start();
+    if(mq.addEventListener){ mq.addEventListener('change', start); } else if(mq.addListener){ mq.addListener(start); }
+  }
+  if(document.readyState !== 'loading'){ init(); }
+  else { document.addEventListener('DOMContentLoaded', init); }
+})();
+</script>
 
 {% schema %}
 {

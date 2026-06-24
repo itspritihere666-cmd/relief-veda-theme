@@ -80,6 +80,23 @@
     .rv-concern-{{ section.id }} .rv-concern__grid::-webkit-scrollbar{ display:none; }
     .rv-concern-{{ section.id }} .rv-concern__card{ scroll-snap-align:start; }
   }
+  .rv-concern-{{ section.id }} .rv-concern__carousel{ position:relative; max-width:1240px; margin:0 auto; }
+  .rv-concern-{{ section.id }} .rv-concern__nav{ display:none; }
+  @media (max-width: 749px){
+    .rv-concern-{{ section.id }} .rv-concern__arrow.rv-concern__nav{ display:flex; }
+    .rv-concern-{{ section.id }} .rv-concern__dots.rv-concern__nav{ display:flex; }
+    .rv-concern-{{ section.id }} .rv-concern__arrow{
+      position:absolute; top:36%; transform:translateY(-50%); z-index:6;
+      width:40px;height:40px;border-radius:50%; background:rgba(255,255,255,.95); border:none;
+      align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 14px rgba(58,42,30,.22);
+    }
+    .rv-concern-{{ section.id }} .rv-concern__arrow--prev{ left:8px; }
+    .rv-concern-{{ section.id }} .rv-concern__arrow--next{ right:8px; }
+    .rv-concern-{{ section.id }} .rv-concern__arrow svg{ width:20px;height:20px; color:#2B1F14; }
+    .rv-concern-{{ section.id }} .rv-concern__dots{ justify-content:center; gap:7px; margin-top:16px; }
+    .rv-concern-{{ section.id }} .rv-concern__dot{ width:8px;height:8px;border-radius:50%;border:none;background:#D9CDB8;padding:0;cursor:pointer; transition:width .25s ease, background .25s ease; }
+    .rv-concern-{{ section.id }} .rv-concern__dot.is-active{ width:22px;border-radius:4px;background:{{ section.settings.accent }}; }
+  }
   @media (prefers-reduced-motion: reduce){
     .rv-concern-{{ section.id }} .rv-concern__card,
     .rv-concern-{{ section.id }} .rv-concern__card img{ transition:none; }
@@ -98,7 +115,11 @@
       <p class="rv-concern__sub">{{ section.settings.subtitle }}</p>
     {%- endif -%}
   </div>
-  <div class="rv-concern__grid">
+  <div class="rv-concern__carousel">
+    <button class="rv-concern__arrow rv-concern__arrow--prev rv-concern__nav" type="button" data-rvc-prev aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="rv-concern__grid" data-rvc-track>
     {%- for block in section.blocks -%}
       <a class="rv-concern__card" href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>
         {%- if block.settings.image != blank -%}
@@ -119,8 +140,56 @@
         </span>
       </a>
     {%- endfor -%}
+    </div>
+    <button class="rv-concern__arrow rv-concern__arrow--next rv-concern__nav" type="button" data-rvc-next aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="rv-concern__dots rv-concern__nav" data-rvc-dots></div>
   </div>
 </section>
+
+<script>
+(function(){
+  function init(){
+    var root = document.querySelector('.rv-concern-{{ section.id }}');
+    if(!root) return;
+    var track = root.querySelector('[data-rvc-track]');
+    var prev = root.querySelector('[data-rvc-prev]');
+    var next = root.querySelector('[data-rvc-next]');
+    var dotsWrap = root.querySelector('[data-rvc-dots]');
+    if(!track) return;
+    var cards = [].slice.call(track.children);
+    if(cards.length < 2) return;
+    cards.forEach(function(c,i){
+      var b = document.createElement('button');
+      b.className = 'rv-concern__dot' + (i===0 ? ' is-active' : '');
+      b.setAttribute('data-i', i);
+      b.setAttribute('aria-label', 'Go to slide ' + (i+1));
+      dotsWrap.appendChild(b);
+    });
+    var dots = [].slice.call(dotsWrap.children);
+    function step(){ return cards[0].getBoundingClientRect().width + 12; }
+    function curr(){ return Math.round(track.scrollLeft / step()); }
+    function go(i){ i = Math.max(0, Math.min(cards.length-1, i)); track.scrollTo({ left: i*step(), behavior:'smooth' }); }
+    function setActive(i){ dots.forEach(function(d,j){ d.classList.toggle('is-active', j===i); }); }
+    prev.addEventListener('click', function(){ go(curr()-1); restart(); });
+    next.addEventListener('click', function(){ var i = curr()+1; if(i >= cards.length) i = 0; go(i); restart(); });
+    dots.forEach(function(d){ d.addEventListener('click', function(){ go(+d.getAttribute('data-i')); restart(); }); });
+    track.addEventListener('scroll', function(){ setActive(curr()); }, { passive:true });
+    var timer = null;
+    function auto(){ var i = curr()+1; if(i >= cards.length) i = 0; go(i); }
+    function start(){ if(window.matchMedia('(max-width:749px)').matches){ stop(); timer = setInterval(auto, 4000); } }
+    function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+    function restart(){ stop(); start(); }
+    track.addEventListener('touchstart', stop, { passive:true });
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    start();
+  }
+  if(document.readyState !== 'loading'){ init(); }
+  else { document.addEventListener('DOMContentLoaded', init); }
+})();
+</script>
 
 {% schema %}
 {
