@@ -191,16 +191,6 @@
     "rv_reels": {
       "type": "rv-video-reels",
       "blocks": {
-        "reel_XxCidD": {
-          "type": "reel",
-          "settings": {
-            "shopify_video": "shopify://files/videos/Immuno Revive.mp4",
-            "video": "",
-            "title": "Immuno Revive",
-            "cta": "Shop now",
-            "link": "https://reliefveda.com/products/baidyashakti-immuno-revive-immunity-booster"
-          }
-        },
         "r1": {
           "type": "reel",
           "settings": {
@@ -219,6 +209,16 @@
             "title": " Healthy Gut",
             "cta": "Shop now",
             "link": "https://reliefveda.com/products/baidyashakt-healthy-gut"
+          }
+        },
+        "reel_XxCidD": {
+          "type": "reel",
+          "settings": {
+            "shopify_video": "shopify://files/videos/Immuno Revive.mp4",
+            "video": "",
+            "title": "Immuno Revive",
+            "cta": "Shop now",
+            "link": "https://reliefveda.com/products/baidyashakti-immuno-revive-immunity-booster"
           }
         },
         "r3": {
@@ -243,9 +243,9 @@
         }
       },
       "block_order": [
-        "reel_XxCidD",
         "r1",
         "r2",
+        "reel_XxCidD",
         "r3",
         "r4"
       ],
@@ -346,7 +346,7 @@
         "title": "Shop by concern",
         "subtitle": "Tell us what's troubling you there's a root cause Ayurvedic formulation for it.",
         "cols": 4,
-        "ratio": "3/4",
+        "ratio": "1/1",
         "radius": 18
       }
     },
@@ -547,7 +547,7 @@
         "text": "#ffffff",
         "media_bg": "#3a2a1e",
         "eyebrow": "Free guidance",
-        "title": "Talk to our Ayurvedic expert — free",
+        "title": "Talk to our Ayurvedic expert free",
         "subtitle": "Not sure which product is right for you? Get a free consultation and a personalised recommendation.",
         "btn_label": "Book free consultation",
         "btn_link": "",
@@ -602,7 +602,7 @@
         "border": "#eae0cd",
         "eyebrow": "What's inside",
         "title": "Pure herbs, potent extracts",
-        "subtitle": "We extract the active compounds from premium herbs — not raw powders — for consistent, effective results.",
+        "subtitle": "We extract the active compounds from premium herbs not raw powders for consistent, effective results.",
         "cols": 4
       }
     }
