@@ -31,21 +31,6 @@
         "o3"
       ]
     },
-    "rv_hero": {
-      "type": "rv-hero",
-      "settings": {
-        "eyebrow": "100% Ayurvedic · Made in India",
-        "title": "Ancient wisdom for modern living.",
-        "subtitle": "Potent herbal extracts — not raw powders — formulated by experts for everyday ailments. Trusted by thousands across India.",
-        "align": "left",
-        "scrim_dir": "to right",
-        "scrim_strength": 50,
-        "btn_label": "Shop bestsellers",
-        "btn_bg": "#1F7A4D",
-        "height_desktop": 620,
-        "height_mobile": 520
-      }
-    },
     "rv_hero_products": {
       "type": "rv-hero-products",
       "settings": {
@@ -467,7 +452,6 @@
   },
   "order": [
     "rv_offer",
-    "rv_hero",
     "rv_hero_products",
     "rv_trust",
     "rv_concern",
