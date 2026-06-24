@@ -34,7 +34,7 @@
     "rv_hero_products": {
       "type": "rv-hero-products",
       "settings": {
-        "heading": "Our Hero Products",
+        "heading": "",
         "bg": "#FFFDF8",
         "ratio_desktop": "16/7",
         "ratio_mobile": "4/5",
