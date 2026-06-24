@@ -1,0 +1,168 @@
+{%- comment -%}
+  Relief Veda — Custom Footer
+  Clean columns (accordion on mobile) + brand blurb + socials + payment icons.
+  Replaces Prestige footer. Self-contained.
+{%- endcomment -%}
+
+{%- liquid
+  assign id = section.id
+  assign accent = section.settings.accent
+-%}
+
+{%- style -%}
+  .rv-foot-{{ id }}{ background:{{ section.settings.bg }}; color:{{ section.settings.text }}; }
+  .rv-foot-{{ id }} a{ color:inherit; text-decoration:none; }
+  .rv-foot-{{ id }} .rv-foot__inner{ max-width:1240px; margin:0 auto; padding: clamp(40px,5vw,64px) clamp(16px,4vw,40px) 22px; }
+  .rv-foot-{{ id }} .rv-foot__top{ display:grid; grid-template-columns: 1.4fr repeat({{ section.blocks.size }}, 1fr); gap: clamp(24px,3vw,46px); }
+  .rv-foot-{{ id }} .rv-foot__brand{ max-width:340px; }
+  .rv-foot-{{ id }} .rv-foot__logo{ max-width:160px; height:auto; display:block; margin:0 0 14px; }
+  .rv-foot-{{ id }} .rv-foot__name{ font-size:22px; font-weight:700; letter-spacing:-.01em; margin:0 0 12px; color:{{ section.settings.heading_color }}; }
+  .rv-foot-{{ id }} .rv-foot__about{ font-size:13.5px; line-height:1.65; opacity:.85; margin:0 0 18px; }
+  .rv-foot-{{ id }} .rv-foot__social{ display:flex; gap:10px; }
+  .rv-foot-{{ id }} .rv-foot__social a{ width:34px;height:34px;border-radius:50%; border:1px solid {{ section.settings.border }}; display:flex;align-items:center;justify-content:center; transition:background .2s ease, color .2s ease, border-color .2s ease; }
+  .rv-foot-{{ id }} .rv-foot__social a:hover{ background:{{ accent }}; color:#fff; border-color:{{ accent }}; }
+  .rv-foot-{{ id }} .rv-foot__social svg{ width:16px;height:16px; }
+  .rv-foot-{{ id }} .rv-foot__col{ }
+  .rv-foot-{{ id }} .rv-foot__colhead{ display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; padding:0; cursor:default; color:{{ section.settings.heading_color }}; font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin:0 0 14px; }
+  .rv-foot-{{ id }} .rv-foot__chev{ display:none; }
+  .rv-foot-{{ id }} .rv-foot__list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .rv-foot-{{ id }} .rv-foot__list a{ font-size:13.5px; opacity:.85; transition:opacity .15s ease, padding-left .15s ease; }
+  .rv-foot-{{ id }} .rv-foot__list a:hover{ opacity:1; padding-left:3px; color:{{ accent }}; }
+
+  .rv-foot-{{ id }} .rv-foot__pay{ border-top:1px solid {{ section.settings.border }}; margin-top:clamp(28px,3vw,40px); padding-top:20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .rv-foot-{{ id }} .rv-foot__pay-label{ font-size:12px; letter-spacing:.04em; opacity:.7; text-transform:uppercase; font-weight:600; }
+  .rv-foot-{{ id }} .rv-foot__pay-list{ display:flex; gap:8px; flex-wrap:wrap; }
+  .rv-foot-{{ id }} .rv-foot__pay-list span{ font-size:10.5px; font-weight:700; letter-spacing:.02em; padding:5px 9px; border:1px solid {{ section.settings.border }}; border-radius:5px; background:{{ section.settings.pay_bg }}; color:{{ section.settings.heading_color }}; }
+  .rv-foot-{{ id }} .rv-foot__bottom{ border-top:1px solid {{ section.settings.border }}; margin-top:20px; padding-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:12.5px; opacity:.75; }
+
+  @media (max-width:749px){
+    .rv-foot-{{ id }} .rv-foot__top{ grid-template-columns:1fr; gap:6px; }
+    .rv-foot-{{ id }} .rv-foot__brand{ max-width:100%; margin-bottom:14px; }
+    .rv-foot-{{ id }} .rv-foot__col{ border-top:1px solid {{ section.settings.border }}; }
+    .rv-foot-{{ id }} .rv-foot__colhead{ cursor:pointer; padding:14px 0; margin:0; }
+    .rv-foot-{{ id }} .rv-foot__chev{ display:block; width:16px;height:16px; transition:transform .25s ease; }
+    .rv-foot-{{ id }} .rv-foot__col.is-open .rv-foot__chev{ transform:rotate(180deg); }
+    .rv-foot-{{ id }} .rv-foot__list{ max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease; padding:0; }
+    .rv-foot-{{ id }} .rv-foot__col.is-open .rv-foot__list{ max-height:600px; padding:0 0 16px; }
+    .rv-foot-{{ id }} .rv-foot__bottom{ justify-content:center; text-align:center; }
+  }
+{%- endstyle -%}
+
+<footer class="rv-foot-{{ id }}">
+  <div class="rv-foot__inner">
+    <div class="rv-foot__top">
+      <div class="rv-foot__brand">
+        {%- if section.settings.logo != blank -%}
+          <img class="rv-foot__logo" src="{{ section.settings.logo | image_url: width: 360 }}" alt="{{ shop.name | escape }}" loading="lazy">
+        {%- else -%}
+          <p class="rv-foot__name">{{ section.settings.brand_name | default: shop.name }}</p>
+        {%- endif -%}
+        {%- if section.settings.about != blank -%}<p class="rv-foot__about">{{ section.settings.about }}</p>{%- endif -%}
+        <div class="rv-foot__social">
+          {%- if section.settings.instagram != blank -%}<a href="{{ section.settings.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>{%- endif -%}
+          {%- if section.settings.facebook != blank -%}<a href="{{ section.settings.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2 0-3 1-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9z"/></svg></a>{%- endif -%}
+          {%- if section.settings.youtube != blank -%}<a href="{{ section.settings.youtube }}" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg></a>{%- endif -%}
+          {%- if section.settings.whatsapp != blank -%}<a href="{{ section.settings.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5 14c-.2.6-1.2 1.1-1.7 1.2-.4 0-1 .1-3-.8-2.6-1-4.2-3.6-4.3-3.8-.1-.2-1-1.3-1-2.5s.6-1.8.9-2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.1.1.3 0 .5l-.4.5-.3.3c-.1.1-.2.3-.1.5.1.2.6 1 1.4 1.7 1 .8 1.7 1 1.9 1.1.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.3.1.2.1.6 0 .9z"/></svg></a>{%- endif -%}
+        </div>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- assign ml = linklists[block.settings.menu] -%}
+        <div class="rv-foot__col" {{ block.shopify_attributes }}>
+          <button class="rv-foot__colhead" type="button" data-rvf-acc>
+            {{ block.settings.heading }}
+            <svg class="rv-foot__chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="rv-foot__list">
+            {%- for link in ml.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- else -%}
+              <li><a href="#">Add a menu in settings</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_payments -%}
+      <div class="rv-foot__pay">
+        <span class="rv-foot__pay-label">We accept</span>
+        <div class="rv-foot__pay-list">
+          <span>VISA</span><span>Mastercard</span><span>RuPay</span><span>UPI</span><span>Net Banking</span><span>COD</span>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="rv-foot__bottom">
+      <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}{% if section.settings.copyright != blank %} · {{ section.settings.copyright }}{% endif %}</span>
+      <span>Made in India</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function init(){
+    var root = document.querySelector('.rv-foot-{{ id }}');
+    if(!root) return;
+    var mq = window.matchMedia('(max-width:749px)');
+    root.querySelectorAll('[data-rvf-acc]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if(!mq.matches) return;
+        btn.closest('.rv-foot__col').classList.toggle('is-open');
+      });
+    });
+  }
+  if(document.readyState !== 'loading'){ init(); }
+  else { document.addEventListener('DOMContentLoaded', init); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "RV Footer",
+  "tag": "footer",
+  "class": "rv-section rv-footer-section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background", "default": "#241813" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#EBE2D2" },
+    { "type": "color", "id": "heading_color", "label": "Headings", "default": "#FFFFFF" },
+    { "type": "color", "id": "accent", "label": "Accent (hover)", "default": "#7FB89A" },
+    { "type": "color", "id": "border", "label": "Border / divider", "default": "rgba(255,255,255,0.16)" },
+    { "type": "color", "id": "pay_bg", "label": "Payment badge bg", "default": "rgba(255,255,255,0.06)" },
+    { "type": "header", "content": "Brand" },
+    { "type": "image_picker", "id": "logo", "label": "Logo (optional)" },
+    { "type": "text", "id": "brand_name", "label": "Brand name (if no logo)", "default": "Relief Veda" },
+    { "type": "textarea", "id": "about", "label": "About blurb", "default": "100% Ayurvedic wellness solutions by Baidyashakti — potent herbal extracts formulated for everyday ailments. Trusted across India." },
+    { "type": "header", "content": "Social links" },
+    { "type": "url", "id": "instagram", "label": "Instagram" },
+    { "type": "url", "id": "facebook", "label": "Facebook" },
+    { "type": "url", "id": "youtube", "label": "YouTube" },
+    { "type": "url", "id": "whatsapp", "label": "WhatsApp" },
+    { "type": "header", "content": "Payments & copyright" },
+    { "type": "checkbox", "id": "show_payments", "label": "Show payment methods", "default": true },
+    { "type": "text", "id": "copyright", "label": "Copyright note", "default": "Baidyashakti Lifecare Pvt. Ltd." }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Link column",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Column heading", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RV Footer",
+      "blocks": [
+        { "type": "menu", "settings": { "heading": "Shop" } },
+        { "type": "menu", "settings": { "heading": "Company" } },
+        { "type": "menu", "settings": { "heading": "Help" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
