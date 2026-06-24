@@ -252,10 +252,36 @@
     "rv_bestsellers": {
       "type": "rv-bestsellers",
       "blocks": {
+        "card_9peKFn": {
+          "type": "card",
+          "settings": {
+            "name": "Beat UTI (urinary relief)",
+            "badge": "50% OFF",
+            "b1": "Relieves burning & pain",
+            "b2": "Flushes UTI-causing bacteria",
+            "b3": "Antibiotic-free, no side effects",
+            "price": "Rs. 499",
+            "compare": "Rs. 999",
+            "link": "https://reliefveda.com/products/baidyashakti-beat-uti"
+          }
+        },
+        "card_CmKEMm": {
+          "type": "card",
+          "settings": {
+            "name": "Healthy Gut",
+            "badge": "Launch Offer",
+            "b1": "Relieves gas & bloating",
+            "b2": "Improves digestion",
+            "b3": "100% herbal",
+            "price": "Rs. 499",
+            "compare": "Rs. 799",
+            "link": ""
+          }
+        },
         "card_FhPw4K": {
           "type": "card",
           "settings": {
-            "name": "Vitalizer",
+            "name": "Vitalizer (men's vitality)",
             "badge": "58% OFF",
             "b1": "Boosts energy & stamina",
             "b2": "Supports testosterone naturally",
@@ -267,6 +293,8 @@
         }
       },
       "block_order": [
+        "card_9peKFn",
+        "card_CmKEMm",
         "card_FhPw4K"
       ],
       "settings": {
