@@ -359,6 +359,7 @@
         "r3": {
           "type": "reel",
           "settings": {
+            "shopify_video": "shopify://files/videos/ILLUMINE.mp4",
             "video": "",
             "title": "Glow from within",
             "cta": "Shop now",
