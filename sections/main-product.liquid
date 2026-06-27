@@ -2157,6 +2157,8 @@
       container.addEventListener('mouseenter', function() {
         var zoomSrc = img.getAttribute('data-zoom-src') || img.src;
         lens.style.backgroundImage = 'url(' + zoomSrc + ')';
+        /* Magnify ~2.2x the displayed image (not the lens) so it actually zooms in */
+        lens.style.backgroundSize = (container.offsetWidth * 2.2) + 'px auto';
         lens.classList.add('is-active');
       });
 
@@ -4364,6 +4366,8 @@
       container.addEventListener('mouseenter', function() {
         var zoomSrc = img.getAttribute('data-zoom-src') || img.src;
         lens.style.backgroundImage = 'url(' + zoomSrc + ')';
+        /* Magnify ~2.2x the displayed image (not the lens) so it actually zooms in */
+        lens.style.backgroundSize = (container.offsetWidth * 2.2) + 'px auto';
         lens.classList.add('is-active');
       });
 
